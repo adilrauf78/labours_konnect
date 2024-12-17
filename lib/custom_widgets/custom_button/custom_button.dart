@@ -1,6 +1,6 @@
-import 'package:flo/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:labours_konnect/constants/colors.dart';
 
 class Button extends StatelessWidget {
   final String text;

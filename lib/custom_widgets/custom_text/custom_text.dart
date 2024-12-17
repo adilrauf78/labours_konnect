@@ -1,6 +1,6 @@
-import 'package:flo/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:labours_konnect/constants/colors.dart';
 
 
 class MainText extends StatelessWidget {
@@ -21,8 +21,8 @@ class MainText extends StatelessWidget {
       text,
       style: TextStyle(
         color: color?? AppColor.black,
-        fontSize: fontSize?? 18..sp,
-        fontWeight: fontWeight?? FontWeight.w500,
+        fontSize: fontSize?? 20..sp,
+        fontWeight: fontWeight?? FontWeight.w700,
         overflow: TextOverflow.ellipsis
       ),
     );
@@ -46,9 +46,8 @@ class SubText extends StatelessWidget {
       text,
       style: TextStyle(
         color: color?? AppColor.black,
-        fontSize: fontSize?? 16..sp,
+        fontSize: fontSize?? 15..sp,
         fontWeight: fontWeight?? FontWeight.w400,
-          overflow: TextOverflow.ellipsis
       ),
     );
   }

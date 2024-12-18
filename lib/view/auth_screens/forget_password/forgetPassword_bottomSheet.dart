@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/auth_screens/forget_password/forget_password1.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -20,6 +22,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
+          child: ForgetPassword1(),
         );
       },
     );
@@ -31,8 +34,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       decoration: BoxDecoration(
         color: AppColor.backgroundColor,
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(30),
-            topLeft: Radius.circular(30))
+            topRight: Radius.circular(30..r),
+            topLeft: Radius.circular(30..r),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -51,15 +55,26 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               ),
             ),
             SizedBox(height: 25..h,),
-            Text15(
+            MainText(
               text: 'Forget Password',
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 40),
-              child: Text15(
-                  text: 'Enter your email for the verification process, we will send 4 digits code to your email.'),
+              padding: const EdgeInsets.only(right: 35),
+              child: Text(
+                  'Enter your email for the verification process, we will send 4 digits code to your email.',
+                style: TextStyle(
+                  color: AppColor.black.withOpacity(.5),
+                  fontSize: 14..sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
             SizedBox(height: 20..h,),
+            Text15(
+              text: 'Email',
+              fontWeight: FontWeight.w400,
+            ),
+            SizedBox(height: 10..h,),
             SizedBox(
               width: MediaQuery.of(context).size.width,
               height: 50..h,
@@ -84,8 +99,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     filled: true,
                     prefixIcon: Transform.scale(
                       scale: 0.45,
-                      child: SvgPicture.asset(
-                          'assets/svgIcons/email.svg'),
+                      child: SvgPicture.asset('${iconPath}email.svg'),
                     ),
                     hintText: 'dummy@email.com',
                     hintStyle: TextStyle(

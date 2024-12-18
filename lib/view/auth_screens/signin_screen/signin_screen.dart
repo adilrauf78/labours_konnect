@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -37,64 +38,68 @@ class _SignInScreenState extends State<SignInScreen> {
       child: Scaffold(
         backgroundColor: AppColor.backgroundColor,
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 55..h,),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 55..h,),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Icon(Icons.arrow_back_ios,
                     color: AppColor.black,
                     size: 18,
                   ),
                 ),
-                SizedBox(height: 30..h,),
-                Center(
-                  child: Text(
-                    'Logo',
-                    style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w700,
-                            color: AppColor.black,
-                  ),
-                ),
-                ),
-                SizedBox(height: 30..h,),
-                TabBar(
-                  physics: NeverScrollableScrollPhysics(),
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  labelColor: AppColor.primaryColor,
-                  indicatorColor: AppColor.primaryColor,
-                  unselectedLabelColor: AppColor.black,
-                  labelStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: AppColor.primaryColor,
-                  ),
-                  unselectedLabelStyle: TextStyle(
-                          fontSize: 16,
+              ),
+              SizedBox(height: 30..h,),
+              Center(
+                child: Text(
+                  'Logo',
+                  style: TextStyle(
+                          fontSize: 40,
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
-                  ),
-                  tabs: [
-                    Tab(
-                      text: 'Email',
-                    ),
-                    Tab(
-                      text: 'Phone',
-                    )
-                  ],
                 ),
-                SizedBox(height: 20..h,),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .67,
-                  child: TabBarView(
-                    children: [
-                      Column(
+              ),
+              ),
+              SizedBox(height: 30..h,),
+              TabBar(
+                physics: NeverScrollableScrollPhysics(),
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelColor: AppColor.primaryColor,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                indicatorColor: AppColor.primaryColor,
+                unselectedLabelColor: AppColor.black,
+                labelStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColor.primaryColor,
+                ),
+                unselectedLabelStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColor.black,
+                ),
+                tabs: [
+                  Tab(
+                    text: 'Email',
+                  ),
+                  Tab(
+                    text: 'Phone',
+                  )
+                ],
+              ),
+              SizedBox(height: 20..h,),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .67,
+                child: TabBarView(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MainText(
@@ -105,6 +110,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           SizedBox(height: 20..h,),
                           Text15(
                             text: 'Email',
+                            fontWeight: FontWeight.w400,
                           ),
                           SizedBox(height: 10..h,),
                           SizedBox(
@@ -131,8 +137,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   filled: true,
                                   prefixIcon: Transform.scale(
                                     scale: 0.45,
-                                    child: SvgPicture.asset(
-                                        'assets/svgIcons/email.svg'),
+                                    child: SvgPicture.asset('${iconPath}email.svg'),
                                   ),
                                   hintText: 'dummy@email.com',
                                   hintStyle: TextStyle(
@@ -143,9 +148,10 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20..h,),
+                          SizedBox(height: 15..h,),
                           Text15(
                             text: 'Password',
+                            fontWeight: FontWeight.w400,
                           ),
                           SizedBox(height: 10..h,),
                           SizedBox(
@@ -172,8 +178,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                 filled: true,
                                 prefixIcon: Transform.scale(
                                     scale: 0.5,
-                                    child: SvgPicture.asset(
-                                        'assets/svgIcons/lock.svg')),
+                                    child: SvgPicture.asset('${iconPath}lock.svg'),
+                                ),
                                 hintStyle: TextStyle(
                                         fontSize: 15..sp,
                                         fontWeight: FontWeight.w400,
@@ -197,7 +203,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              GestureDetector(
+                              InkWell(
                                 onTap: () {
                                   setState(() {
                                     _showBottomSheet(context);
@@ -205,7 +211,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 },
                                 child: Text15(
                                   text: 'Forgot password?',
-                                  fontWeight: FontWeight.w600,
+                                  color: AppColor.black,
                                 ),
                               ),
                             ],
@@ -243,19 +249,16 @@ class _SignInScreenState extends State<SignInScreen> {
                               InkWell(
                                   onTap: () {
                                   },
-                                  child: SvgPicture.asset(
-                                      'assets/svgIcons/google.svg')
+                                  child: SvgPicture.asset('${iconPath}google.svg')
                               ),
                               SizedBox(width: 20..w,),
                               InkWell(
                                   onTap: () {
                                   },
-                                  child: SvgPicture.asset(
-                                      'assets/svgIcons/facebook.svg')
+                                  child: SvgPicture.asset('${iconPath}facebook.svg')
                               ),
-                              SizedBox(width: 20
-                                ..w,),
-                              SvgPicture.asset('assets/svgIcons/linked.svg'),
+                              SizedBox(width: 20..w,),
+                              SvgPicture.asset('${iconPath}linkedin.svg'),
                             ],
                           ),
                           SizedBox(height: 25..h,),
@@ -267,9 +270,9 @@ class _SignInScreenState extends State<SignInScreen> {
                               children: [
                                 Text15(
                                   text: 'Don’t have any account?',
+                                  fontWeight: FontWeight.w400,
                                 ),
                                 Text15(text: 'Sign Up',
-                                  fontWeight: FontWeight.w700,
                                   color: AppColor.primaryColor,
                                 ),
                               ],
@@ -277,18 +280,21 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ],
                       ),
-                      Column(
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MainText(
                               text: 'Sign In'
                           ),
                           SubText(
-                              text: 'Enter your Phone number and password to sign in'),
+                              text: 'Enter your Phone number and password to signIn'),
                           SizedBox(height: 20..h,),
                           Text15(
                             text: 'Phone',
-                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
                           ),
                           SizedBox(height: 10..h,),
                           Container(
@@ -344,10 +350,10 @@ class _SignInScreenState extends State<SignInScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 20..h,),
+                          SizedBox(height: 15..h,),
                           Text15(
                             text: 'Password',
-                            color: AppColor.black.withOpacity(.6),
+                            fontWeight: FontWeight.w400,
                           ),
                           SizedBox(height: 10..h,),
                           SizedBox(
@@ -374,8 +380,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 filled: true,
                                 prefixIcon: Transform.scale(
                                     scale: 0.5,
-                                    child: SvgPicture.asset(
-                                        'assets/svgIcons/lock.svg')),
+                                    child: SvgPicture.asset('${iconPath}lock.svg')),
                                 hintStyle: TextStyle(
                                         fontSize: 15..sp,
                                         fontWeight: FontWeight.w400,
@@ -399,7 +404,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              GestureDetector(
+                              InkWell(
                                 onTap: () {
                                   setState(() {
                                     _showBottomSheet(context);
@@ -407,7 +412,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 },
                                 child: Text15(
                                   text: 'Forgot password?',
-                                  fontWeight: FontWeight.w600,
+                                  color: AppColor.black,
                                 ),
                               ),
                             ],
@@ -444,13 +449,19 @@ class _SignInScreenState extends State<SignInScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SvgPicture.asset('assets/svgIcons/google.svg'),
-                              SizedBox(width: 20
-                                ..w,),
-                              SvgPicture.asset('assets/svgIcons/fb.svg'),
-                              SizedBox(width: 20
-                                ..w,),
-                              SvgPicture.asset('assets/svgIcons/linked.svg'),
+                              InkWell(
+                                  onTap: () {
+                                  },
+                                  child: SvgPicture.asset('${iconPath}google.svg')
+                              ),
+                              SizedBox(width: 20..w,),
+                              InkWell(
+                                  onTap: () {
+                                  },
+                                  child: SvgPicture.asset('${iconPath}facebook.svg')
+                              ),
+                              SizedBox(width: 20..w,),
+                              SvgPicture.asset('${iconPath}linkedin.svg'),
                             ],
                           ),
                           SizedBox(height: 25..h,),
@@ -462,9 +473,9 @@ class _SignInScreenState extends State<SignInScreen> {
                               children: [
                                 Text15(
                                   text: 'Don’t have any account?',
+                                  fontWeight: FontWeight.w400,
                                 ),
                                 Text15(text: 'Sign Up',
-                                  fontWeight: FontWeight.w700,
                                   color: AppColor.primaryColor,
                                 ),
                               ],
@@ -472,11 +483,12 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20..h,),
+            ],
           ),
         ),
       ),

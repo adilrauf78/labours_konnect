@@ -5,10 +5,10 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
-import 'package:labours_konnect/view/onboarding_screen/onboarding_screen1.dart';
+import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+class OnboardingScreen2 extends StatelessWidget {
+  const OnboardingScreen2({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,31 +18,49 @@ class OnboardingScreen extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('${imagePath}onboarding.png'),
-                fit: BoxFit.cover,
-              )
+                image: DecorationImage(
+                  image: AssetImage('${imagePath}onboarding2.png'),
+                  fit: BoxFit.cover,
+                )
             ),
           ),
           Positioned(
             bottom: 0,
             child: Container(
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.only(top: 25,bottom: 20,right: 10,left: 10),
+              padding: EdgeInsets.only(top: 25,bottom: 35,right: 20,left: 20),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30..r),
-                  topRight: Radius.circular(30..r),
-                ),
-                color: AppColor.white
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30..r),
+                    topRight: Radius.circular(30..r),
+                  ),
+                  color: AppColor.white
               ),
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 15),
+                    padding: const EdgeInsets.only(right: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        Container(
+                          width: 15..w,
+                          height: 10..h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30..r),
+                            color: Color(0xFFD9D9D9),
+                          ),
+                        ),
+                        SizedBox(width: 5..w),
+                        Container(
+                          width: 15..w,
+                          height: 10..h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30..r),
+                            color: Color(0xFFD9D9D9),
+                          ),
+                        ),
+                        SizedBox(width: 5..w),
                         Container(
                           width: 25..w,
                           height: 10..h,
@@ -51,67 +69,43 @@ class OnboardingScreen extends StatelessWidget {
                             color: AppColor.primaryColor,
                           ),
                         ),
-                        SizedBox(width: 5..w),
-                        Container(
-                          width: 15..w,
-                          height: 10..h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30..r),
-                            color: Color(0xFFD9D9D9),
-                          ),
-                        ),
-                        SizedBox(width: 5..w),
-                        Container(
-                          width: 15..w,
-                          height: 10..h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30..r),
-                            color: Color(0xFFD9D9D9),
-                          ),
-                        ),
                       ],
                     ),
                   ),
                   SizedBox(height: 30..h),
-                  Center(
-                    child: MainText(
-                      text: 'Qualified Professionals',
-                    ),
-                  ),
-                  SizedBox(height: 15..h),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      'Search from a list of qualified professionals around you as we bring the best for you',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15..sp,
-                        color: AppColor.black.withOpacity(.5),
-                        fontWeight: FontWeight.w400,
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Center(
+                      child: Text(
+                        'Let’s Find your Professional',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 24..sp,
+                          color: AppColor.black,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
                   SizedBox(height: 30..h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap:(){
-                          navigateToNextScreen(context, OnboardingScreen1());
-                        },
-                        child: Container(
-                          width: 47..w,
-                          height: 47..h,
-                          decoration: BoxDecoration(
-                            color: AppColor.primaryColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                              child: SvgPicture.asset('${iconPath}arrow_forward.svg')
-                          ),
+                  GestureDetector(
+                    onTap:(){
+                      navigateToNextScreen(context, SignInScreen());
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50..h,
+                      decoration: BoxDecoration(
+                        color: AppColor.primaryColor,
+                        borderRadius: BorderRadius.circular(100..r),
+                      ),
+                      child: Center(
+                        child: MainText(
+                          text: 'Get Started',
+                          color: AppColor.white,
                         ),
-                      )
-                    ],
+                      ),
+                    ),
                   )
                 ],
               ),

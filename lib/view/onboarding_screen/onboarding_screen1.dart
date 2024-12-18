@@ -5,10 +5,10 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
-import 'package:labours_konnect/view/onboarding_screen/onboarding_screen1.dart';
+import 'package:labours_konnect/view/onboarding_screen/onboarding_screen2.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+class OnboardingScreen1 extends StatelessWidget {
+  const OnboardingScreen1({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +18,10 @@ class OnboardingScreen extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('${imagePath}onboarding.png'),
-                fit: BoxFit.cover,
-              )
+                image: DecorationImage(
+                  image: AssetImage('${imagePath}onboarding1.png'),
+                  fit: BoxFit.cover,
+                )
             ),
           ),
           Positioned(
@@ -30,11 +30,11 @@ class OnboardingScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.only(top: 25,bottom: 20,right: 10,left: 10),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30..r),
-                  topRight: Radius.circular(30..r),
-                ),
-                color: AppColor.white
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30..r),
+                    topRight: Radius.circular(30..r),
+                  ),
+                  color: AppColor.white
               ),
               child: Column(
                 children: [
@@ -43,6 +43,15 @@ class OnboardingScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        Container(
+                          width: 15..w,
+                          height: 10..h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30..r),
+                            color: Color(0xFFD9D9D9),
+                          ),
+                        ),
+                        SizedBox(width: 5..w),
                         Container(
                           width: 25..w,
                           height: 10..h,
@@ -60,29 +69,20 @@ class OnboardingScreen extends StatelessWidget {
                             color: Color(0xFFD9D9D9),
                           ),
                         ),
-                        SizedBox(width: 5..w),
-                        Container(
-                          width: 15..w,
-                          height: 10..h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30..r),
-                            color: Color(0xFFD9D9D9),
-                          ),
-                        ),
                       ],
                     ),
                   ),
                   SizedBox(height: 30..h),
                   Center(
                     child: MainText(
-                      text: 'Qualified Professionals',
+                      text: 'Easy & Fast Services',
                     ),
                   ),
                   SizedBox(height: 15..h),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Text(
-                      'Search from a list of qualified professionals around you as we bring the best for you',
+                      'Book your services at your convenient time and enjoy the hassle free process',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15..sp,
@@ -97,7 +97,7 @@ class OnboardingScreen extends StatelessWidget {
                     children: [
                       InkWell(
                         onTap:(){
-                          navigateToNextScreen(context, OnboardingScreen1());
+                          navigateToNextScreen(context, OnboardingScreen2());
                         },
                         child: Container(
                           width: 47..w,

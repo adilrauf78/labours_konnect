@@ -23,7 +23,6 @@ class MainText extends StatelessWidget {
         color: color?? AppColor.black,
         fontSize: fontSize?? 20..sp,
         fontWeight: fontWeight?? FontWeight.w700,
-        overflow: TextOverflow.ellipsis
       ),
     );
   }
@@ -45,20 +44,20 @@ class SubText extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        color: color?? AppColor.black,
-        fontSize: fontSize?? 15..sp,
+        color: color?? AppColor.k0xFF818080,
+        fontSize: fontSize?? 14..sp,
         fontWeight: fontWeight?? FontWeight.w400,
       ),
     );
   }
 }
 
-class Text14 extends StatelessWidget {
+class Text15 extends StatelessWidget {
   final String text;
   final Color? color;
   final double? fontSize;
   final FontWeight? fontWeight;
-  const Text14({super.key,
+  const Text15({super.key,
     required this.text,
     this.color,
     this.fontSize,
@@ -70,12 +69,10 @@ class Text14 extends StatelessWidget {
     return Text(
       textAlign: TextAlign.center,
       text,
-      maxLines: 2,
       style: TextStyle(
-        color: color?? AppColor.black,
-        fontSize: fontSize?? 14..sp,
+        color: color?? AppColor.black.withOpacity(.5),
+        fontSize: fontSize?? 15..sp,
         fontWeight: fontWeight?? FontWeight.w500,
-        overflow: TextOverflow.ellipsis
       ),
     );
   }

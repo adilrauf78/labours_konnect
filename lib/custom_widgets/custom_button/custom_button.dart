@@ -18,17 +18,17 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 55..h,
+      height: 50..h,
       decoration: BoxDecoration(
         color: AppColor.primaryColor,
-        borderRadius: BorderRadius.circular(15..r),
+        borderRadius: BorderRadius.circular(10..r),
       ),
       child: Center(
         child: Text(
           text,
           style: TextStyle(
             color: color?? AppColor.white,
-            fontSize: fontSize?? 18..sp,
+            fontSize: fontSize?? 16..sp,
             fontWeight: fontWeight?? FontWeight.w500,
           ),
         ),

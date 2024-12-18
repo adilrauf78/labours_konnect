@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/auth_screens/create_account/create_account.dart';
 import 'package:labours_konnect/view/auth_screens/forget_password/forgetPassword_bottomSheet.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -42,19 +44,7 @@ class _SignInScreenState extends State<SignInScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 55..h,),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Icon(Icons.arrow_back_ios,
-                    color: AppColor.black,
-                    size: 18,
-                  ),
-                ),
-              ),
-              SizedBox(height: 30..h,),
+              SizedBox(height: 48..h,),
               Center(
                 child: Text(
                   'Logo',
@@ -262,8 +252,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             ],
                           ),
                           SizedBox(height: 25..h,),
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
+                              navigateToNextScreen(context, CreateAccount());
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -467,6 +458,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           SizedBox(height: 25..h,),
                           GestureDetector(
                             onTap: () {
+                              navigateToNextScreen(context, CreateAccount());
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,

@@ -52,6 +52,32 @@ class SubText extends StatelessWidget {
   }
 }
 
+class Text12 extends StatelessWidget {
+  final String text;
+  final Color? color;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  const Text12({super.key,
+    required this.text,
+    this.color,
+    this.fontSize,
+    this.fontWeight,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        overflow: TextOverflow.ellipsis,
+        color: color?? AppColor.black.withOpacity(.5),
+        fontSize: fontSize?? 12..sp,
+        fontWeight: fontWeight?? FontWeight.w500,
+      ),
+    );
+  }
+}
+
 class Text15 extends StatelessWidget {
   final String text;
   final Color? color;

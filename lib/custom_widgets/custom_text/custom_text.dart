@@ -104,6 +104,30 @@ class Text15 extends StatelessWidget {
   }
 }
 
+class Text16 extends StatelessWidget {
+  final String text;
+  final Color? color;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  const Text16({super.key,
+    required this.text,
+    this.color,
+    this.fontSize,
+    this.fontWeight,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: color?? AppColor.black.withOpacity(.8),
+        fontSize: fontSize?? 16..sp,
+        fontWeight: fontWeight?? FontWeight.w400,
+      ),
+    );
+  }
+}
 
 class Text18 extends StatelessWidget {
   final String text;

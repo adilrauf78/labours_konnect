@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,10 +6,128 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/account_screen/edit_profile/edit_profile.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
 
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  bool vendor = false;
+  void _showCustomPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16..r),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+                color: AppColor.backgroundColor,
+                borderRadius: BorderRadius.circular(16..r),
+            ),
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: SvgPicture.asset('${iconPath}close.svg',
+                        height: 15..h,
+                        width: 15..w,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5..h),
+                SvgPicture.asset('${iconPath}trash.svg'),
+                SizedBox(height: 5..h),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Text15(
+                      text: 'Are you sure you want to delete this account?',
+                      color: AppColor.black,
+                      fontWeight: FontWeight.w400,
+                    )
+                ),
+                SizedBox(height: 25..h,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: (){
+                        },
+                        child: Container(
+                          height: 32..h,
+                          width: 90..w,
+                          decoration: BoxDecoration(
+                            color: AppColor.primaryColor,
+                            borderRadius: BorderRadius.circular(5),
+
+                          ),
+                          child: Center(
+                            child: Text('Yes',
+                              style: TextStyle(
+                                  fontSize: 16..sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColor.white
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 32..h,
+                          width: 90..w,
+                          decoration: BoxDecoration(
+                              color: AppColor.white,
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: AppColor.black.withOpacity(.25),
+                                    blurRadius: 4
+                                )
+                              ]
+
+                          ),
+                          child: Center(
+                            child: Text('No',
+                              style: TextStyle(
+                                  fontSize: 16..sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColor.black
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +203,36 @@ class AccountScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 30..h),
+              GestureDetector(
+                onTap: (){
+                  navigateToNextScreen(context, EditProfile());
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 45..h,
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10..r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.k0xFFEEEEEE,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text16(
+                        text: 'Edit Profile',
+                      ),
+                      SvgPicture.asset('${iconPath}arrow_left.svg'),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 15..h),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 45..h,
@@ -91,17 +240,170 @@ class AccountScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColor.white,
                   borderRadius: BorderRadius.circular(10..r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.k0xFFEEEEEE,
+                      blurRadius: 5,
+                    ),
+                  ],
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text15(
-                      text: 'Edit Profile',
+                    Text16(
+                      text: 'Change Password',
                     ),
                     SvgPicture.asset('${iconPath}arrow_left.svg'),
                   ],
                 ),
-              )
+              ),
+              SizedBox(height: 15..h),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 45..h,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(10..r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.k0xFFEEEEEE,
+                      blurRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text16(
+                      text: 'My Favorite',
+                    ),
+                    SvgPicture.asset('${iconPath}arrow_left.svg'),
+                  ],
+                ),
+              ),
+              SizedBox(height: 15..h),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 45..h,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(10..r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.k0xFFEEEEEE,
+                      blurRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text16(
+                      text: 'Payment Methods',
+                    ),
+                    SvgPicture.asset('${iconPath}arrow_left.svg'),
+                  ],
+                ),
+              ),
+              SizedBox(height: 15..h),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 45..h,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(10..r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.k0xFFEEEEEE,
+                      blurRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text16(
+                      text: 'Switch to Professional',
+                    ),
+                    Transform.scale(
+                      scale: 0.7,
+                      child: CupertinoSwitch(
+                          activeColor: AppColor.primaryColor,
+                          value: vendor,
+                          onChanged: (value){
+                            setState(() {
+                              vendor =value;
+                            });
+                          }
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 15..h),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 45..h,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(10..r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.k0xFFEEEEEE,
+                      blurRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text16(
+                      text: 'About us',
+                    ),
+                    SvgPicture.asset('${iconPath}arrow_left.svg'),
+                  ],
+                ),
+              ),
+              SizedBox(height: 25..h),
+              GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      _showCustomPopup(context);
+                    });
+                  },
+                child: Container(
+                  child: Row(
+                    children: [
+                      SvgPicture.asset('${iconPath}delete.svg'),
+                      SizedBox(width: 15..w,),
+                      Text16(
+                        text: 'Delete Account',
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFFD8333E),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 25..h),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('${iconPath}logout.svg'),
+                    SizedBox(width: 15..w,),
+                    MainText(
+                      text: 'Logout',
+                      color: AppColor.primaryColor,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 25..h),
             ],
           ),
         ),

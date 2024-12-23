@@ -134,7 +134,7 @@ class _AccountScreenState extends State<AccountScreen> {
       backgroundColor: AppColor.backgroundColor,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

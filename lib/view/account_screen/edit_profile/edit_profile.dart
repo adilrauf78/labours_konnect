@@ -288,7 +288,7 @@ class _EditProfileState extends State<EditProfile> {
                               color: AppColor.black.withOpacity(.3),
                               fontSize: 15..sp,
                               fontWeight: FontWeight.w400,
-                            )
+                            ),
                         ),
                       ),
                     ),

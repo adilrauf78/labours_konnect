@@ -6,7 +6,9 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/account_screen/change_password/change_password.dart';
 import 'package:labours_konnect/view/account_screen/edit_profile/edit_profile.dart';
+import 'package:labours_konnect/view/account_screen/payment_method/payment_method.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -233,28 +235,33 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               SizedBox(height: 15..h),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 45..h,
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                decoration: BoxDecoration(
-                  color: AppColor.white,
-                  borderRadius: BorderRadius.circular(10..r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.k0xFFEEEEEE,
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text16(
-                      text: 'Change Password',
-                    ),
-                    SvgPicture.asset('${iconPath}arrow_left.svg'),
-                  ],
+              GestureDetector(
+                onTap: (){
+                  navigateToNextScreen(context, ChangePassword());
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 45..h,
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10..r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.k0xFFEEEEEE,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text16(
+                        text: 'Change Password',
+                      ),
+                      SvgPicture.asset('${iconPath}arrow_left.svg'),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 15..h),
@@ -283,28 +290,33 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               SizedBox(height: 15..h),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 45..h,
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                decoration: BoxDecoration(
-                  color: AppColor.white,
-                  borderRadius: BorderRadius.circular(10..r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.k0xFFEEEEEE,
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text16(
-                      text: 'Payment Methods',
-                    ),
-                    SvgPicture.asset('${iconPath}arrow_left.svg'),
-                  ],
+              GestureDetector(
+                onTap: (){
+                  navigateToNextScreen(context, PaymentMethod());
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 45..h,
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10..r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.k0xFFEEEEEE,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text16(
+                        text: 'Payment Methods',
+                      ),
+                      SvgPicture.asset('${iconPath}arrow_left.svg'),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 15..h),

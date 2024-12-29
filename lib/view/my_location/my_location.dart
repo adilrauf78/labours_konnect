@@ -73,7 +73,7 @@ class MyLocation extends StatelessWidget {
                     width: 100..w,
                     decoration: BoxDecoration(
                         color: AppColor.black.withOpacity(.25),
-                        borderRadius: BorderRadius.circular(1)
+                        borderRadius: BorderRadius.circular(1),
                     ),
                   ),
                   SizedBox(height: 20..h),
@@ -89,7 +89,7 @@ class MyLocation extends StatelessWidget {
                         padding: EdgeInsets.symmetric(),
                       );
                     },
-                  )
+                  ),
                 ],
               ),
             ),

@@ -11,6 +11,5 @@ class AppColor {
   static Color k0xFFEEEEEE = const Color(0xFFEEEEEE);
 
   
-  
 
 }

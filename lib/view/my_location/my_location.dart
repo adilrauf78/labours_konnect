@@ -88,7 +88,6 @@ class MyLocation extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.symmetric(),
                       );
-
                     },
                   ),
                 ],

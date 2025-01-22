@@ -190,6 +190,7 @@ class BookingScreen extends StatelessWidget {
                             itemCount: 1,
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.zero,
                             itemBuilder: (context,index){
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
@@ -301,6 +302,22 @@ class BookingScreen extends StatelessWidget {
                                         ],
                                       ),
                                       SizedBox(height: 10..h),
+                                      Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 30..h,
+                                        decoration: BoxDecoration(
+                                          color: AppColor.primaryColor,
+                                          borderRadius: BorderRadius.circular(10..r),
+                                        ),
+                                        child: Center(
+                                          child: Text16(
+                                            text: 'Pay Now',
+                                            fontSize: 15..sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColor.white,
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -354,7 +371,7 @@ class BookingScreen extends StatelessWidget {
                                                   child: Text15(
                                                     fontWeight: FontWeight.w500,
                                                     color: AppColor.green,
-                                                    text: 'Pending',
+                                                    text: 'On Going',
                                                   ),
                                                 ),
                                               ),
@@ -475,14 +492,14 @@ class BookingScreen extends StatelessWidget {
                                                 width: 95..w,
                                                 height: 30..h,
                                                 decoration: BoxDecoration(
-                                                  color: AppColor.bggreen,
+                                                  color: AppColor.primaryColor,
                                                   borderRadius: BorderRadius.circular(5..r),
                                                 ),
                                                 child: Center(
                                                   child: Text15(
                                                     fontWeight: FontWeight.w500,
-                                                    color: AppColor.green,
-                                                    text: 'Pending',
+                                                    color: AppColor.white,
+                                                    text: 'Completed',
                                                   ),
                                                 ),
                                               ),

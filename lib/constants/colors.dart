@@ -16,6 +16,8 @@ class AppColor {
   static Color bgblue = const Color(0xFFEAF3FE);
   static Color green = const Color(0xFF31BB00);
   static Color bggreen = const Color(0xFFD6FFCF);
+  static Color orange = const Color(0xFFA46600);
+  static Color bgorange = const Color(0xFFFFD591);
 
 
 

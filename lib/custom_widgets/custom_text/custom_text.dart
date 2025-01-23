@@ -121,7 +121,7 @@ class Text16 extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        color: color?? AppColor.black.withOpacity(.8),
+        color: color?? AppColor.black.withOpacity(.7),
         fontSize: fontSize?? 16..sp,
         fontWeight: fontWeight?? FontWeight.w400,
       ),

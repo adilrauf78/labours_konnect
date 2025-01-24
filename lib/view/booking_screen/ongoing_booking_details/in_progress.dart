@@ -133,14 +133,14 @@ class _InProgressState extends State<InProgress> {
                         width: 95..w,
                         height: 30..h,
                         decoration: BoxDecoration(
-                          color: AppColor.bgblue,
+                          color: AppColor.bgorange,
                           borderRadius: BorderRadius.circular(5..r),
                         ),
                         child: Center(
                           child: Text15(
                             fontWeight: FontWeight.w500,
-                            color: AppColor.blue,
-                            text: 'Accepted',
+                            color: AppColor.orange,
+                            text: 'In Progress',
                           ),
                         ),
                       ),

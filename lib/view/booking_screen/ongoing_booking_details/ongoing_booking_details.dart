@@ -121,14 +121,14 @@ class _OngoingBookingDetailsState extends State<OngoingBookingDetails> {
                         width: 95..w,
                         height: 30..h,
                         decoration: BoxDecoration(
-                          color: AppColor.bgorange,
+                          color: AppColor.bggreen,
                           borderRadius: BorderRadius.circular(5..r),
                         ),
                         child: Center(
                           child: Text15(
                             fontWeight: FontWeight.w500,
-                            color: AppColor.orange,
-                            text: 'In Progress',
+                            color: AppColor.green,
+                            text: 'On Going',
                           ),
                         ),
                       ),

@@ -168,10 +168,10 @@ class _AccountScreenState extends State<AccountScreen> {
                     height: 100..h,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColor.primaryColor, width: 2), // Black border
+                      border: Border.all(color: AppColor.primaryColor, width: 2),
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50..r), // Circular border radius
+                      borderRadius: BorderRadius.circular(50..r),
                       child: Image.asset('${imagePath}image.png',
                       fit: BoxFit.cover,
                       ),

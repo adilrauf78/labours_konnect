@@ -6,6 +6,7 @@ import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/account_screen/payment_method/confirm_payment.dart';
 
 class AddCard extends StatelessWidget {
   const AddCard({super.key});
@@ -256,7 +257,7 @@ class AddCard extends StatelessWidget {
               SizedBox(height: 110..h,),
               GestureDetector(
                   onTap: (){
-
+                    navigateToNextScreen(context, ConfirmPayment());
                   },
                   child: Button(
                       text: 'Add Card'),

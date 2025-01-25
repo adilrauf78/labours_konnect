@@ -230,7 +230,7 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 20..h),
             SizedBox(
-              height: 200,
+              height: 400,
               child: ListView.builder(
                 itemCount: 2,
                 padding: EdgeInsets.symmetric(horizontal: 10,vertical: 1),
@@ -253,9 +253,14 @@ class HomeScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Container(
+                            width: 210..w,
+                            height: 250..h,
+                            padding: EdgeInsets.only(top: 5),
                             decoration: BoxDecoration(
+                              color: AppColor.white,
                               image: DecorationImage(
                                 image: AssetImage('${imagePath}man.png'),
+                                fit: BoxFit.cover,
                               ),
                             ),
                           )

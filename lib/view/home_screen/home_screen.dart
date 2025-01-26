@@ -1,13 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/home_screen/categories/categories.dart';
+import 'package:labours_konnect/view/home_screen/category_open/category_open.dart';
+import 'package:labours_konnect/view/home_screen/filter/filter.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool favorite = true;
+  bool favorite1 = true;
+  double _rating = 5;
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          child: Filter(),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,17 +145,24 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 10..w),
-                  Container(
-                    width: 45..w,
-                    height: 45..h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10..r),
-                      border: Border.all(
-                        color: Color(0xFFEEEEEE),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _showBottomSheet(context);
+                      });
+                    },
+                    child: Container(
+                      width: 45..w,
+                      height: 45..h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10..r),
+                        border: Border.all(
+                          color: Color(0xFFEEEEEE),
+                        ),
                       ),
-                    ),
-                    child: Center(
-                        child: SvgPicture.asset('${iconPath}filter.svg'),
+                      child: Center(
+                          child: SvgPicture.asset('${iconPath}filter.svg'),
+                      ),
                     ),
                   )
                 ],
@@ -162,14 +194,19 @@ class HomeScreen extends StatelessWidget {
                           fontSize: 18..sp,
                           fontWeight: FontWeight.w500,
                         ),
-                        Text(
-                          'More',
-                          style: TextStyle(
-                            color: AppColor.red,
-                            fontSize: 14..sp,
-                            fontWeight: FontWeight.w400,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColor.red,
+                        GestureDetector(
+                          onTap: (){
+                            navigateToNextScreen(context, Categories());
+                          },
+                          child: Text(
+                            'More',
+                            style: TextStyle(
+                              color: AppColor.red,
+                              fontSize: 14..sp,
+                              fontWeight: FontWeight.w400,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColor.red,
+                            ),
                           ),
                         )
                       ],
@@ -184,33 +221,38 @@ class HomeScreen extends StatelessWidget {
                       physics: NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
                       children: List.generate(8, (index) {
-                        return Container(
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 60..w,
-                                height: 60..h,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColor.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: AppColor.black.withOpacity(.25),
-                                        blurRadius: 2
-                                    ),
-                                  ],
+                        return GestureDetector(
+                          onTap: (){
+                            navigateToNextScreen(context, CategoryOpen());
+                          },
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 60..w,
+                                  height: 60..h,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColor.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: AppColor.black.withOpacity(.25),
+                                          blurRadius: 2
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                      child: SvgPicture.asset('${iconPath}paint-roller.svg'),
+                                  ),
                                 ),
-                                child: Center(
-                                    child: SvgPicture.asset('${iconPath}paint-roller.svg'),
+                                SizedBox(height: 5..h),
+                                Text15(
+                                  text: 'House Painting',
+                                  fontSize: 12..sp,
+                                  color: AppColor.black,
                                 ),
-                              ),
-                              SizedBox(height: 5..h),
-                              Text15(
-                                text: 'House Painting',
-                                fontSize: 12..sp,
-                                color: AppColor.black,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       }),
@@ -230,16 +272,179 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 20..h),
             SizedBox(
-              height: 400,
+              height: 280,
               child: ListView.builder(
                 itemCount: 2,
-                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 1),
+                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 2),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context,index){
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 210..w,
+                          decoration: BoxDecoration(
+                            color: AppColor.white,
+                            image: DecorationImage(
+                              image: AssetImage('${imagePath}man.png'),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.circular(10..r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColor.k0xFFEEEEEE,
+                                blurRadius: 5,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          left: 8,
+                          right: 10,
+                          top: 8,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: 85..w,
+                                height: 20..h,
+                                decoration: BoxDecoration(
+                                  color: AppColor.primaryColor,
+                                  borderRadius: BorderRadius.circular(5..r),
+                                ),
+                                child: Center(
+                                  child: Text18(
+                                    text: 'Level two',
+                                    color: AppColor.white,
+                                    fontSize: 12..sp,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    favorite = !favorite;
+                                  });
+                                },
+                                child: Container(
+                                  width: 25..w,
+                                  height: 25..h,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColor.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColor.k0xFFEEEEEE,
+                                        blurRadius: 5,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                      child: favorite ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 18,) :
+                                      Icon(Icons.favorite,color: AppColor.red,size: 18,)
+                                  ),
+                                ),
+                              )
+                            ]
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            width: 210..w,
+                            padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5,),
+                            decoration: BoxDecoration(
+                              color: AppColor.white,
+                              borderRadius: BorderRadius.circular(10..r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColor.k0xFFEEEEEE,
+                                  blurRadius: 3,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                MainText(
+                                  text: 'Jack marston',
+                                  fontSize: 14..sp,
+                                ),
+                                SubText(
+                                  text: 'Plumber',
+                                  fontSize: 10..sp,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    RatingBar.builder(
+                                        initialRating: 5,
+                                        minRating: 1,
+                                        itemCount: 5,
+                                        itemSize: 12,
+                                        itemPadding: EdgeInsets.only(right: 2),
+                                        direction: Axis.horizontal,
+                                        unratedColor: Color(0x4DF9E005),
+                                        itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
+                                        onRatingUpdate: (rating1){
+                                          setState(() {
+                                            _rating = _rating;
+                                          });
+                                        }
+                                    ),
+                                    SizedBox(width: 5..w),
+                                    Text(
+                                      '$_rating',
+                                      style: TextStyle(
+                                        color: AppColor.black,
+                                        fontSize: 10..sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset('${iconPath}map-pin.svg'),
+                                    SizedBox(width: 10..w),
+                                    Text12(
+                                      text: 'Woodstock, GA',
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 20..h),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: MainText(
+                text: 'Featured Services',
+                fontSize: 16..sp,
+              ),
+            ),
+            SizedBox(height: 20..h),
+            SizedBox(
+              height: 300,
+              child: ListView.builder(
+                itemCount: 2,
+                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 2),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context,index){
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Container(
-                      width: 210..w,
+                      width: 290..w,
                       decoration: BoxDecoration(
                         color: AppColor.white,
                         borderRadius: BorderRadius.circular(10..r),
@@ -251,17 +456,170 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 210..w,
-                            height: 250..h,
-                            padding: EdgeInsets.only(top: 5),
-                            decoration: BoxDecoration(
-                              color: AppColor.white,
-                              image: DecorationImage(
-                                image: AssetImage('${imagePath}man.png'),
-                                fit: BoxFit.cover,
+                          Stack(
+                            children: [
+                              Container(
+                                width: 290..w,
+                                height: 200..h,
+                                decoration: BoxDecoration(
+                                  color: AppColor.white,
+                                  image: DecorationImage(
+                                    image: AssetImage('${imagePath}pipe-fitting.png'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10..r),
+                                    topRight: Radius.circular(10..r),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColor.k0xFFEEEEEE,
+                                      blurRadius: 5,
+                                    ),
+                                  ],
+                                ),
                               ),
+                              Positioned(
+                                left: 8,
+                                right: 10,
+                                top: 8,
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width: 85..w,
+                                        height: 20..h,
+                                        decoration: BoxDecoration(
+                                          color: AppColor.primaryColor,
+                                          borderRadius: BorderRadius.circular(5..r),
+                                        ),
+                                        child: Center(
+                                          child: Text18(
+                                            text: 'Level two',
+                                            color: AppColor.white,
+                                            fontSize: 12..sp,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: (){
+                                          setState(() {
+                                            favorite1 = !favorite1;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 25..w,
+                                          height: 25..h,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColor.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: AppColor.k0xFFEEEEEE,
+                                                blurRadius: 5,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Center(
+                                              child: favorite1 ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 18,) :
+                                              Icon(Icons.favorite,color: AppColor.red,size: 18,)
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text16(
+                                  text: 'Pipe Fitting',
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColor.black,
+                                ),
+                                SizedBox(height: 10..h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 34..w,
+                                          height: 34..h,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColor.white,
+                                            image: DecorationImage(
+                                              image: AssetImage('${imagePath}pipe.png'),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10..w),
+                                        Column(
+                                          children: [
+                                            MainText(
+                                              text: 'Jack Marston',
+                                              fontSize: 14..sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                RatingBar.builder(
+                                                    initialRating: 5,
+                                                    minRating: 1,
+                                                    itemCount: 5,
+                                                    itemSize: 12,
+                                                    itemPadding: EdgeInsets.only(right: 2),
+                                                    direction: Axis.horizontal,
+                                                    unratedColor: Color(0x4DF9E005),
+                                                    itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
+                                                    onRatingUpdate: (rating1){
+                                                      setState(() {
+                                                        _rating = _rating;
+                                                      });
+                                                    }
+                                                ),
+                                                SizedBox(width: 5..w),
+                                                Text(
+                                                  '$_rating',
+                                                  style: TextStyle(
+                                                    color: AppColor.black,
+                                                    fontSize: 10..sp,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 13,vertical: 8),
+                                      decoration: BoxDecoration(
+                                        color: AppColor.primaryColor,
+                                        borderRadius: BorderRadius.circular(5..r),
+                                      ),
+                                      child: Center(
+                                        child: MainText(
+                                          text: '\$ 20.00',
+                                          fontSize: 14..sp,
+                                          color: AppColor.white,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
                             ),
                           )
                         ],
@@ -270,7 +628,8 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               ),
-            )
+            ),
+            SizedBox(height: 50..h),
           ],
         ),
       ),

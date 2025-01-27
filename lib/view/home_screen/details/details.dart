@@ -578,7 +578,7 @@ class _DetailsState extends State<Details> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: ,)
+                                    SizedBox(height: 15..h),
                                   ],
                                 ),
                               );

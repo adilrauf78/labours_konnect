@@ -51,7 +51,7 @@ class MessageScreen extends StatelessWidget {
                     color: Colors.transparent,
                       border: Border(
                           bottom: BorderSide(
-                            color: AppColor.black.withOpacity(.25),
+                            color: AppColor.black.withOpacity(.1),
                           )
                       ),
                   ),

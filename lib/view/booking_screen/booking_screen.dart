@@ -38,7 +38,7 @@ class BookingScreen extends StatelessWidget {
                 labelColor: AppColor.primaryColor,
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 indicatorColor: AppColor.primaryColor,
-                unselectedLabelColor: AppColor.black,
+                unselectedLabelColor: AppColor.black.withOpacity(.5),
                 labelStyle: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -46,8 +46,8 @@ class BookingScreen extends StatelessWidget {
                 ),
                 unselectedLabelStyle: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: AppColor.black,
+                  fontWeight: FontWeight.w400,
+                  color: AppColor.black.withOpacity(.5),
                 ),
                 tabs: [
                   Tab(

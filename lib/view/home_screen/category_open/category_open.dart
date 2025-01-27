@@ -245,7 +245,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                           text: 'Woodstock, GA',
                                         ),
                                       ],
-                                    )
+                                    ),
                                   ],
                                 ),
                                 SizedBox(height: 25..h),

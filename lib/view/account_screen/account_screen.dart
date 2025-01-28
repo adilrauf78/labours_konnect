@@ -9,6 +9,7 @@ import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/account_screen/change_password/change_password.dart';
 import 'package:labours_konnect/view/account_screen/edit_profile/edit_profile.dart';
 import 'package:labours_konnect/view/account_screen/payment_method/payment_method.dart';
+import 'package:labours_konnect/view/vendor/vendor_home/vendor_home.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -320,39 +321,44 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               SizedBox(height: 15..h),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 45..h,
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                decoration: BoxDecoration(
-                  color: AppColor.white,
-                  borderRadius: BorderRadius.circular(10..r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.k0xFFEEEEEE,
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text16(
-                      text: 'Switch to Professional',
-                    ),
-                    Transform.scale(
-                      scale: 0.7,
-                      child: CupertinoSwitch(
-                          activeColor: AppColor.primaryColor,
-                          value: vendor,
-                          onChanged: (value){
-                            setState(() {
-                              vendor =value;
-                            });
-                          }
+              GestureDetector(
+                onTap: (){
+                  navigateToNextScreen(context, VendorHome());
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 45..h,
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10..r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.k0xFFEEEEEE,
+                        blurRadius: 5,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text16(
+                        text: 'Switch to Professional',
+                      ),
+                      Transform.scale(
+                        scale: 0.7,
+                        child: CupertinoSwitch(
+                            activeColor: AppColor.primaryColor,
+                            value: vendor,
+                            onChanged: (value){
+                              setState(() {
+                                vendor =value;
+                              });
+                            }
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 15..h),

@@ -139,7 +139,7 @@ class _BookNowState extends State<BookNow> {
                 ],
               ),
             ),
-            SizedBox(height: 25..h),
+            SizedBox(height: 20..h),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Container(
@@ -152,7 +152,7 @@ class _BookNowState extends State<BookNow> {
                     BoxShadow(
                       color: AppColor.k0xFFEEEEEE,
                       blurRadius: 5,
-                    ),
+                    )
                   ],
                 ),
                 child: Column(

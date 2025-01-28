@@ -445,8 +445,11 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
                   _showBottomSheet(context);
                 });
               },
-              child: Button(
-                text: 'Confirm Booking',
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Button(
+                  text: 'Confirm Booking',
+                ),
               ),
             ),
             SizedBox(height: 20..h),

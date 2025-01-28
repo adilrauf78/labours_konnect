@@ -34,7 +34,7 @@ class BookingScreen extends StatelessWidget {
               SizedBox(height: 30..h),
               TabBar(
                 physics: NeverScrollableScrollPhysics(),
-                indicatorSize: TabBarIndicatorSize.label,
+                indicatorSize: TabBarIndicatorSize.tab,
                 labelColor: AppColor.primaryColor,
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 indicatorColor: AppColor.primaryColor,

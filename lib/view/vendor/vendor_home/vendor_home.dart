@@ -9,6 +9,7 @@ import 'package:labours_konnect/view/vendor/vendor_home/vendor_booking_accepted/
 import 'package:labours_konnect/view/vendor/vendor_home/vendor_booking_completed/vendor_booking_completed.dart';
 import 'package:labours_konnect/view/vendor/vendor_home/vendor_booking_ongoing/vendor_booking_ongoing.dart';
 import 'package:labours_konnect/view/vendor/vendor_home/vendor_booking_pending/vendor_booking_pending.dart';
+import 'package:labours_konnect/view/vendor/vendor_profile/vendor_profile.dart';
 
 class VendorHome extends StatelessWidget {
   const VendorHome({super.key});
@@ -70,15 +71,20 @@ class VendorHome extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Container(
-                          width: 48..w,
-                          height: 48..h,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColor.white,
-                            image: DecorationImage(
-                              image: AssetImage('${imagePath}pipe.png'),
-                              fit: BoxFit.cover,
+                        GestureDetector(
+                          onTap: (){
+                            navigateToNextScreen(context, VendorProfile());
+                          },
+                          child: Container(
+                            width: 48..w,
+                            height: 48..h,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColor.white,
+                              image: DecorationImage(
+                                image: AssetImage('${imagePath}pipe.png'),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),

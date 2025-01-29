@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "499257875578",
+    "project_id": "labourskonnect",
+    "storage_bucket": "labourskonnect.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499257875578:android:b55415963bfe31aaf16fc3",
+        "android_client_info": {
+          "package_name": "com.example.labours_konnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVasBnXwrqLBL7ww7NftWSmfPkCP6sK38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -488,7 +488,7 @@ class _DetailsState extends State<Details> {
                                     ),
                                   );
                                 },
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -617,14 +617,14 @@ class _DetailsState extends State<Details> {
                                                 'incididunt utertid labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud '
                                                 'exercitation ullamco aruun laboris nisi ut aliquip ex ea commodo consequat.',
                                             fontSize: 12..sp,
-                                            fontWeight: FontWeight.w500,
-                                          )
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ],
                                       ),
                                     ),
                                   );
                                 },
-                              )
+                              ),
                             ],
                           ),
                         )

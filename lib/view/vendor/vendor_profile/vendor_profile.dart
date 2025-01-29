@@ -8,6 +8,10 @@ import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/account_screen/edit_profile/edit_profile.dart';
 import 'package:labours_konnect/view/bottom_navigator/bottom_navigator.dart';
+import 'package:labours_konnect/view/vendor/add_services/add_services.dart';
+import 'package:labours_konnect/view/vendor/vendor_profile/my_review/my_review.dart';
+import 'package:labours_konnect/view/vendor/vendor_profile/my_services/my_services.dart';
+import 'package:labours_konnect/view/vendor/vendor_profile/my_wallet/my_wallet.dart';
 
 class VendorProfile extends StatefulWidget {
   const VendorProfile({super.key});
@@ -170,9 +174,14 @@ class _VendorProfileState extends State<VendorProfile> {
                               fontWeight: FontWeight.w500,
                               color: AppColor.white,
                             ),
-                            Icon(Icons.edit_outlined,
-                              color: AppColor.white,
-                              size: 18,
+                            GestureDetector(
+                              onTap: (){
+                                navigateToNextScreen(context, AddServices());
+                              },
+                              child: Icon(Icons.edit_outlined,
+                                color: AppColor.white,
+                                size: 18,
+                              ),
                             ),
                           ],
                         ),
@@ -318,78 +327,93 @@ class _VendorProfileState extends State<VendorProfile> {
                     ),
                   ),
                   SizedBox(height: 15..h),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 45..h,
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(10..r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColor.k0xFFEEEEEE,
-                          blurRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text16(
-                          text: 'My Services',
-                        ),
-                        SvgPicture.asset('${iconPath}arrow_left.svg'),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 15..h),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 45..h,
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(10..r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColor.k0xFFEEEEEE,
-                          blurRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text16(
-                          text: 'My Reviews',
-                        ),
-                        SvgPicture.asset('${iconPath}arrow_left.svg'),
-                      ],
+                  GestureDetector(
+                    onTap: (){
+                      navigateToNextScreen(context, MyServices());
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 45..h,
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: AppColor.white,
+                        borderRadius: BorderRadius.circular(10..r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColor.k0xFFEEEEEE,
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text16(
+                            text: 'My Services',
+                          ),
+                          SvgPicture.asset('${iconPath}arrow_left.svg'),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 15..h),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 45..h,
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(10..r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColor.k0xFFEEEEEE,
-                          blurRadius: 5,
-                        ),
-                      ],
+                  GestureDetector(
+                    onTap: (){
+                      navigateToNextScreen(context, MyReview());
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 45..h,
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: AppColor.white,
+                        borderRadius: BorderRadius.circular(10..r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColor.k0xFFEEEEEE,
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text16(
+                            text: 'My Reviews',
+                          ),
+                          SvgPicture.asset('${iconPath}arrow_left.svg'),
+                        ],
+                      ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text16(
-                          text: 'My Wallet',
-                        ),
-                        SvgPicture.asset('${iconPath}arrow_left.svg'),
-                      ],
+                  ),
+                  SizedBox(height: 15..h),
+                  GestureDetector(
+                    onTap: (){
+                      navigateToNextScreen(context, MyWallet());
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 45..h,
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: AppColor.white,
+                        borderRadius: BorderRadius.circular(10..r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColor.k0xFFEEEEEE,
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text16(
+                            text: 'My Wallet',
+                          ),
+                          SvgPicture.asset('${iconPath}arrow_left.svg'),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 15..h),

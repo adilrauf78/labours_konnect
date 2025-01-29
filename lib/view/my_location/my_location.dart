@@ -6,6 +6,7 @@ import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/home_screen/details/details.dart';
+import 'package:labours_konnect/view/my_location/service/service.dart';
 
 class MyLocation extends StatefulWidget {
   const MyLocation({super.key});
@@ -99,7 +100,7 @@ class _MyLocationState extends State<MyLocation> {
                             setState(() {
                               selectedIndex = index;
                             });
-                            navigateToNextScreen(context, Details());
+                            navigateToNextScreen(context, Service());
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width,

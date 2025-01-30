@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/onboarding_controller/onboarding_controller.dart';
+import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
 import 'package:labours_konnect/view/onboarding_screen/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,12 +16,18 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final OnboardingController onboardingController = Get.put(OnboardingController());
   @override
   void initState() {
     super.initState();
     Timer(
         Duration(seconds: 3),(){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnboardingScreen()));
+      if(onboardingController.isLaunched.isTrue){
+        Get.off(OnboardingScreen());
+      }
+      else{
+        Get.off(SignInScreen());
+      }
     }
     );
   }

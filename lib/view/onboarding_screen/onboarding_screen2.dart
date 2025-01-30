@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/onboarding_controller/onboarding_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
 
-class OnboardingScreen2 extends StatelessWidget {
+class OnboardingScreen2 extends StatefulWidget {
   const OnboardingScreen2({super.key});
 
+  @override
+  State<OnboardingScreen2> createState() => _OnboardingScreen2State();
+}
+
+class _OnboardingScreen2State extends State<OnboardingScreen2> {
+  final OnboardingController onboardingController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +98,7 @@ class OnboardingScreen2 extends StatelessWidget {
                   SizedBox(height: 30..h),
                   GestureDetector(
                     onTap:(){
+                      onboardingController.CompleteOnBoarding();
                       navigateToNextScreen(context, SignInScreen());
                     },
                     child: Container(

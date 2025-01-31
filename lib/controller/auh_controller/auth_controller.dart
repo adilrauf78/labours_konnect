@@ -302,6 +302,7 @@ class AuthController extends GetxController {
     }
 }
 
+
   Future<void> signOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('isLoggedIn');

@@ -1,10 +1,312 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:labours_konnect/constants/utils.dart';
+import 'package:labours_konnect/view/auth_screens/enable_location/enable_location.dart';
+import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
+import 'package:labours_konnect/view/auth_screens/user_details/user_details.dart';
+import 'package:labours_konnect/view/auth_screens/verify_account/verify_account.dart';
+import 'package:labours_konnect/view/bottom_navigator/bottom_navigator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthController extends  GetxController{
+class AuthController extends GetxController {
 
+  RxInt remainingTime = 119.obs;  // For countdown timer
+  RxBool canResendCode = false.obs;
+  Timer? _countdownTimer;
+  bool isLoading = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
+
+  //User Details
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController cnPassword = TextEditingController();
+  TextEditingController emailLogin = TextEditingController();
+  TextEditingController passwordLogin = TextEditingController();
+
+  Rxn<User> _firebaseUser = Rxn<User>();
+
+  User? get user => _firebaseUser.value;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _firebaseUser.bindStream(_auth.authStateChanges());
+  }
+
+  //Email show text in verify screen
+  String maskEmail(String email) {
+    if (email.length <= 14) {
+      return email;
+    }
+    String start = email.substring(0, 3); // First 3 characters
+    String end = email.substring(email.length - 10); // Last 11 characters
+    return '$start****$end';
+  }
 
 
+  void startCountdown() {
+    remainingTime.value = 119;  // Reset to 60 seconds
+    canResendCode.value = false;
+
+    _countdownTimer?.cancel();  // Cancel previous timer if any
+    _countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (remainingTime.value > 0) {
+        remainingTime.value--;
+      } else {
+        canResendCode.value = true;  // Enable "Resend Code" after 60 seconds
+        _countdownTimer?.cancel();
+      }
+    });
+  }
+
+  void stopCountdown() {
+    _countdownTimer?.cancel();
+  }
+
+  //Create account and Send Email Otp
+
+  Future<void> EmailController() async {
+    String emailPattern = r'^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+';
+    RegExp regExp = RegExp(emailPattern);
+
+    if (emailController.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Your Email');
+    }
+    else if (!regExp.hasMatch(emailController.text)) {
+      showSnackBar(title: 'Please Enter a Valid Email Address');
+    }
+    else {
+      EmailOTP.config(
+        appEmail: 'labourskonnect@gmail.com',
+        appName: 'Labours Konnect',
+        emailTheme: EmailTheme.v5,
+        otpType: OTPType.numeric,
+        otpLength: 4,
+        expiry: 120000,
+      );
+      isLoading = true;
+      update();
+
+      bool isOTPSent = await EmailOTP.sendOTP(email: emailController.text);
+
+      isLoading = false;
+      update();
+
+      if (isOTPSent) {
+        SuccessSnackBar('Success','OTP has been sent to your Email',);
+        startCountdown();
+        Get.to(VerifyAccount());
+      } else {
+        ErrorSnackBar('Error','Failed to send OTP. Please try again.',);
+      }
+    }
+  }
+
+  //Otp Controller
+
+  Future<void> OtpController() async {
+    isLoading = true;
+    update();
+    await Future.delayed(Duration(seconds: 3));
+    bool checkOTP = await EmailOTP.verifyOTP(otp: otpController.text);
+    isLoading = false;
+    update();
+    if(checkOTP){
+      stopCountdown();
+      SuccessSnackBar('Success','Your account is Successfully Created.');
+      Get.to(UserDetails());
+    }
+    else{
+      ErrorSnackBar('Error', 'Please Enter Correct OTP');
+    }
+  }
+  Future<void> resendOTP() async {
+    if (canResendCode.value) {
+      await EmailController();  // Resend OTP email
+      canResendCode.value = false;  // Disable resend button after resending
+    }
+  }
+
+  //User Details
+
+  Future<void> userDetails()async {
+    if (firstName.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Your First Name');
+    }
+    else if (lastName.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Your Last Name');
+    }
+    else if (password.text.isEmpty) {
+      showSnackBar(title: 'Please Enter a Password');
+    }
+    else if (cnPassword.text.isEmpty) {
+      showSnackBar(title: 'Please Enter a Confirm Password');
+    }
+    else if (password.text != cnPassword.text) {
+      showSnackBar(title: 'Passwords do not match');
+    }
+    else {
+      try {
+        isLoading = true;
+        update();
+
+        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: password.text.trim(),
+        );
+        isLoading = false;
+        update();
+        SuccessSnackBar('Success', 'User registered successfully');
+        Get.to(EnableLocation());
+        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+          'First Name': firstName.text.trim(),
+          'Last Name': lastName.text.trim(),
+          'Email': emailController.text.trim(),
+
+        });
+      } on FirebaseAuthException catch (e) {
+        ErrorSnackBar('Error', e.message ?? 'An error occurred');
+        isLoading = false;
+        update();
+      }
+    }
+  }
+
+
+  Future<void> signInWithEmailPassword() async {
+    String emailPattern = r'^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+';
+    RegExp regExp = RegExp(emailPattern);
+
+    if (emailLogin.text.isEmpty && passwordLogin.text.isEmpty) {
+      showSnackBar(title: 'Email and Password are required');
+    }
+    else if (emailLogin.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Your Email');
+    }
+    else if (!regExp.hasMatch(emailLogin.text)) {
+      showSnackBar(title: 'Please Enter a Valid Email Address');
+    }
+    else if (passwordLogin.text.isEmpty){
+      showSnackBar(title: 'Please Enter a Password');
+    }
+    else{
+      try {
+        isLoading = true;
+        update();
+
+        await _auth.signInWithEmailAndPassword(
+          email: emailLogin.text.trim(),
+          password: passwordLogin.text.trim(),
+        );
+
+        isLoading = false;
+        update();
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        SuccessSnackBar('Success', 'Logged in successfully');
+        Get.offAll(BottomNavigator());
+      } on FirebaseAuthException catch (e) {
+        ErrorSnackBar('Error', e.message ?? 'Login failed');
+        isLoading = false;
+        update();
+      }
+    }
+  }
+
+  //SignIn with Google
+
+  Future<User?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        await _firestore.collection('google').doc(user.uid).set({
+          'Id': user.uid,
+          'Name': user.displayName,
+          'Email': user.email,
+          'PhotoURL': user.photoURL,
+        });
+      }
+
+      return user;
+    } catch (e) {
+      print('Error during sign-in: $e');
+      return null;
+    }
+  }
+
+  //SignIn with Facebook
+
+  Future<User?> signInWithFacebook() async {
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
+      if (result.status != LoginStatus.success) {
+        return null;
+      }
+
+      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken!.tokenString);
+
+      final UserCredential userCredential = await _auth.signInWithCredential(facebookAuthCredential);
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        await _firestore.collection('Facebook ').doc(user.uid).set({
+          'Id': user.uid,
+          'Name': user.displayName,
+          'Email': user.email,
+          'PhotoURL': user.photoURL,
+        });
+      }
+
+      return user;
+    } catch (e) {
+      print('Error during sign-in: $e');
+      return null;
+    }
+  }
+
+  Future<void> checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      Get.off(BottomNavigator());
+    } else {
+      Get.off(SignInScreen());
+    }
+}
+
+  Future<void> signOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('isLoggedIn');
+    await _auth.signOut();
+    await _googleSignIn.signOut();
+    await FacebookAuth.instance.logOut();
+  }
 }

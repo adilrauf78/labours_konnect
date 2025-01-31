@@ -13,6 +13,8 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
+ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey  = GlobalKey<ScaffoldMessengerState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (_ , child) {
         return GetMaterialApp(
+          scaffoldMessengerKey: scaffoldMessengerKey,
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
         );

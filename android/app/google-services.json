@@ -12,7 +12,20 @@
           "package_name": "com.example.labours_konnect"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "499257875578-sos7084367hdqq8i2gshh3p1uc7gpajr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.labours_konnect",
+            "certificate_hash": "a46269794838a2da1718677e5863abb96cf9c139"
+          }
+        },
+        {
+          "client_id": "499257875578-nu28cq8b0rgnrbtq9td95d60ii8tum2d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCVasBnXwrqLBL7ww7NftWSmfPkCP6sK38"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499257875578-nu28cq8b0rgnrbtq9td95d60ii8tum2d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "499257875578-rncr7330o5l72uts5cepc4dqoc7bno3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.laboursKonnect"
+              }
+            }
+          ]
         }
       }
     }

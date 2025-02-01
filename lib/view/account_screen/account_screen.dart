@@ -2,13 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/account_screen/change_password/change_password.dart';
 import 'package:labours_konnect/view/account_screen/edit_profile/edit_profile.dart';
 import 'package:labours_konnect/view/account_screen/payment_method/payment_method.dart';
+import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
 import 'package:labours_konnect/view/vendor/vendor_home/vendor_home.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -19,6 +22,8 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  final AuthController authController = Get.find<AuthController>();
+
   bool vendor = false;
   void _showCustomPopup(BuildContext context) {
     showDialog(
@@ -71,7 +76,8 @@ class _AccountScreenState extends State<AccountScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: (){
+                        onTap: () async {
+                          await authController.deleteAccount();
                         },
                         child: Container(
                           height: 32..h,
@@ -183,9 +189,10 @@ class _AccountScreenState extends State<AccountScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      MainText(
-                        text: 'Jaydon Siphron',
-                        fontWeight: FontWeight.w500,
+                      Obx(() =>MainText(
+                          text: '${authController.fullName.value}',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       SizedBox(height: 5..h),
                       Text12(
@@ -196,9 +203,10 @@ class _AccountScreenState extends State<AccountScreen> {
                         children: [
                           Icon(Icons.email_outlined,size: 20,color: AppColor.black.withOpacity(.5),),
                           SizedBox(width: 5..h,),
-                          Text12(
-                            text: 'alexandra23@gmail.com',
-                          )
+                          Obx(() =>Text12(
+                            text: '${authController.email.value}',
+                          ),
+                          ),
                         ],
                       )
                     ],
@@ -362,28 +370,33 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               SizedBox(height: 15..h),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 45..h,
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                decoration: BoxDecoration(
-                  color: AppColor.white,
-                  borderRadius: BorderRadius.circular(10..r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.k0xFFEEEEEE,
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text16(
-                      text: 'About us',
-                    ),
-                    SvgPicture.asset('${iconPath}arrow_left.svg'),
-                  ],
+              GestureDetector(
+                onTap: (){
+                  Get.to(SignInScreen());
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 45..h,
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10..r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.k0xFFEEEEEE,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text16(
+                        text: 'About us',
+                      ),
+                      SvgPicture.asset('${iconPath}arrow_left.svg'),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 25..h),
@@ -408,17 +421,22 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               SizedBox(height: 25..h),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset('${iconPath}logout.svg'),
-                    SizedBox(width: 15..w,),
-                    MainText(
-                      text: 'Logout',
-                      color: AppColor.primaryColor,
-                    ),
-                  ],
+              GestureDetector(
+                onTap: () async {
+                  await authController.SignOut();
+                },
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset('${iconPath}logout.svg'),
+                      SizedBox(width: 15..w,),
+                      MainText(
+                        text: 'Logout',
+                        color: AppColor.primaryColor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 25..h),

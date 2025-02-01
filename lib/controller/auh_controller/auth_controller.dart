@@ -211,6 +211,7 @@ class AuthController extends GetxController {
           password: passwordLogin.text.trim(),
         );
 
+        await fetchAndStoreUserData();
         isLoading = false;
         update();
 
@@ -223,6 +224,30 @@ class AuthController extends GetxController {
         isLoading = false;
         update();
       }
+    }
+  }
+
+  // Function to fetch and store user data
+  var email = ''.obs;
+  var fullName = ''.obs;
+  Future<void> fetchAndStoreUserData() async {
+    try {
+
+      User? user = _auth.currentUser;
+      if (user != null) {
+        DocumentSnapshot userDoc = await _firestore.collection('users').doc(user.uid).get();
+
+        if (userDoc.exists) {
+          email.value = userDoc['Email'];
+          fullName.value = '${userDoc['First Name']} ${userDoc['Last Name']}';
+        } else {
+          ErrorSnackBar('Error', 'User data not found');
+        }
+      } else {
+        ErrorSnackBar('Error', 'User not logged in');
+      }
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to fetch user data: $e');
     }
   }
 
@@ -260,6 +285,9 @@ class AuthController extends GetxController {
       return null;
     }
   }
+
+
+
 
   //SignIn with Facebook
 
@@ -302,12 +330,48 @@ class AuthController extends GetxController {
     }
 }
 
+  void resetUserData() {
+    email.value = '';
+    fullName.value = '';
+  }
+  Future<void> SignOut() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('isLoggedIn');
+      await _auth.signOut();
+      await _googleSignIn.signOut();
+      //await FacebookAuth.instance.logOut();
+      resetUserData();
+      Get.offAll(SignInScreen());
+      SuccessSnackBar('Success', 'Logged out successfully');
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to log out: $e');
+    }
+  }
 
-  Future<void> signOut() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('isLoggedIn');
-    await _auth.signOut();
-    await _googleSignIn.signOut();
-    await FacebookAuth.instance.logOut();
+  //Delete Account
+  Future<void> deleteAccount() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).delete();
+        await user.delete();
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.remove('isLoggedIn');
+
+        Get.offAll(SignInScreen());
+        SuccessSnackBar('Success', 'Account deleted successfully');
+      } else {
+        ErrorSnackBar('Error', 'No user is currently logged in');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        ErrorSnackBar('Error', 'Please re-login to delete your account.');
+      } else {
+        ErrorSnackBar('Error', 'Failed to delete account: ${e.message}');
+      }
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to delete account: $e');
+    }
   }
 }

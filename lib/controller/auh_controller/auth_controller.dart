@@ -251,6 +251,45 @@ class AuthController extends GetxController {
     }
   }
 
+  //Update User Name
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  Future<void> updateUserName() async {
+    try {
+      if (firstNameController.text.isEmpty || lastNameController.text.isEmpty) {
+        ErrorSnackBar('Error', 'First Name and Last Name cannot be empty');
+        return;
+      }
+
+      User? user = _auth.currentUser;
+      if (user != null) {
+        isLoading = true;
+        update();
+
+        await _firestore.collection('users').doc(user.uid).update({
+          'First Name': firstNameController.text,
+          'Last Name': lastNameController.text,
+        });
+
+        await user.updateProfile(
+            displayName: '${firstNameController.text} ${lastNameController.text}',
+        );
+        fullName.value = '${firstNameController.text} ${lastNameController.text}';
+        isLoading = false;
+        update();
+
+        SuccessSnackBar('Success', 'Name updated successfully');
+      } else {
+        ErrorSnackBar('Error', 'No user is currently logged in');
+      }
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to update name: $e');
+      isLoading = false;
+      update();
+    }
+  }
+
+
   //SignIn with Google
 
   Future<User?> signInWithGoogle() async {
@@ -322,8 +361,11 @@ class AuthController extends GetxController {
   Future<void> checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    User? user = FirebaseAuth.instance.currentUser;
 
-    if (isLoggedIn) {
+    if (isLoggedIn && user != null) {
+      await fetchAndStoreUserData();
+      update();
       Get.off(BottomNavigator());
     } else {
       Get.off(SignInScreen());

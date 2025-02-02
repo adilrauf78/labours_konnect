@@ -1,6 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
@@ -153,7 +154,12 @@ class CreateAccount extends StatelessWidget {
                             ),
                             SizedBox(height: 50
                               ..h,),
-                            GestureDetector(
+                            _authController.isLoading
+                                ? SpinKitRing(
+                              color: AppColor.blue,
+                              size:40,
+                              lineWidth: 4,
+                            ) : GestureDetector(
                                 onTap: () {
                                   _authController.EmailController();
                                   //navigateToNextScreen(context, VerifyAccount());

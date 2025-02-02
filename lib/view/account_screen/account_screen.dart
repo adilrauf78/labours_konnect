@@ -190,7 +190,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Obx(() =>MainText(
-                          text: '${authController.fullName.value}',
+                          text: 'null' : '${authController.fullName.value}',
                           fontWeight: FontWeight.w500,
                         ),
                       ),

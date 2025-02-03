@@ -108,7 +108,6 @@ class AuthController extends GetxController {
         SuccessSnackBar('Success','OTP has been sent to your Email',);
         startCountdown();
         Get.to(VerifyAccount());
-        emailController.clear();
       } else {
         ErrorSnackBar('Error','Failed to send OTP. Please try again.',);
       }
@@ -172,7 +171,11 @@ class AuthController extends GetxController {
         isLoading = false;
         update();
         SuccessSnackBar('Success', 'User registered successfully');
-        Get.to(EnableLocation());
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('enableLocation', true);
+        Get.off(EnableLocation());
+
         await _firestore.collection('users').doc(userCredential.user!.uid).set({
           'First Name': firstName.text.trim(),
           'Last Name': lastName.text.trim(),
@@ -183,6 +186,7 @@ class AuthController extends GetxController {
         lastName.clear();
         password.clear();
         cnPassword.clear();
+        emailController.clear();
       } on FirebaseAuthException catch (e) {
         ErrorSnackBar('Error', e.message ?? 'An error occurred');
         isLoading = false;
@@ -420,16 +424,20 @@ class AuthController extends GetxController {
   Future<void> checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    bool enableLocationStep = prefs.getBool('enableLocation') ?? false;
     User? user = FirebaseAuth.instance.currentUser;
 
     if (isLoggedIn && user != null) {
       await fetchAndStoreUserData();
       update();
+
       Get.off(BottomNavigator());
+
     } else {
       Get.off(SignInScreen());
     }
-}
+  }
+
 
   void resetUserData() {
     email.value = '';

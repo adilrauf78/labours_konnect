@@ -11,6 +11,7 @@ import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/auth_screens/create_account/create_account.dart';
+import 'package:labours_konnect/view/auth_screens/enable_location/enable_location.dart';
 import 'package:labours_konnect/view/auth_screens/forget_password/forgetPassword_bottomSheet.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -315,7 +316,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               ..h,),
                             InkWell(
                               onTap: () {
-                                navigateToNextScreen(context, CreateAccount());
+                                navigateToNextScreen(context, EnableLocation());
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

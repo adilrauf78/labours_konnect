@@ -108,6 +108,7 @@ class AuthController extends GetxController {
         SuccessSnackBar('Success','OTP has been sent to your Email',);
         startCountdown();
         Get.to(VerifyAccount());
+        emailController.clear();
       } else {
         ErrorSnackBar('Error','Failed to send OTP. Please try again.',);
       }
@@ -127,6 +128,7 @@ class AuthController extends GetxController {
       stopCountdown();
       SuccessSnackBar('Success','Your account is Successfully Created.');
       Get.to(UserDetails());
+      otpController.clear();
     }
     else{
       ErrorSnackBar('Error', 'Please Enter Correct OTP');
@@ -134,6 +136,7 @@ class AuthController extends GetxController {
   }
   Future<void> resendOTP() async {
     if (canResendCode.value) {
+      otpController.clear();
       await EmailController();  // Resend OTP email
       canResendCode.value = false;  // Disable resend button after resending
     }
@@ -176,6 +179,10 @@ class AuthController extends GetxController {
           'Email': emailController.text.trim(),
 
         });
+        firstName.clear();
+        lastName.clear();
+        password.clear();
+        cnPassword.clear();
       } on FirebaseAuthException catch (e) {
         ErrorSnackBar('Error', e.message ?? 'An error occurred');
         isLoading = false;
@@ -219,6 +226,8 @@ class AuthController extends GetxController {
         await prefs.setBool('isLoggedIn', true);
         SuccessSnackBar('Success', 'Logged in successfully');
         Get.offAll(BottomNavigator());
+        emailLogin.clear();
+        passwordLogin.clear();
       } on FirebaseAuthException catch (e) {
         ErrorSnackBar('Error', e.message ?? 'Login failed');
         isLoading = false;
@@ -284,6 +293,56 @@ class AuthController extends GetxController {
       }
     } catch (e) {
       ErrorSnackBar('Error', 'Failed to update name: $e');
+      isLoading = false;
+      update();
+    }
+  }
+
+  //Change Password
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  Future<void> changePassword() async {
+    if (newPasswordController.text.isEmpty) {
+      ErrorSnackBar('Error', 'Please enter your new password');
+      return;
+    }
+    if (confirmPasswordController.text.isEmpty) {
+      ErrorSnackBar('Error', 'Please confirm your new password');
+      return;
+    }
+    if (newPasswordController.text != confirmPasswordController.text) {
+      ErrorSnackBar('Error', 'Passwords do not match');
+      return;
+    }
+
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        isLoading = true;
+        update();
+        await user.updatePassword(newPasswordController.text);
+
+        isLoading = false;
+        update();
+
+        SuccessSnackBar('Success', 'Password updated successfully');
+        newPasswordController.clear();
+        confirmPasswordController.clear();
+
+      } else {
+        ErrorSnackBar('Error', 'No user is currently logged in');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        ErrorSnackBar('Error', 'Please re-login to update your password.');
+      } else {
+        ErrorSnackBar('Error', 'Failed to update password: ${e.message}');
+      }
+      isLoading = false;
+      update();
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to update password: $e');
       isLoading = false;
       update();
     }

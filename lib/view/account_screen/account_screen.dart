@@ -190,7 +190,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Obx(() =>MainText(
-                          text: 'null' : '${authController.fullName.value}',
+                          text: authController.fullName.value.isNotEmpty
+                              ? authController.fullName.value
+                              : "null",
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -204,7 +206,9 @@ class _AccountScreenState extends State<AccountScreen> {
                           Icon(Icons.email_outlined,size: 20,color: AppColor.black.withOpacity(.5),),
                           SizedBox(width: 5..h,),
                           Obx(() =>Text12(
-                            text: '${authController.email.value}',
+                            text: authController.email.value.isNotEmpty
+                                ? authController.email.value
+                                : "null",
                           ),
                           ),
                         ],

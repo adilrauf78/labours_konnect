@@ -7,6 +7,7 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/controller/location_controller/location_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
@@ -23,6 +24,7 @@ class ConfirmLocation extends StatefulWidget {
 
 class _ConfirmLocationState extends State<ConfirmLocation> {
   final LocationController locationController = Get.put(LocationController());
+  final AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +83,7 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
                         ),
                         borderRadius: BorderRadius.circular(5)
                     ),
-                    googleAPIKey: "AIzaSyDEztc5VQY5Le2KhQXYm--l8Wvkswzr9RQ",
+                    googleAPIKey: "AIzaSyC6EjvOFj1TIxgu9P74e20uE_RDk-jHRz4",
                     inputDecoration: InputDecoration(
                       hintText: "Search your location",
                       hintStyle: TextStyle(
@@ -155,6 +157,7 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
             right: 20,
             child: GestureDetector(
                 onTap: () async {
+                  await authController.fetchAndStoreUserData();
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   await prefs.setBool('isLoggedIn', true);
                   Get.offAll(BottomNavigator());
@@ -171,7 +174,7 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
               height: 50..h,
               child: FloatingActionButton(
                 backgroundColor: AppColor.white,
-                child: locationController.isLoading
+                child: locationController.isLoading.value
                     ? Center(
                   child: SizedBox(
                     width: 20,

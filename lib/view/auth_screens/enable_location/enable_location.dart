@@ -61,7 +61,7 @@ class _EnableLocationState extends State<EnableLocation> {
                   ),
                   SizedBox(height: 50
                     ..h,),
-                  locationController.isLoading
+                  locationController.isLoading.value
                       ? SpinKitRing(
                     color: AppColor.blue,
                     size: 40,

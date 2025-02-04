@@ -7,8 +7,8 @@ import 'package:labours_konnect/view/auth_screens/confirm_location/confirm_locat
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationController extends GetxController{
-  bool isLoading =  false;
-
+  RxBool isLoading = false.obs;
+  RxString locationText = "Fetching location...".obs;
 
   TextEditingController controller = TextEditingController();
   final FocusNode focusNode = FocusNode();
@@ -21,7 +21,7 @@ class LocationController extends GetxController{
   }
 
   Future<void> getCurrentLocation() async {
-      isLoading = true;
+      isLoading.value = true;
     try {
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
@@ -38,7 +38,7 @@ class LocationController extends GetxController{
     } catch (e) {
       print("Error getting location: $e");
     } finally {
-        isLoading = false;
+        isLoading.value = false;
     }
   }
 
@@ -78,10 +78,10 @@ class LocationController extends GetxController{
 
 
   Future<void> requestLocationPermission() async {
-    isLoading = true;
+    isLoading.value = true;
     update();
     var status = await Permission.location.request();
-    isLoading = false;
+    isLoading.value = false;
     update();
 
     if (status.isGranted) {

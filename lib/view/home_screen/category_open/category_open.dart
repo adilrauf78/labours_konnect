@@ -5,11 +5,13 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/category_model/category_model.dart';
 import 'package:labours_konnect/view/home_screen/details/details.dart';
 import 'package:labours_konnect/view/home_screen/filter/filter.dart';
 
 class CategoryOpen extends StatefulWidget {
-  const CategoryOpen({super.key});
+  final CategoryModel category;
+  const CategoryOpen({super.key, required this.category});
 
   @override
   State<CategoryOpen> createState() => _CategoryOpenState();
@@ -53,7 +55,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
                     ),
                   ),
                   MainText(
-                    text: 'Cleaning',
+                    text: widget.category.category,
                     fontWeight: FontWeight.w500,
                   ),
                   SizedBox(width: 20..w),

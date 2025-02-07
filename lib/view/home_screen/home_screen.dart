@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/category_controller/category_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/category_model/category_model.dart';
 import 'package:labours_konnect/view/home_screen/categories/categories.dart';
 import 'package:labours_konnect/view/home_screen/category_open/category_open.dart';
 import 'package:labours_konnect/view/home_screen/filter/filter.dart';
@@ -18,6 +21,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final CategoryController categoryController = Get.put(CategoryController());
+  final Map<int, bool> _imageLoadingStates = {};
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize loading states for all categories
+    for (int i = 0; i < 8; i++) {
+      _imageLoadingStates[i] = true;
+    }
+    // Simulate a 2-second delay before hiding the loading indicators
+    Future.delayed(Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          for (int i = 0; i < 8; i++) {
+            _imageLoadingStates[i] = false;
+          }
+        });
+      }
+    });
+  }
   bool favorite = true;
   bool favorite1 = true;
   double _rating = 5;
@@ -212,51 +236,91 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     SizedBox(height: 10..h),
-                    GridView.count(
-                      shrinkWrap: true,
-                      crossAxisCount: 4,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      childAspectRatio: (1 / 1.59),
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      children: List.generate(8, (index) {
-                        return GestureDetector(
-                          onTap: (){
-                            navigateToNextScreen(context, CategoryOpen());
-                          },
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 60..w,
-                                  height: 60..h,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColor.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: AppColor.black.withOpacity(.25),
-                                          blurRadius: 2
+                FutureBuilder<List<CategoryModel>>(
+                  future: categoryController.fetchCategories(), // Fetch categories
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text("Error: ${snapshot.error}"),
+                      );
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(
+                        child: Text("No categories found"),
+                      );
+                    } else {
+                      final categories = snapshot.data!;
+                      return GridView.count(
+                        shrinkWrap: true,
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                        childAspectRatio: (1 / 1.59),
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        children: List.generate(
+                          categories.length > 8 ? 8 : categories.length,
+                              (index) {
+                            final category = categories[index];
+                            return GestureDetector(
+                              onTap: () {
+                                navigateToNextScreen(context, CategoryOpen(category: category));
+                              },
+                              child: Container(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 60..w,
+                                      height: 60..h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColor.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppColor.black.withOpacity(.25),
+                                            blurRadius: 2,
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                      child: SvgPicture.asset('${iconPath}paint-roller.svg'),
-                                  ),
+                                      child:  _imageLoadingStates[index] ?? true
+                                          ? Center(
+                                        child: CircularProgressIndicator(), // Show loading indicator for 2 seconds
+                                      )
+                                          :Center(
+                                        child: category.imagePath.isNotEmpty
+                                            ? Image.network(
+                                          category.imagePath,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (context, child, loadingProgress) {
+                                            if (loadingProgress == null) return child;
+                                            return CircularProgressIndicator();
+                                          },
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return SvgPicture.asset('${iconPath}paint-roller.svg');
+                                          },
+                                        )
+                                            : SvgPicture.asset('${iconPath}paint-roller.svg'),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5..h),
+                                    Text15(
+                                      text: category.category,
+                                      fontSize: 12..sp,
+                                      color: AppColor.black,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 5..h),
-                                Text15(
-                                  text: 'House Painting',
-                                  fontSize: 12..sp,
-                                  color: AppColor.black,
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }
+                  },
+                ),
                     SizedBox(height: 10..h),
                   ],
                 ),

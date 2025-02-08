@@ -119,6 +119,7 @@ class _CategoriesState extends State<Categories> {
                         return GestureDetector(
                           onTap: () {
                             navigateToNextScreen(context, CategoryOpen(category: category));
+                            
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width,

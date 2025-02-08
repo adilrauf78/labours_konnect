@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/account_controller/account_controller.dart';
+import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/account_screen/edit_profile/edit_profile.dart';
@@ -21,19 +24,23 @@ class VendorProfile extends StatefulWidget {
 }
 
 class _VendorProfileState extends State<VendorProfile> {
-  bool  customer = false;
+  final AuthController authController = Get.find<AuthController>();
+  final AccountController accountController = Get.put(AccountController());
+
   void _showCustomPopup(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16..r),
+            borderRadius: BorderRadius.circular(16
+              ..r),
           ),
           child: Container(
             decoration: BoxDecoration(
               color: AppColor.backgroundColor,
-              borderRadius: BorderRadius.circular(16..r),
+              borderRadius: BorderRadius.circular(16
+                ..r),
             ),
             padding: EdgeInsets.all(20),
             child: Column(
@@ -45,19 +52,23 @@ class _VendorProfileState extends State<VendorProfile> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pop(context);
                       },
                       child: SvgPicture.asset('${iconPath}close.svg',
-                        height: 15..h,
-                        width: 15..w,
+                        height: 15
+                          ..h,
+                        width: 15
+                          ..w,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 5..h),
+                SizedBox(height: 5
+                  ..h),
                 SvgPicture.asset('${iconPath}trash.svg'),
-                SizedBox(height: 5..h),
+                SizedBox(height: 5
+                  ..h),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text15(
@@ -66,18 +77,22 @@ class _VendorProfileState extends State<VendorProfile> {
                       fontWeight: FontWeight.w400,
                     )
                 ),
-                SizedBox(height: 25..h,),
+                SizedBox(height: 25
+                  ..h,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: (){
+                        onTap: () async {
+                          await authController.deleteAccount();
                         },
                         child: Container(
-                          height: 32..h,
-                          width: 90..w,
+                          height: 32
+                            ..h,
+                          width: 90
+                            ..w,
                           decoration: BoxDecoration(
                             color: AppColor.primaryColor,
                             borderRadius: BorderRadius.circular(5),
@@ -86,7 +101,8 @@ class _VendorProfileState extends State<VendorProfile> {
                           child: Center(
                             child: Text('Yes',
                               style: TextStyle(
-                                  fontSize: 16..sp,
+                                  fontSize: 16
+                                    ..sp,
                                   fontWeight: FontWeight.w500,
                                   color: AppColor.white
                               ),
@@ -95,12 +111,14 @@ class _VendorProfileState extends State<VendorProfile> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          height: 32..h,
-                          width: 90..w,
+                          height: 32
+                            ..h,
+                          width: 90
+                            ..w,
                           decoration: BoxDecoration(
                               color: AppColor.white,
                               borderRadius: BorderRadius.circular(5),
@@ -115,7 +133,8 @@ class _VendorProfileState extends State<VendorProfile> {
                           child: Center(
                             child: Text('No',
                               style: TextStyle(
-                                  fontSize: 16..sp,
+                                  fontSize: 16
+                                    ..sp,
                                   fontWeight: FontWeight.w500,
                                   color: AppColor.black
                               ),
@@ -133,6 +152,7 @@ class _VendorProfileState extends State<VendorProfile> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,16 +163,21 @@ class _VendorProfileState extends State<VendorProfile> {
             Stack(
               children: [
                 Container(
-                  height: 350..h,
+                  height: 350
+                    ..h,
                   decoration: BoxDecoration(
                     color: AppColor.white,
                   ),
                   child: Column(
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 230..h,
-                        padding: EdgeInsets.only(left: 20,right: 20,top: 55),
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
+                        height: 230
+                          ..h,
+                        padding: EdgeInsets.only(left: 20, right: 20, top: 55),
                         decoration: BoxDecoration(
                           color: AppColor.primaryColor,
                         ),
@@ -175,7 +200,7 @@ class _VendorProfileState extends State<VendorProfile> {
                               color: AppColor.white,
                             ),
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 navigateToNextScreen(context, AddServices());
                               },
                               child: Icon(Icons.edit_outlined,
@@ -197,13 +222,18 @@ class _VendorProfileState extends State<VendorProfile> {
                     children: [
                       Column(
                         children: [
-                          SizedBox(height: 35..h),
+                          SizedBox(height: 35
+                            ..h),
                           Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width,
                             padding: EdgeInsets.symmetric(vertical: 15),
                             decoration: BoxDecoration(
                               color: AppColor.white,
-                              borderRadius: BorderRadius.circular(10..r),
+                              borderRadius: BorderRadius.circular(10
+                                ..r),
                               boxShadow: [
                                 BoxShadow(
                                   color: AppColor.k0xFFEEEEEE,
@@ -213,50 +243,65 @@ class _VendorProfileState extends State<VendorProfile> {
                             ),
                             child: Column(
                               children: [
-                                SizedBox(height: 30..h),
+                                SizedBox(height: 30
+                                  ..h),
                                 MainText(
                                   text: 'Jaylon Herwitz',
                                 ),
-                                SizedBox(height: 5..h),
+                                SizedBox(height: 5
+                                  ..h),
                                 Divider(
                                   color: AppColor.black.withOpacity(.1),
                                 ),
-                                SizedBox(height: 10..h,),
+                                SizedBox(height: 10
+                                  ..h,),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 50),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceBetween,
                                     children: [
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .center,
                                         children: [
                                           Text16(
                                             text: '120',
-                                            color: AppColor.black.withOpacity(.7),
-                                            fontSize: 18..sp,
+                                            color: AppColor.black.withOpacity(
+                                                .7),
+                                            fontSize: 18
+                                              ..sp,
                                             fontWeight: FontWeight.w500,
                                           ),
                                           Text16(
                                             text: 'Total Jobs',
-                                            color: AppColor.black.withOpacity(.3),
-                                            fontSize: 12..sp,
+                                            color: AppColor.black.withOpacity(
+                                                .3),
+                                            fontSize: 12
+                                              ..sp,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ],
                                       ),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .center,
                                         children: [
                                           Text16(
                                             text: '1.5',
-                                            color: AppColor.black.withOpacity(.7),
-                                            fontSize: 18..sp,
+                                            color: AppColor.black.withOpacity(
+                                                .7),
+                                            fontSize: 18
+                                              ..sp,
                                             fontWeight: FontWeight.w500,
                                           ),
                                           Text16(
                                             text: 'Years',
-                                            color: AppColor.black.withOpacity(.3),
-                                            fontSize: 12..sp,
+                                            color: AppColor.black.withOpacity(
+                                                .3),
+                                            fontSize: 12
+                                              ..sp,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ],
@@ -274,8 +319,10 @@ class _VendorProfileState extends State<VendorProfile> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              width: 70..w,
-                              height: 70..h,
+                              width: 70
+                                ..w,
+                              height: 70
+                                ..h,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: AppColor.white,
@@ -298,16 +345,21 @@ class _VendorProfileState extends State<VendorProfile> {
               child: Column(
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       navigateToNextScreen(context, EditProfile());
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 45..h,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      height: 45
+                        ..h,
                       padding: EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: AppColor.white,
-                        borderRadius: BorderRadius.circular(10..r),
+                        borderRadius: BorderRadius.circular(10
+                          ..r),
                         boxShadow: [
                           BoxShadow(
                             color: AppColor.k0xFFEEEEEE,
@@ -326,18 +378,24 @@ class _VendorProfileState extends State<VendorProfile> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15..h),
+                  SizedBox(height: 15
+                    ..h),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       navigateToNextScreen(context, MyServices());
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 45..h,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      height: 45
+                        ..h,
                       padding: EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: AppColor.white,
-                        borderRadius: BorderRadius.circular(10..r),
+                        borderRadius: BorderRadius.circular(10
+                          ..r),
                         boxShadow: [
                           BoxShadow(
                             color: AppColor.k0xFFEEEEEE,
@@ -356,18 +414,24 @@ class _VendorProfileState extends State<VendorProfile> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15..h),
+                  SizedBox(height: 15
+                    ..h),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       navigateToNextScreen(context, MyReview());
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 45..h,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      height: 45
+                        ..h,
                       padding: EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: AppColor.white,
-                        borderRadius: BorderRadius.circular(10..r),
+                        borderRadius: BorderRadius.circular(10
+                          ..r),
                         boxShadow: [
                           BoxShadow(
                             color: AppColor.k0xFFEEEEEE,
@@ -386,18 +450,24 @@ class _VendorProfileState extends State<VendorProfile> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15..h),
+                  SizedBox(height: 15
+                    ..h),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       navigateToNextScreen(context, MyWallet());
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 45..h,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      height: 45
+                        ..h,
                       padding: EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: AppColor.white,
-                        borderRadius: BorderRadius.circular(10..r),
+                        borderRadius: BorderRadius.circular(10
+                          ..r),
                         boxShadow: [
                           BoxShadow(
                             color: AppColor.k0xFFEEEEEE,
@@ -416,50 +486,51 @@ class _VendorProfileState extends State<VendorProfile> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15..h),
-                  GestureDetector(
-                    onTap: (){
-                      navigateToNextScreen(context, BottomNavigator());
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 45..h,
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      decoration: BoxDecoration(
-                        color: AppColor.white,
-                        borderRadius: BorderRadius.circular(10..r),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColor.k0xFFEEEEEE,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text16(
-                            text: 'Switch to Customer',
-                          ),
-                          Transform.scale(
+                  SizedBox(height: 15
+                    ..h),
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    height: 45
+                      ..h,
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(10
+                        ..r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColor.k0xFFEEEEEE,
+                          blurRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text16(
+                          text: 'Switch to Customer',
+                        ),
+                        Obx(() => Transform.scale(
                             scale: 0.7,
                             child: CupertinoSwitch(
-                                activeColor: AppColor.primaryColor,
-                                value: customer,
-                                onChanged: (value){
-                                  setState(() {
-                                    customer =value;
-                                  });
-                                }
+                              activeColor: AppColor.primaryColor,
+                              value: !accountController.isProfessionalMode
+                                  .value,
+                              onChanged: (value) {
+                                accountController.toggleSwitch(!value, context);
+                              },
                             ),
-                          ),
-                        ],
-                      ),
+                          ),),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 25..h),
+                  SizedBox(height: 25
+                    ..h),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
                         _showCustomPopup(context);
                       });
@@ -468,7 +539,8 @@ class _VendorProfileState extends State<VendorProfile> {
                       child: Row(
                         children: [
                           SvgPicture.asset('${iconPath}delete.svg'),
-                          SizedBox(width: 15..w,),
+                          SizedBox(width: 15
+                            ..w,),
                           Text16(
                             text: 'Delete Account',
                             fontWeight: FontWeight.w500,
@@ -478,21 +550,29 @@ class _VendorProfileState extends State<VendorProfile> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 25..h),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset('${iconPath}logout.svg'),
-                        SizedBox(width: 15..w,),
-                        MainText(
-                          text: 'Logout',
-                          color: AppColor.primaryColor,
-                        ),
-                      ],
+                  SizedBox(height: 25
+                    ..h),
+                  GestureDetector(
+                    onTap: () async {
+                      await authController.SignOut();
+                    },
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('${iconPath}logout.svg'),
+                          SizedBox(width: 15
+                            ..w,),
+                          MainText(
+                            text: 'Logout',
+                            color: AppColor.primaryColor,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: 25..h),
+                  SizedBox(height: 30
+                    ..h),
                 ],
               ),
             ),

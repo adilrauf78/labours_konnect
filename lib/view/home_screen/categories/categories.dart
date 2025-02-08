@@ -11,9 +11,9 @@ import 'package:get/get.dart';
 import 'package:labours_konnect/view/home_screen/category_open/category_open.dart';
 
 class Categories extends StatefulWidget {
+  final bool isFromFilter;
 
-
-  const Categories({super.key});
+  const Categories({super.key, this.isFromFilter = false});
 
   @override
   State<Categories> createState() => _CategoriesState();
@@ -111,15 +111,17 @@ class _CategoriesState extends State<Categories> {
                     return ListView.builder(
                       itemCount: categories.length,
                       scrollDirection: Axis.vertical,
-                      padding: EdgeInsets.zero,
+                      padding: EdgeInsets.symmetric(horizontal: 5),
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final category = categories[index];
                         return GestureDetector(
                           onTap: () {
-                            navigateToNextScreen(context, CategoryOpen(category: category));
-                            
+                            if (widget.isFromFilter) {
+                              Navigator.pop(context, category.category);
+                            } else {
+                              navigateToNextScreen(context, CategoryOpen(category: category));
+                            }
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width,
@@ -179,6 +181,7 @@ class _CategoriesState extends State<Categories> {
                 },
               ),
             ),
+            SizedBox(height: 20..h),
           ],
         ),
       ),

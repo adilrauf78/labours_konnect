@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/account_controller/account_controller.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -12,6 +13,7 @@ import 'package:labours_konnect/view/account_screen/change_password/change_passw
 import 'package:labours_konnect/view/account_screen/edit_profile/edit_profile.dart';
 import 'package:labours_konnect/view/account_screen/payment_method/payment_method.dart';
 import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
+import 'package:labours_konnect/view/vendor/vendor_bottom_navigator/vendor_bottom_navigator.dart';
 import 'package:labours_konnect/view/vendor/vendor_home/vendor_home.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -23,20 +25,22 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   final AuthController authController = Get.find<AuthController>();
+  final AccountController accountController = Get.put(AccountController());
 
-  bool vendor = false;
   void _showCustomPopup(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16..r),
+            borderRadius: BorderRadius.circular(16
+              ..r),
           ),
           child: Container(
             decoration: BoxDecoration(
-                color: AppColor.backgroundColor,
-                borderRadius: BorderRadius.circular(16..r),
+              color: AppColor.backgroundColor,
+              borderRadius: BorderRadius.circular(16
+                ..r),
             ),
             padding: EdgeInsets.all(20),
             child: Column(
@@ -48,19 +52,23 @@ class _AccountScreenState extends State<AccountScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pop(context);
                       },
                       child: SvgPicture.asset('${iconPath}close.svg',
-                        height: 15..h,
-                        width: 15..w,
+                        height: 15
+                          ..h,
+                        width: 15
+                          ..w,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 5..h),
+                SizedBox(height: 5
+                  ..h),
                 SvgPicture.asset('${iconPath}trash.svg'),
-                SizedBox(height: 5..h),
+                SizedBox(height: 5
+                  ..h),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text15(
@@ -69,7 +77,8 @@ class _AccountScreenState extends State<AccountScreen> {
                       fontWeight: FontWeight.w400,
                     )
                 ),
-                SizedBox(height: 25..h,),
+                SizedBox(height: 25
+                  ..h,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -80,8 +89,10 @@ class _AccountScreenState extends State<AccountScreen> {
                           await authController.deleteAccount();
                         },
                         child: Container(
-                          height: 32..h,
-                          width: 90..w,
+                          height: 32
+                            ..h,
+                          width: 90
+                            ..w,
                           decoration: BoxDecoration(
                             color: AppColor.primaryColor,
                             borderRadius: BorderRadius.circular(5),
@@ -90,7 +101,8 @@ class _AccountScreenState extends State<AccountScreen> {
                           child: Center(
                             child: Text('Yes',
                               style: TextStyle(
-                                  fontSize: 16..sp,
+                                  fontSize: 16
+                                    ..sp,
                                   fontWeight: FontWeight.w500,
                                   color: AppColor.white
                               ),
@@ -99,12 +111,14 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          height: 32..h,
-                          width: 90..w,
+                          height: 32
+                            ..h,
+                          width: 90
+                            ..w,
                           decoration: BoxDecoration(
                               color: AppColor.white,
                               borderRadius: BorderRadius.circular(5),
@@ -119,7 +133,8 @@ class _AccountScreenState extends State<AccountScreen> {
                           child: Center(
                             child: Text('No',
                               style: TextStyle(
-                                  fontSize: 16..sp,
+                                  fontSize: 16
+                                    ..sp,
                                   fontWeight: FontWeight.w500,
                                   color: AppColor.black
                               ),
@@ -137,6 +152,7 @@ class _AccountScreenState extends State<AccountScreen> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,7 +163,8 @@ class _AccountScreenState extends State<AccountScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 55..h),
+              SizedBox(height: 55
+                ..h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -164,52 +181,65 @@ class _AccountScreenState extends State<AccountScreen> {
                     text: 'Account',
                     fontWeight: FontWeight.w500,
                   ),
-                  SizedBox(width: 20..w),
+                  SizedBox(width: 20
+                    ..w),
                 ],
               ),
-              SizedBox(height: 20..h),
+              SizedBox(height: 20
+                ..h),
               Row(
                 children: [
                   Container(
-                    width: 100..w,
-                    height: 100..h,
+                    width: 100
+                      ..w,
+                    height: 100
+                      ..h,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColor.primaryColor, width: 2),
+                      border: Border.all(
+                          color: AppColor.primaryColor, width: 2),
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50..r),
+                      borderRadius: BorderRadius.circular(50
+                        ..r),
                       child: Image.asset('${imagePath}image.png',
-                      fit: BoxFit.cover,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  SizedBox(width: 20..w),
+                  SizedBox(width: 20
+                    ..w),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Obx(() =>MainText(
-                          text: authController.fullName.value.isNotEmpty
-                              ? authController.fullName.value
-                              : "null",
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Obx(() =>
+                          MainText(
+                            text: authController.fullName.value.isNotEmpty
+                                ? authController.fullName.value
+                                : "null",
+                            fontWeight: FontWeight.w500,
+                          ),
                       ),
-                      SizedBox(height: 5..h),
+                      SizedBox(height: 5
+                        ..h),
                       Text12(
                         text: '(+1) 331 623 8413',
                       ),
-                      SizedBox(height: 5..h),
+                      SizedBox(height: 5
+                        ..h),
                       Row(
                         children: [
-                          Icon(Icons.email_outlined,size: 20,color: AppColor.black.withOpacity(.5),),
-                          SizedBox(width: 5..h,),
-                          Obx(() =>Text12(
-                            text: authController.email.value.isNotEmpty
-                                ? authController.email.value
-                                : "null",
-                          ),
+                          Icon(Icons.email_outlined, size: 20, color: AppColor
+                              .black.withOpacity(.5),),
+                          SizedBox(width: 5
+                            ..h,),
+                          Obx(() =>
+                              Text12(
+                                text: authController.email.value.isNotEmpty
+                                    ? authController.email.value
+                                    : "null",
+                              ),
                           ),
                         ],
                       )
@@ -217,18 +247,24 @@ class _AccountScreenState extends State<AccountScreen> {
                   )
                 ],
               ),
-              SizedBox(height: 30..h),
+              SizedBox(height: 30
+                ..h),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   navigateToNextScreen(context, EditProfile());
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 45..h,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: 45
+                    ..h,
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   decoration: BoxDecoration(
                     color: AppColor.white,
-                    borderRadius: BorderRadius.circular(10..r),
+                    borderRadius: BorderRadius.circular(10
+                      ..r),
                     boxShadow: [
                       BoxShadow(
                         color: AppColor.k0xFFEEEEEE,
@@ -247,18 +283,24 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 15..h),
+              SizedBox(height: 15
+                ..h),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   navigateToNextScreen(context, ChangePassword());
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 45..h,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: 45
+                    ..h,
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   decoration: BoxDecoration(
                     color: AppColor.white,
-                    borderRadius: BorderRadius.circular(10..r),
+                    borderRadius: BorderRadius.circular(10
+                      ..r),
                     boxShadow: [
                       BoxShadow(
                         color: AppColor.k0xFFEEEEEE,
@@ -277,14 +319,20 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 15..h),
+              SizedBox(height: 15
+                ..h),
               Container(
-                width: MediaQuery.of(context).size.width,
-                height: 45..h,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                height: 45
+                  ..h,
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
                   color: AppColor.white,
-                  borderRadius: BorderRadius.circular(10..r),
+                  borderRadius: BorderRadius.circular(10
+                    ..r),
                   boxShadow: [
                     BoxShadow(
                       color: AppColor.k0xFFEEEEEE,
@@ -302,18 +350,24 @@ class _AccountScreenState extends State<AccountScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 15..h),
+              SizedBox(height: 15
+                ..h),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   navigateToNextScreen(context, PaymentMethod());
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 45..h,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: 45
+                    ..h,
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   decoration: BoxDecoration(
                     color: AppColor.white,
-                    borderRadius: BorderRadius.circular(10..r),
+                    borderRadius: BorderRadius.circular(10
+                      ..r),
                     boxShadow: [
                       BoxShadow(
                         color: AppColor.k0xFFEEEEEE,
@@ -332,59 +386,65 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 15..h),
-              GestureDetector(
-                onTap: (){
-                  navigateToNextScreen(context, VendorHome());
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 45..h,
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: AppColor.white,
-                    borderRadius: BorderRadius.circular(10..r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColor.k0xFFEEEEEE,
-                        blurRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text16(
-                        text: 'Switch to Professional',
-                      ),
-                      Transform.scale(
+              SizedBox(height: 15
+                ..h),
+              Container(
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                height: 45
+                  ..h,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(10
+                    ..r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.k0xFFEEEEEE,
+                      blurRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text16(
+                      text: 'Switch to Professional',
+                    ),
+                    Obx(() =>Transform.scale(
                         scale: 0.7,
                         child: CupertinoSwitch(
-                            activeColor: AppColor.primaryColor,
-                            value: vendor,
-                            onChanged: (value){
-                              setState(() {
-                                vendor =value;
-                              });
-                            }
+                          activeColor: AppColor.primaryColor,
+                          value: accountController.isProfessionalMode.value,
+                          onChanged: (value) {
+                            accountController.toggleSwitch(
+                                value, context); // Use the controller method
+                          },
                         ),
-                      ),
-                    ],
-                  ),
+                      ),),
+                  ],
                 ),
               ),
-              SizedBox(height: 15..h),
+              SizedBox(height: 15
+                ..h),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Get.to(SignInScreen());
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 45..h,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: 45
+                    ..h,
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   decoration: BoxDecoration(
                     color: AppColor.white,
-                    borderRadius: BorderRadius.circular(10..r),
+                    borderRadius: BorderRadius.circular(10
+                      ..r),
                     boxShadow: [
                       BoxShadow(
                         color: AppColor.k0xFFEEEEEE,
@@ -403,18 +463,20 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 25..h),
+              SizedBox(height: 25
+                ..h),
               GestureDetector(
-                  onTap: (){
-                    setState(() {
-                      _showCustomPopup(context);
-                    });
-                  },
+                onTap: () {
+                  setState(() {
+                    _showCustomPopup(context);
+                  });
+                },
                 child: Container(
                   child: Row(
                     children: [
                       SvgPicture.asset('${iconPath}delete.svg'),
-                      SizedBox(width: 15..w,),
+                      SizedBox(width: 15
+                        ..w,),
                       Text16(
                         text: 'Delete Account',
                         fontWeight: FontWeight.w500,
@@ -424,7 +486,8 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 25..h),
+              SizedBox(height: 25
+                ..h),
               GestureDetector(
                 onTap: () async {
                   await authController.SignOut();
@@ -434,7 +497,8 @@ class _AccountScreenState extends State<AccountScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset('${iconPath}logout.svg'),
-                      SizedBox(width: 15..w,),
+                      SizedBox(width: 15
+                        ..w,),
                       MainText(
                         text: 'Logout',
                         color: AppColor.primaryColor,
@@ -443,7 +507,8 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 25..h),
+              SizedBox(height: 30
+                ..h),
             ],
           ),
         ),

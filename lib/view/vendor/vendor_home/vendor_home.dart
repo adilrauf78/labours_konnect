@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/vendor/vendor_home/vendor_booking_accepted/vendor_booking_accepted.dart';
@@ -11,9 +13,15 @@ import 'package:labours_konnect/view/vendor/vendor_home/vendor_booking_ongoing/v
 import 'package:labours_konnect/view/vendor/vendor_home/vendor_booking_pending/vendor_booking_pending.dart';
 import 'package:labours_konnect/view/vendor/vendor_profile/vendor_profile.dart';
 
-class VendorHome extends StatelessWidget {
+class VendorHome extends StatefulWidget {
   const VendorHome({super.key});
 
+  @override
+  State<VendorHome> createState() => _VendorHomeState();
+}
+
+class _VendorHomeState extends State<VendorHome> {
+  final AuthController authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -53,7 +61,9 @@ class VendorHome extends StatelessWidget {
                                     ),
                                   ),
                                   TextSpan(
-                                    text: 'Jaydon Siphron',
+                                    text: authController.fullName.value.isNotEmpty
+                                        ? authController.fullName.value
+                                        : "null",
                                     style: TextStyle(
                                       fontSize: 16..sp,
                                       color: AppColor.white,

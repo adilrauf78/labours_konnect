@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/home_screen/categories/categories.dart';
 
 class Filter extends StatefulWidget {
   const Filter({super.key});
@@ -13,6 +15,7 @@ class Filter extends StatefulWidget {
 
 class _FilterState extends State<Filter> {
   int currentIndex = 0;
+  String selectedCategory = 'Choose Category';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,27 +56,38 @@ class _FilterState extends State<Filter> {
                 fontSize: 18..sp,
               ),
               SizedBox(height: 10..h),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 45..h,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: AppColor.white,
-                  border: Border.all(
-                    color: Color(0xFFEEEEEE),
-                  ),
-                  borderRadius: BorderRadius.circular(10..r),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SubText(
-                      text: 'Choose Category',
-                      color: AppColor.black,
-                      fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: () async {
+                  final selected = await Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Categories(isFromFilter: true),),);
+                  if (selected != null) {
+                    setState(() {
+                      selectedCategory = selected;
+                    });
+                  }
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 45..h,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    border: Border.all(
+                      color: Color(0xFFEEEEEE),
                     ),
-                    Icon(Icons.keyboard_arrow_down_outlined,)
-                  ],
+                    borderRadius: BorderRadius.circular(10..r),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SubText(
+                        text: selectedCategory,
+                        color: AppColor.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      Icon(Icons.keyboard_arrow_down_outlined,)
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height:20..h),
@@ -255,8 +269,13 @@ class _FilterState extends State<Filter> {
                 ],
               ),
               SizedBox(height: 60..h),
-              Button(
-                text: 'Submit',
+              GestureDetector(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Button(
+                  text: 'Submit',
+                ),
               )
             ],
           ),

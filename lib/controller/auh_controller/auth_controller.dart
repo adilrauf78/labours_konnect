@@ -8,11 +8,13 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:labours_konnect/constants/utils.dart';
+import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/view/auth_screens/enable_location/enable_location.dart';
 import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
 import 'package:labours_konnect/view/auth_screens/user_details/user_details.dart';
 import 'package:labours_konnect/view/auth_screens/verify_account/verify_account.dart';
 import 'package:labours_konnect/view/bottom_navigator/bottom_navigator.dart';
+import 'package:labours_konnect/view/vendor/vendor_bottom_navigator/vendor_bottom_navigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
@@ -36,12 +38,12 @@ class AuthController extends GetxController {
   TextEditingController passwordLogin = TextEditingController();
 
   Rxn<User> _firebaseUser = Rxn<User>();
-
   User? get user => _firebaseUser.value;
 
   @override
   void onInit() {
     super.onInit();
+    loadSwitchState();
     _firebaseUser.bindStream(_auth.authStateChanges());
   }
 
@@ -421,20 +423,22 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    bool enableLocationStep = prefs.getBool('enableLocation') ?? false;
-    User? user = FirebaseAuth.instance.currentUser;
+  Future<bool> checkLoginStatus() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+      User? user = FirebaseAuth.instance.currentUser;
 
-    if (isLoggedIn && user != null) {
-      await fetchAndStoreUserData();
-      update();
-
-      Get.off(BottomNavigator());
-
-    } else {
-      Get.off(SignInScreen());
+      if (isLoggedIn && user != null) {
+        await fetchAndStoreUserData();
+        update();
+        return true; // User logged in hai
+      } else {
+        return false; // User logged in nahi hai
+      }
+    } catch (e) {
+      print("Error in checkLoginStatus: $e");
+      return false; // Error aane par bhi false return karein
     }
   }
 
@@ -443,10 +447,52 @@ class AuthController extends GetxController {
     email.value = '';
     fullName.value = '';
   }
+
+
+  //Vendor & Customer
+  var isProfessionalMode = false.obs;
+
+
+  Future<void> saveSwitchState(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_professional_mode', value);
+    isProfessionalMode.value = value;
+  }
+
+  Future<void> loadSwitchState() async {
+    final prefs = await SharedPreferences.getInstance();
+    isProfessionalMode.value = prefs.getBool('is_professional_mode') ?? false;
+  }
+  Future<void> resetToggleState() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_professional_mode', false); // Toggle state reset karein
+    isProfessionalMode.value = false; // Observable variable reset karein
+  }
+
+  // Toggle the switch and handle navigation
+  void toggleSwitch(bool value, BuildContext context) {
+    isProfessionalMode.value = value;
+    saveSwitchState(value);
+    if (value) {
+      Future.delayed(Duration(milliseconds: 300), () {
+        navigateToNextScreen(context, VendorBottomNavigator());
+      }
+      );
+    } else {
+      Future.delayed(Duration(milliseconds: 300), () {
+        navigateToNextScreen(context, BottomNavigator());
+      }
+      );
+    }
+  }
+
+
+
   Future<void> SignOut() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove('isLoggedIn');
+      await prefs.setBool('isLoggedIn', false);
+      await resetToggleState();
       await _auth.signOut();
       await _googleSignIn.signOut();
       //await FacebookAuth.instance.logOut();

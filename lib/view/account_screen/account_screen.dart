@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
-import 'package:labours_konnect/controller/account_controller/account_controller.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -25,8 +24,7 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   final AuthController authController = Get.find<AuthController>();
-  final AccountController accountController = Get.put(AccountController());
-
+  
   void _showCustomPopup(BuildContext context) {
     showDialog(
       context: context,
@@ -417,10 +415,10 @@ class _AccountScreenState extends State<AccountScreen> {
                         scale: 0.7,
                         child: CupertinoSwitch(
                           activeColor: AppColor.primaryColor,
-                          value: accountController.isProfessionalMode.value,
+                          value: authController.isProfessionalMode.value,
                           onChanged: (value) {
-                            accountController.toggleSwitch(
-                                value, context); // Use the controller method
+                            authController.toggleSwitch(
+                                value, context);
                           },
                         ),
                       ),),

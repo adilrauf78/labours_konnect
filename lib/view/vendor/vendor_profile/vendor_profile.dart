@@ -5,12 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
-import 'package:labours_konnect/controller/account_controller/account_controller.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/account_screen/edit_profile/edit_profile.dart';
-import 'package:labours_konnect/view/bottom_navigator/bottom_navigator.dart';
 import 'package:labours_konnect/view/vendor/add_services/add_services.dart';
 import 'package:labours_konnect/view/vendor/vendor_profile/my_review/my_review.dart';
 import 'package:labours_konnect/view/vendor/vendor_profile/my_services/my_services.dart';
@@ -25,8 +23,7 @@ class VendorProfile extends StatefulWidget {
 
 class _VendorProfileState extends State<VendorProfile> {
   final AuthController authController = Get.find<AuthController>();
-  final AccountController accountController = Get.put(AccountController());
-
+  bool customer = true;
   void _showCustomPopup(BuildContext context) {
     showDialog(
       context: context,
@@ -517,10 +514,9 @@ class _VendorProfileState extends State<VendorProfile> {
                             scale: 0.7,
                             child: CupertinoSwitch(
                               activeColor: AppColor.primaryColor,
-                              value: !accountController.isProfessionalMode
-                                  .value,
+                              value: authController.isProfessionalMode.value,
                               onChanged: (value) {
-                                accountController.toggleSwitch(!value, context);
+                                authController.toggleSwitch(value, context);
                               },
                             ),
                           ),),

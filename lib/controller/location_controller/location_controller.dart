@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -20,6 +21,8 @@ class LocationController extends GetxController{
     mapController = controller;
   }
 
+  //Floating Action Button Click Location in Text Show
+  RxString address = 'H#28 saleem Street # 17 Fiji garhi stop Band Rd, Shera Kot, Lahore, Punjab 54000 Pakistan'.obs;
   Future<void> getCurrentLocation() async {
       isLoading.value = true;
     try {
@@ -35,10 +38,22 @@ class LocationController extends GetxController{
           ),
         ),
       );
+      isLoading.value = false;
+      //ya baad ma kia ha
+      // Coordinates ko address mein convert karein
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      if (placemarks.isNotEmpty) {
+        Placemark placemark = placemarks[0];
+        address.value = '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.postalCode}, ${placemark.country}';
+      }
+      isLoading.value = false;
     } catch (e) {
       print("Error getting location: $e");
     } finally {
-        isLoading.value = false;
+      isLoading.value = false;
     }
   }
 
@@ -65,10 +80,6 @@ class LocationController extends GetxController{
         infoWindow: InfoWindow(title: 'Selected Location'),
       ),);
   }
-
-
-
-
 
 
 

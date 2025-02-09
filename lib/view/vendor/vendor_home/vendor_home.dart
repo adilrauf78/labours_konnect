@@ -81,20 +81,15 @@ class _VendorHomeState extends State<VendorHome> {
                             ),
                           ],
                         ),
-                        GestureDetector(
-                          onTap: (){
-                            navigateToNextScreen(context, VendorProfile());
-                          },
-                          child: Container(
-                            width: 48..w,
-                            height: 48..h,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColor.white,
-                              image: DecorationImage(
-                                image: AssetImage('${imagePath}pipe.png'),
-                                fit: BoxFit.cover,
-                              ),
+                        Container(
+                          width: 48..w,
+                          height: 48..h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColor.white,
+                            image: DecorationImage(
+                              image: AssetImage('${imagePath}pipe.png'),
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),

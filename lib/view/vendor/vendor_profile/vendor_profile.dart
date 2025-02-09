@@ -243,7 +243,9 @@ class _VendorProfileState extends State<VendorProfile> {
                                 SizedBox(height: 30
                                   ..h),
                                 MainText(
-                                  text: 'Jaylon Herwitz',
+                                  text: authController.fullName.value.isNotEmpty
+                                      ? authController.fullName.value
+                                      : "null",
                                 ),
                                 SizedBox(height: 5
                                   ..h),

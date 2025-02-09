@@ -83,7 +83,7 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
                         ),
                         borderRadius: BorderRadius.circular(5)
                     ),
-                    googleAPIKey: "AIzaSyC6EjvOFj1TIxgu9P74e20uE_RDk-jHRz4",
+                    googleAPIKey: "AIzaSyDEztc5VQY5Le2KhQXYm--l8Wvkswzr9RQ",
                     inputDecoration: InputDecoration(
                       hintText: "Search your location",
                       hintStyle: TextStyle(
@@ -118,7 +118,6 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
                       locationController.controller.selection = TextSelection.fromPosition(
                           TextPosition(offset: prediction.description?.length ?? 0));
                     },
-                    // OPTIONAL// If you want to customize list view item builder
                     itemBuilder: (context, index, Prediction prediction) {
                       return Container(
                         decoration: BoxDecoration(

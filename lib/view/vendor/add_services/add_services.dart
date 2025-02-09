@@ -5,19 +5,38 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/category_controller/category_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/home_screen/categories/categories.dart';
 import 'package:labours_konnect/view/vendor/add_services/select_map/select_map.dart';
 
 class AddServices extends StatefulWidget {
-  const AddServices({super.key});
+  final String? address;
+  const AddServices({super.key, this.address});
 
   @override
   State<AddServices> createState() => _AddServicesState();
 }
 
 class _AddServicesState extends State<AddServices> {
+  final CategoryController categoryController = Get.put(CategoryController());
+  String selectedCategory = 'Choose Category';
+  late TextEditingController _addressController;
+
+  @override
+  void initState() {
+    super.initState();
+    _addressController = TextEditingController(text: widget.address);
+  }
+
+  @override
+  void dispose() {
+    _addressController.dispose();
+    super.dispose();
+  }
+
   List<File?> images = [];
   File? image2;
   void imagePickerOption(String imageType) {
@@ -237,10 +256,15 @@ class _AddServicesState extends State<AddServices> {
                           fillColor: AppColor.white,
                           filled: true,
                           hintStyle: TextStyle(
-                            color: AppColor.black.withOpacity(.3),
+                            color: AppColor.black.withOpacity(.5),
                             fontSize: 15..sp,
                             fontWeight: FontWeight.w400,
-                          )
+                          ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 14..sp,
+                        color: AppColor.black.withOpacity(.5),
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -251,8 +275,14 @@ class _AddServicesState extends State<AddServices> {
                   ),
                   SizedBox(height: 10..h),
                   GestureDetector(
-                    onTap: (){
-
+                    onTap: () async {
+                      final selected = await Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => Categories(isFromFilter: true),),);
+                      if (selected != null) {
+                        setState(() {
+                          selectedCategory = selected;
+                        });
+                      }
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width,
@@ -269,9 +299,9 @@ class _AddServicesState extends State<AddServices> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SubText(
-                            text: 'Select Category',
-                            color: AppColor.black.withOpacity(.25),
-                            fontWeight: FontWeight.w500,
+                            text: selectedCategory,
+                            color: AppColor.black.withOpacity(.5),
+                            fontWeight: FontWeight.w400,
                           ),
                           Icon(Icons.keyboard_arrow_down_outlined,color: AppColor.black.withOpacity(.25),)
                         ],
@@ -300,8 +330,8 @@ class _AddServicesState extends State<AddServices> {
                       children: [
                         SubText(
                           text: 'Select Sub-Category',
-                          color: AppColor.black.withOpacity(.25),
-                          fontWeight: FontWeight.w500,
+                          color: AppColor.black.withOpacity(.5),
+                          fontWeight: FontWeight.w400,
                         ),
                         Icon(Icons.keyboard_arrow_down_outlined,color: AppColor.black.withOpacity(.25),)
                       ],
@@ -342,16 +372,22 @@ class _AddServicesState extends State<AddServices> {
                     ),
                     child: TextField(
                       maxLines: null,
+                      controller: _addressController,
                       cursorColor: Color(0xFF9FA3A8),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(15),
                         hintText: 'Enter your Address',
                         hintStyle: TextStyle(
                           fontSize: 14..sp,
-                          color: Color(0xFF999999),
+                          color: AppColor.black.withOpacity(.5),
                           fontWeight: FontWeight.w400,
                         ),
                         border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        fontSize: 14..sp,
+                        color: AppColor.black.withOpacity(.5),
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -389,6 +425,11 @@ class _AddServicesState extends State<AddServices> {
                             fontWeight: FontWeight.w400,
                           ),
                       ),
+                      style: TextStyle(
+                        fontSize: 14..sp,
+                        color: AppColor.black.withOpacity(.5),
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20..h),
@@ -415,6 +456,11 @@ class _AddServicesState extends State<AddServices> {
                       cursorColor: Color(0xFF9FA3A8),
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(11),
+                        labelStyle: TextStyle(
+                          fontSize: 14..sp,
+                          color: Color(0xFF999999),
+                          fontWeight: FontWeight.w400,
+                        ),
                         hintText: 'Enter Description',
                         hintStyle: TextStyle(
                           fontSize: 14..sp,
@@ -422,6 +468,11 @@ class _AddServicesState extends State<AddServices> {
                           fontWeight: FontWeight.w400,
                         ),
                         border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        fontSize: 14..sp,
+                        color: AppColor.black.withOpacity(.5),
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),

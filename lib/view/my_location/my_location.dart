@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/location_controller/location_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/home_screen/details/details.dart';
@@ -16,6 +19,7 @@ class MyLocation extends StatefulWidget {
 }
 
 class _MyLocationState extends State<MyLocation> {
+  final LocationController locationController = Get.put(LocationController());
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -51,15 +55,52 @@ class _MyLocationState extends State<MyLocation> {
                 ),
               ),
               SizedBox(height: 20..h),
-              Expanded(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: AppColor.white,
+              Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height*.5,
+                    child: GoogleMap(
+                      onMapCreated: locationController.onMapCreated,
+                      markers: Set<Marker>.of(locationController.markers),
+                      initialCameraPosition: CameraPosition(
+                        target: locationController.initialPosition,
+                        zoom: 9.0,
+                      ),
+                      compassEnabled: false,
+                      mapType: MapType.normal,
+                      zoomControlsEnabled: false,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false, // Disable the default my location button
+                    ),
                   ),
-                  child: Image.asset('${imagePath}map.png',fit: BoxFit.fill,),
-                ),
-              )
+                  Positioned(
+                    bottom: 20,
+                    right: 20,
+                    child: SizedBox(
+                      width: 50..w,
+                      height: 50..h,
+                      child: FloatingActionButton(
+                        backgroundColor: AppColor.white,
+                        child: locationController.isLoading.value
+                            ? Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              color: AppColor.blue,
+                            ),
+                          ),
+                        )
+                            : Icon(Icons.my_location),
+                        onPressed: locationController.getCurrentLocation,
+
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
           Positioned(

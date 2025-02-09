@@ -316,7 +316,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               ..h,),
                             InkWell(
                               onTap: () {
-                                navigateToNextScreen(context, EnableLocation());
+                                navigateToNextScreen(context, CreateAccount());
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -569,7 +569,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               ..h,),
                             GestureDetector(
                               onTap: () {
-                                navigateToNextScreen(context, CreateAccount());
+                                navigateToNextScreen(context, EnableLocation());
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

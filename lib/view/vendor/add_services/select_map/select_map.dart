@@ -65,7 +65,7 @@ class _SelectMapState extends State<SelectMap> {
                     mapType: MapType.normal,
                     zoomControlsEnabled: false,
                     myLocationEnabled: true,
-                    myLocationButtonEnabled: false, // Disable the default my location button
+                    myLocationButtonEnabled: false,
                   ),
                 ),
                 Positioned(

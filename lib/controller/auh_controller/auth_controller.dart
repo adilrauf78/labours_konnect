@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_otp/email_otp.dart';
@@ -529,4 +530,54 @@ class AuthController extends GetxController {
       ErrorSnackBar('Error', 'Failed to delete account: $e');
     }
   }
+
+
+  //Add Services
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController categoryController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController experienceController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  Future<void> addService() async {
+    if (emailLogin.text.isEmpty && passwordLogin.text.isEmpty) {
+      showSnackBar(title: 'Email and Password are required');
+    }
+    else if (emailLogin.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Your Email');
+    }
+    else if (passwordLogin.text.isEmpty){
+      showSnackBar(title: 'Please Enter a Password');
+    }
+    else{
+      try {
+        isLoading = true;
+        update();
+
+        // Upload image to Firebase Storage
+        String imageUrl = await _uploadImage(image);
+
+        // Save data to Firestore
+        await _firestore.collection('services').add({
+          'imageUrl': imageUrl,
+          'title': title,
+          'category': category,
+          'price': price,
+          'location': location,
+          'description': description,
+          'experience': experience,
+          'city': city,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+
+        SuccessSnackBar('Success', 'Service added successfully');
+      } catch (e) {
+        ErrorSnackBar('Error', 'Failed to add service: $e');
+      } finally {
+        isLoading = false;
+        update();
+      }
+    }
+    }
 }

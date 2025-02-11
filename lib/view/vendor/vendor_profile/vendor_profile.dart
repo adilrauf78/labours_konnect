@@ -196,15 +196,9 @@ class _VendorProfileState extends State<VendorProfile> {
                               fontWeight: FontWeight.w500,
                               color: AppColor.white,
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                navigateToNextScreen(context, AddServices());
-                              },
-                              child: Icon(Icons.edit_outlined,
-                                color: AppColor.white,
-                                size: 18,
-                              ),
-                            ),
+                            Container(
+                              width: 20..w,
+                            )
                           ],
                         ),
                       ),

@@ -5,9 +5,11 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 
 class ServiceDetails extends StatefulWidget {
-  const ServiceDetails({super.key});
+  final AddServicesModel service;
+  const ServiceDetails({super.key, required this.service});
 
   @override
   State<ServiceDetails> createState() => _ServiceDetailsState();
@@ -20,6 +22,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             children: [
@@ -33,7 +36,9 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                       decoration: BoxDecoration(
                         color: AppColor.white,
                         image: DecorationImage(
-                          image: AssetImage('${imagePath}pipe-fitting.png'),
+                          image: widget.service.imageUrl.isNotEmpty
+                              ? NetworkImage(widget.service.imageUrl)
+                              : AssetImage('${imagePath}pipe-fitting.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -42,8 +47,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                 ),
               ),
               Positioned(
-                top: 55,
-                right: 20,
+                top: 50,
                 left: 20,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,49 +56,10 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                       onTap: () {
                         navigateBackWithAnimation(context);
                       },
-                      child: Container(
-                        width: 40..w,
-                        height:40..h,
-                        decoration: BoxDecoration(
+                      child: Center(
+                        child: Icon(Icons.arrow_back_ios,
                           color: AppColor.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColor.k0xFFEEEEEE,
-                              blurRadius: 5,
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Icon(Icons.arrow_back_ios,
-                            color: AppColor.black,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: (){
-                        setState(() {
-                          favorite1 = !favorite1;
-                        });
-                      },
-                      child: Container(
-                        width: 40..w,
-                        height: 40..h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColor.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColor.k0xFFEEEEEE,
-                              blurRadius: 5,
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                            child: favorite1 ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 24,) :
-                            Icon(Icons.favorite,color: AppColor.red,size: 24,)
+                          size: 18,
                         ),
                       ),
                     ),
@@ -122,8 +87,14 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SubText(
-                        text: 'Pipe Fitting',
+                        text: widget.service.serviceTitle,
                         fontWeight: FontWeight.w700,
+                        fontSize: 16..sp,
+                      ),
+                      SizedBox(height: 5..h),
+                      SubText(
+                        text: widget.service.category,
+                        fontWeight: FontWeight.w400,
                         fontSize: 16..sp,
                       ),
                       SizedBox(height: 5..h),
@@ -131,8 +102,17 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                         children: [
                           SvgPicture.asset('${iconPath}map-pin.svg'),
                           SizedBox(width: 10..w),
-                          Text12(
-                            text: 'Woodstock, GA',
+                          Expanded(
+                            child: Text(
+                              widget.service.location.isNotEmpty
+                                  ? widget.service.location
+                                  : 'Unknown Location',
+                              style: TextStyle(
+                                color: AppColor.black.withOpacity(.5),
+                                fontSize: 12..sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -159,7 +139,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                             ),
                             child: Center(
                               child: MainText(
-                                text: '\$ 20.00',
+                                text: '\$ ${widget.service.price}',
                                 fontSize: 14..sp,
                                 color: AppColor.white,
                               ),
@@ -175,17 +155,18 @@ class _ServiceDetailsState extends State<ServiceDetails> {
           ),
           SizedBox(height: 10..h),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 15..h,),
                 Text16(
                   text: 'Description',
                 ),
                 SubText(
-                  text: 'Hey, I\'m Jack Marston and expert of plumb servicing. I having more than 2 years of working '
-                      'experience. I appreciate the best delivery from my side. Hey, I\'m Jack Marston and expert of plumb '
-                      'servicing. I having more than 2 years of working experience Read More...',
+                  text: widget.service.description.isNotEmpty
+                      ? widget.service.description
+                      : 'No description provided',
                   fontSize: 12..sp,
                 ),
               ],

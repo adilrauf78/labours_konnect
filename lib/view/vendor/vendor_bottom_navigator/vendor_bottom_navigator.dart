@@ -8,6 +8,7 @@ import 'package:labours_konnect/view/booking_screen/booking_screen.dart';
 import 'package:labours_konnect/view/home_screen/home_screen.dart';
 import 'package:labours_konnect/view/message_screen/message_screen.dart';
 import 'package:labours_konnect/view/my_location/my_location.dart';
+import 'package:labours_konnect/view/vendor/add_services/add_services.dart';
 import 'package:labours_konnect/view/vendor/vendor_home/vendor_home.dart';
 import 'package:labours_konnect/view/vendor/vendor_profile/my_services/my_services.dart';
 import 'package:labours_konnect/view/vendor/vendor_profile/vendor_profile.dart';
@@ -39,9 +40,9 @@ class _VendorBottomNavigator extends State<VendorBottomNavigator> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MyLocation()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddServices()));
         },
-        child: SvgPicture.asset('${iconPath}my_location.svg'),
+        child: Icon(Icons.add,color: AppColor.primaryColor,size: 35,),
         elevation: 5,
         backgroundColor: AppColor.white,
         shape: CircleBorder(
@@ -118,7 +119,7 @@ class _VendorBottomNavigator extends State<VendorBottomNavigator> {
                         SvgPicture.asset(currentTab == 1 ?"${iconPath}bookingclick.svg" : "${iconPath}booking.svg",),
                         SizedBox(height: 8..h),
                         Text(
-                          ('Booking'),
+                          ('Services'),
                           style: TextStyle(
                               color: currentTab == 1 ? AppColor.white : AppColor.white.withOpacity(.8),
                               fontSize: 10..sp,

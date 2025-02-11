@@ -159,10 +159,10 @@ class _CategoriesState extends State<Categories> {
                                         return CircularProgressIndicator();
                                       },
                                       errorBuilder: (context, error, stackTrace) {
-                                        return SvgPicture.asset('${iconPath}paint-roller.svg'); // Fallback icon
+                                        return SvgPicture.asset('${iconPath}paint-roller.svg');
                                       },
                                     )
-                                        : SvgPicture.asset('${iconPath}paint-roller.svg'), // Fallback icon
+                                        : SvgPicture.asset('${iconPath}paint-roller.svg'),
                                   ),
                                 ),
                                 SizedBox(width: 20..w),

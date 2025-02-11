@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:labours_konnect/constants/utils.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
+import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/view/auth_screens/enable_location/enable_location.dart';
 import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
 import 'package:labours_konnect/view/auth_screens/user_details/user_details.dart';
@@ -547,14 +548,12 @@ class AuthController extends GetxController {
   final TextEditingController experienceController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-
+  RxString imagePath = ''.obs;
 
   Future<void> addService() async {
     if (serviceTitle.text.isEmpty) {
       showSnackBar(title: 'Please select an image');
-    } else if (serviceTitle.text.isEmpty) {
-      showSnackBar(title: 'Please Enter Service Title');
-    } else if (selectedCategory.value == 'Choose Category') {
+    }else if (selectedCategory.value == 'Choose Category') {
       showSnackBar(title: 'Please Enter Category');
     } else if (cityController.text.isEmpty) {
       showSnackBar(title: 'Please Enter City');
@@ -571,22 +570,19 @@ class AuthController extends GetxController {
         isLoading = true;
         update();
 
-        // Upload image to Firebase Storage
-
-        // Save service details to Firestore
-        await _firestore.collection('services').add({
-          'userId': _auth.currentUser?.uid,
-          'imageUrl': "",
-          'service title': serviceTitle.text.trim(),
-          'category': selectedCategory.value,
-          'city': cityController.text.trim(),
-          'location': locationController.text.trim(),
-          'experience': experienceController.text.trim(),
-          'price': priceController.text.trim(),
-          'description': descriptionController.text.trim(),
-          'timestamp': FieldValue.serverTimestamp(),
-        });
-
+        final serviceData = AddServicesModel(
+            userId: _auth.currentUser?.uid ?? '',
+            imageUrl: "",
+            serviceTitle: serviceTitle.text.trim(),
+            category: selectedCategory.value,
+            city: cityController.text.trim(),
+            location: locationController.text.trim(),
+            experience: experienceController.text.trim(),
+            price: priceController.text.trim(),
+            description: descriptionController.text.trim(),
+            timestamp: DateTime.now(),
+        );
+        await _firestore.collection('services').add(serviceData.toMap());
         isLoading = false;
         update();
 
@@ -606,6 +602,29 @@ class AuthController extends GetxController {
       }
     }
   }
+
+  //Fetch AddServices Data
+  Future<List<AddServicesModel>> fetchServicesForUser() async {
+    try {
+
+      User? user = _auth.currentUser;
+      if (user == null) {
+        throw Exception('User not logged in');
+      }
+      final querySnapshot = await _firestore
+          .collection('services')
+          .where('userId', isEqualTo: user.uid)
+          .get();
+
+      return querySnapshot.docs.map((doc) {
+        return AddServicesModel.fromMap(doc.data());
+      }).toList();
+    } catch (e) {
+      ErrorSnackBar('Error','Error fetching services for user: $e');
+      rethrow;
+    }
+  }
+
 
 // Upload Image to Firebase Storage
   Future<String> _uploadImage(File image) async {

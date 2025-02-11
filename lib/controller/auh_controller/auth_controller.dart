@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
@@ -532,52 +533,87 @@ class AuthController extends GetxController {
   }
 
 
+
+  //selected category
+  RxString selectedCategory = 'Choose Category'.obs;
+  void updateSelectedCategory(String category) {
+    selectedCategory.value = category;
+  }
+
   //Add Services
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController categoryController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController experienceController = TextEditingController();
+  final TextEditingController serviceTitle = TextEditingController();
   final TextEditingController cityController = TextEditingController();
+  late  TextEditingController locationController = TextEditingController();
+  final TextEditingController experienceController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
+
   Future<void> addService() async {
-    if (emailLogin.text.isEmpty && passwordLogin.text.isEmpty) {
-      showSnackBar(title: 'Email and Password are required');
-    }
-    else if (emailLogin.text.isEmpty) {
-      showSnackBar(title: 'Please Enter Your Email');
-    }
-    else if (passwordLogin.text.isEmpty){
-      showSnackBar(title: 'Please Enter a Password');
-    }
-    else{
+    if (serviceTitle.text.isEmpty) {
+      showSnackBar(title: 'Please select an image');
+    } else if (serviceTitle.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Service Title');
+    } else if (selectedCategory.value == 'Choose Category') {
+      showSnackBar(title: 'Please Enter Category');
+    } else if (cityController.text.isEmpty) {
+      showSnackBar(title: 'Please Enter City');
+    } else if (locationController.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Location');
+    } else if (experienceController.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Experience');
+    } else if (priceController.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Price');
+    } else if (descriptionController.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Description');
+    } else {
       try {
         isLoading = true;
         update();
 
         // Upload image to Firebase Storage
-        String imageUrl = await _uploadImage(image);
 
-        // Save data to Firestore
+        // Save service details to Firestore
         await _firestore.collection('services').add({
-          'imageUrl': imageUrl,
-          'title': title,
-          'category': category,
-          'price': price,
-          'location': location,
-          'description': description,
-          'experience': experience,
-          'city': city,
+          'userId': _auth.currentUser?.uid,
+          'imageUrl': "",
+          'service title': serviceTitle.text.trim(),
+          'category': selectedCategory.value,
+          'city': cityController.text.trim(),
+          'location': locationController.text.trim(),
+          'experience': experienceController.text.trim(),
+          'price': priceController.text.trim(),
+          'description': descriptionController.text.trim(),
           'timestamp': FieldValue.serverTimestamp(),
         });
 
+        isLoading = false;
+        update();
+
         SuccessSnackBar('Success', 'Service added successfully');
+
+        serviceTitle.clear();
+        selectedCategory.value = 'Choose Category';
+        cityController.clear();
+        locationController.clear();
+        experienceController.clear();
+        priceController.clear();
+        descriptionController.clear();
       } catch (e) {
         ErrorSnackBar('Error', 'Failed to add service: $e');
-      } finally {
         isLoading = false;
         update();
       }
     }
-    }
+  }
+
+// Upload Image to Firebase Storage
+  Future<String> _uploadImage(File image) async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference storageReference = FirebaseStorage.instance.ref().child('service_images/$fileName');
+    UploadTask uploadTask = storageReference.putFile(image);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String downloadURL = await taskSnapshot.ref.getDownloadURL();
+    return downloadURL;
+  }
 }

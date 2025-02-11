@@ -47,4 +47,6 @@ class CategoryController extends GetxController {
       return [];
     }
   }
+
+
 }

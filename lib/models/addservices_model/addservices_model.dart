@@ -41,18 +41,4 @@ class ServiceModel {
     );
   }
 
-  // Dart object ko Firestore mein save karne ke liye map mein convert karein
-  Map<String, dynamic> toMap() {
-    return {
-      'imageUrl': imageUrl,
-      'title': title,
-      'category': category,
-      'price': price,
-      'location': location,
-      'description': description,
-      'experience': experience,
-      'city': city,
-      'timestamp': timestamp ?? FieldValue.serverTimestamp(),
-    };
-  }
 }

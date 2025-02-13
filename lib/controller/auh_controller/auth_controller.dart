@@ -625,6 +625,25 @@ class AuthController extends GetxController {
     }
   }
 
+  //Fetch Services by Category
+
+  Future<List<AddServicesModel>> fetchServicesByCategory(String categoryValue) async {
+    try {
+      //print('Fetching services for category: $categoryValue');
+      final querySnapshot = await _firestore.collection('services')
+          .where('category', isEqualTo: categoryValue).get();
+      print('Number of services found: ${querySnapshot.docs.length}');
+      return querySnapshot.docs.map((doc) {
+        print('Service Data: ${doc.data()}');
+        return AddServicesModel.fromMap(doc.data());
+      }).toList();
+    } catch (e) {
+      print('Error fetching services: $e');
+      ErrorSnackBar('Error', 'Failed to fetch services: $e');
+      rethrow;
+    }
+  }
+
 
 // Upload Image to Firebase Storage
   Future<String> _uploadImage(File image) async {

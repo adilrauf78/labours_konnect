@@ -150,7 +150,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
                         padding: const EdgeInsets.only(bottom: 20),
                         child: GestureDetector(
                           onTap: (){
-                            navigateToNextScreen(context, Details());
+                            navigateToNextScreen(context, Details(service: service,));
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width,

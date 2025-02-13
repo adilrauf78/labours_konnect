@@ -2,21 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/view/home_screen/book_now/book_now.dart';
 
 
 class Details extends StatefulWidget {
-  const Details({super.key});
+  final AddServicesModel service;
+  const Details({super.key, required this.service});
 
   @override
   State<Details> createState() => _DetailsState();
 }
 
 class _DetailsState extends State<Details> {
+  final AuthController authController = Get.find<AuthController>();
   bool favorite = true;
   bool favorite1 = true;
   double _rating = 5;
@@ -76,7 +81,8 @@ class _DetailsState extends State<Details> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText(
-                              text: 'Jack Marston',
+                              text: widget.service.userName ?? 'null',
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
                             ),
                             SizedBox(height: 5..h),
@@ -88,7 +94,7 @@ class _DetailsState extends State<Details> {
                               ),
                               child: Center(
                                 child: Text16(
-                                  text: 'Plumbing',
+                                  text: widget.service.category,
                                   fontSize: 14..sp,
                                   color: AppColor.white,
                                 ),
@@ -100,7 +106,7 @@ class _DetailsState extends State<Details> {
                                 SvgPicture.asset('${iconPath}map-pin.svg'),
                                 SizedBox(width: 10..w),
                                 Text12(
-                                  text: 'Woodstock, GA',
+                                  text: widget.service.location,
                                 ),
                               ],
                             ),
@@ -147,11 +153,10 @@ class _DetailsState extends State<Details> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SubText(
-                                text: 'Hey, I\'m Jack Marston and expert of plumb servicing. I having more than 2 years of working '
-                                    'experience. I appreciate the best delivery from my side. Hey, I\'m Jack Marston and expert of plumb '
-                                    'servicing. I having more than 2 years of working experience Read More...',
+                                text: widget.service.description,
                                 fontSize: 12..sp,
                               ),
                               SizedBox(height: 10..h),
@@ -275,11 +280,12 @@ class _DetailsState extends State<Details> {
                                                 Row(
                                                   children: [
                                                     SubText(
-                                                      text: '4',
+                                                      text: widget.service.experience,
                                                       fontSize: 18..sp,
                                                       fontWeight: FontWeight.w500,
                                                       color: AppColor.white,
                                                     ),
+                                                    SizedBox(width: 5..w),
                                                     SubText(
                                                       text: 'Years',
                                                       fontSize: 13..sp,
@@ -318,175 +324,193 @@ class _DetailsState extends State<Details> {
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Column(
                             children: [
-                              ListView.builder(
-                                itemCount: 2,
-                                shrinkWrap: true,
-                                padding: EdgeInsets.zero,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemBuilder: (context,index){
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 20),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                        color: AppColor.white,
-                                        borderRadius: BorderRadius.circular(10..r),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: AppColor.k0xFFEEEEEE,
-                                            blurRadius: 5,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Stack(
-                                            children: [
-                                              Container(
-                                                width: MediaQuery.of(context).size.width,
-                                                height: 160..h,
-                                                decoration: BoxDecoration(
-                                                  color: AppColor.white,
-                                                  image: DecorationImage(
-                                                    image: AssetImage('${imagePath}pipe-fitting.png'),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  borderRadius: BorderRadius.only(
-                                                    topLeft: Radius.circular(10..r),
-                                                    topRight: Radius.circular(10..r),
-                                                  ),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: AppColor.k0xFFEEEEEE,
-                                                      blurRadius: 5,
-                                                    ),
-                                                  ],
+                              FutureBuilder<List<AddServicesModel>>(
+                                future: authController.fetchUserServices(widget.service.userId), // Fetch services for specific user
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Center(child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    return Center(child: Text('Error: ${snapshot.error}'));
+                                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                    return Center(child: Text('No services found.'));
+                                  } else {
+                                    final services = snapshot.data!;
+                                    return ListView.builder(
+                                      itemCount: services.length, // Dynamic item count
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.zero,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        final service = services[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.only(bottom: 20),
+                                          child: Container(
+                                            width: MediaQuery.of(context).size.width,
+                                            decoration: BoxDecoration(
+                                              color: AppColor.white,
+                                              borderRadius: BorderRadius.circular(10..r),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: AppColor.k0xFFEEEEEE,
+                                                  blurRadius: 5,
                                                 ),
-                                              ),
-                                              Positioned(
-                                                top: 10,
-                                                right: 10,
-                                                child: GestureDetector(
-                                                  onTap: (){
-                                                    setState(() {
-                                                      favorite1 = !favorite1;
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    width: 40..w,
-                                                    height: 40..h,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: AppColor.white,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: AppColor.k0xFFEEEEEE,
-                                                          blurRadius: 5,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: Center(
-                                                        child: favorite1 ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 24,) :
-                                                        Icon(Icons.favorite,color: AppColor.red,size: 24,)
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.all(10),
+                                              ],
+                                            ),
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                SubText(
-                                                  text: 'Pipe Fitting',
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 16..sp,
-                                                ),
-                                                SizedBox(height: 10..h),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                Stack(
                                                   children: [
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          width: 34..w,
-                                                          height: 34..h,
+                                                    Container(
+                                                      width: MediaQuery.of(context).size.width,
+                                                      height: 160..h,
+                                                      decoration: BoxDecoration(
+                                                        color: AppColor.white,
+                                                        image: DecorationImage(
+                                                          image: authController.imagePath.isNotEmpty
+                                                              ? NetworkImage(authController.imagePath.value)
+                                                              : AssetImage('${imagePath}pipe-fitting.png'),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        borderRadius: BorderRadius.only(
+                                                          topLeft: Radius.circular(10..r),
+                                                          topRight: Radius.circular(10..r),
+                                                        ),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: AppColor.k0xFFEEEEEE,
+                                                            blurRadius: 5,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      top: 10,
+                                                      right: 10,
+                                                      child: GestureDetector(
+                                                        onTap: (){
+                                                          setState(() {
+                                                            favorite1 = !favorite1;
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          width: 40..w,
+                                                          height: 40..h,
                                                           decoration: BoxDecoration(
                                                             shape: BoxShape.circle,
                                                             color: AppColor.white,
-                                                            image: DecorationImage(
-                                                              image: AssetImage('${imagePath}pipe.png'),
-                                                              fit: BoxFit.cover,
-                                                            ),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: AppColor.k0xFFEEEEEE,
+                                                                blurRadius: 5,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          child: Center(
+                                                              child: favorite1 ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 24,) :
+                                                              Icon(Icons.favorite,color: AppColor.red,size: 24,)
                                                           ),
                                                         ),
-                                                        SizedBox(width: 10..w),
-                                                        Column(
-                                                          children: [
-                                                            MainText(
-                                                              text: 'Jack Marston',
-                                                              fontSize: 14..sp,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              children: [
-                                                                RatingBar.builder(
-                                                                    initialRating: 5,
-                                                                    minRating: 1,
-                                                                    itemCount: 5,
-                                                                    itemSize: 12,
-                                                                    itemPadding: EdgeInsets.only(right: 2),
-                                                                    direction: Axis.horizontal,
-                                                                    unratedColor: Color(0x4DF9E005),
-                                                                    itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                                                    onRatingUpdate: (rating1){
-                                                                      setState(() {
-                                                                        _rating = _rating;
-                                                                      });
-                                                                    }
-                                                                ),
-                                                                SizedBox(width: 5..w),
-                                                                Text(
-                                                                  '$_rating',
-                                                                  style: TextStyle(
-                                                                    color: AppColor.black,
-                                                                    fontSize: 10..sp,
-                                                                    fontWeight: FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      SubText(
+                                                        text: service.serviceTitle,
+                                                        fontWeight: FontWeight.w700,
+                                                        fontSize: 16..sp,
+                                                      ),
+                                                      SizedBox(height: 10..h),
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                width: 34..w,
+                                                                height: 34..h,
+                                                                decoration: BoxDecoration(
+                                                                  shape: BoxShape.circle,
+                                                                  color: AppColor.white,
+                                                                  image: DecorationImage(
+                                                                    image: AssetImage('${imagePath}pipe.png'),
+                                                                    fit: BoxFit.cover,
                                                                   ),
                                                                 ),
-                                                              ],
+                                                              ),
+                                                              SizedBox(width: 10..w),
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  MainText(
+                                                                    text: service.userName ?? 'Unknown User', // Use 'Unknown User' if userName is null
+                                                                    fontSize: 14.sp,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    children: [
+                                                                      RatingBar.builder(
+                                                                          initialRating: 5,
+                                                                          minRating: 1,
+                                                                          itemCount: 5,
+                                                                          itemSize: 12,
+                                                                          itemPadding: EdgeInsets.only(right: 2),
+                                                                          direction: Axis.horizontal,
+                                                                          unratedColor: Color(0x4DF9E005),
+                                                                          itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
+                                                                          onRatingUpdate: (rating1){
+                                                                            setState(() {
+                                                                              _rating = _rating;
+                                                                            });
+                                                                          }
+                                                                      ),
+                                                                      SizedBox(width: 5..w),
+                                                                      Text(
+                                                                        '$_rating',
+                                                                        style: TextStyle(
+                                                                          color: AppColor.black,
+                                                                          fontSize: 10..sp,
+                                                                          fontWeight: FontWeight.w400,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Container(
+                                                            padding: EdgeInsets.symmetric(horizontal: 13,vertical: 8),
+                                                            decoration: BoxDecoration(
+                                                              color: AppColor.primaryColor,
+                                                              borderRadius: BorderRadius.circular(5..r),
                                                             ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Container(
-                                                      padding: EdgeInsets.symmetric(horizontal: 13,vertical: 8),
-                                                      decoration: BoxDecoration(
-                                                        color: AppColor.primaryColor,
-                                                        borderRadius: BorderRadius.circular(5..r),
-                                                      ),
-                                                      child: Center(
-                                                        child: MainText(
-                                                          text: '\$ 20.00',
-                                                          fontSize: 14..sp,
-                                                          color: AppColor.white,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
+                                                            child: Center(
+                                                              child: MainText(
+                                                                text: '\$ ${service.price}.00',
+                                                                fontSize: 14..sp,
+                                                                color: AppColor.white,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
                                                 )
                                               ],
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  );
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
                                 },
                               ),
                             ],

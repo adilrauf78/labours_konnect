@@ -1,7 +1,9 @@
 class AddServicesModel {
   final String userId;
-  final String imageUrl;
+  final String? userName; // Nullable field
+  final String? userImage; // Nullable field
   final String serviceTitle;
+  final String? serviceImage; // Nullable field
   final String category;
   final String city;
   final String location;
@@ -12,8 +14,10 @@ class AddServicesModel {
 
   AddServicesModel({
     required this.userId,
-    required this.imageUrl,
+    this.userName, // Nullable field
+    this.userImage, // Nullable field
     required this.serviceTitle,
+    this.serviceImage, // Nullable field
     required this.category,
     required this.city,
     required this.location,
@@ -23,12 +27,13 @@ class AddServicesModel {
     required this.timestamp,
   });
 
-  // Convert the model to a Map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
-      'imageUrl': imageUrl,
+      'userName': userName,
+      'userImage': userImage,
       'serviceTitle': serviceTitle,
+      'serviceImage': serviceImage,
       'category': category,
       'city': city,
       'location': location,
@@ -39,19 +44,20 @@ class AddServicesModel {
     };
   }
 
-  // Create a model from a Firestore document
   factory AddServicesModel.fromMap(Map<String, dynamic> map) {
     return AddServicesModel(
-      userId: map['userId'] ?? '', // Provide a default value if null
-      imageUrl: map['imageUrl'] ?? '',
-      serviceTitle: map['serviceTitle'] ?? '',
-      category: map['category'] ?? '',
-      city: map['city'] ?? '',
-      location: map['location'] ?? '',
-      experience: map['experience'] ?? '',
-      price: map['price'] ?? '',
-      description: map['description'] ?? '',
-      timestamp: map['timestamp']?.toDate() ?? DateTime.now(), // Handle null timestamp
+      userId: map['userId'] ?? '', // Default value
+      userName: map['userName'], // Nullable field
+      userImage: map['userImage'], // Nullable field
+      serviceTitle: map['serviceTitle'] ?? '', // Default value
+      serviceImage: map['serviceImage'], // Nullable field
+      category: map['category'] ?? '', // Default value
+      city: map['city'] ?? '', // Default value
+      location: map['location'] ?? '', // Default value
+      experience: map['experience'] ?? '', // Default value
+      price: map['price'] ?? '', // Default value
+      description: map['description'] ?? '', // Default value
+      timestamp: map['timestamp']?.toDate() ?? DateTime.now(), // Default value
     );
   }
 }

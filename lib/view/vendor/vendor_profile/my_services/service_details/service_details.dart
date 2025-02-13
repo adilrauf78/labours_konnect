@@ -36,9 +36,9 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                       decoration: BoxDecoration(
                         color: AppColor.white,
                         image: DecorationImage(
-                          image: widget.service.imageUrl.isNotEmpty
-                              ? NetworkImage(widget.service.imageUrl)
-                              : AssetImage('${imagePath}pipe-fitting.png'),
+                          image: widget.service.serviceImage != null && widget.service.serviceImage!.isNotEmpty
+                              ? NetworkImage(widget.service.serviceImage!) // Use NetworkImage if serviceImage is not null and not empty
+                              : AssetImage('${imagePath}pipe-fitting.png') as ImageProvider, // Use default image otherwise
                           fit: BoxFit.cover,
                         ),
                       ),

@@ -541,6 +541,16 @@ class AuthController extends GetxController {
     selectedCategory.value = category;
   }
 
+  Future<Map<String, dynamic>?> fetchUserDetails(String userId) async {
+    try {
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      return  userDoc.data() ;
+    } catch (e) {
+      print('Error fetching user details: $e');
+    }
+    return null;
+  }
+
   //Add Services
   final TextEditingController serviceTitle = TextEditingController();
   final TextEditingController cityController = TextEditingController();
@@ -569,11 +579,20 @@ class AuthController extends GetxController {
       try {
         isLoading = true;
         update();
+        final userId = _auth.currentUser!.uid;
+        final userDetails = await fetchUserDetails(userId);
+
+        // Check if userDetails is null and provide default values
+        final firstName = userDetails?['First Name'] ?? 'Unknown';
+        final lastName = userDetails?['Last Name'] ?? 'User';
+        final profileImage = userDetails?['profileImage'] ?? '';
 
         final serviceData = AddServicesModel(
             userId: _auth.currentUser?.uid ?? '',
-            imageUrl: "",
+          userName: '$firstName $lastName',
+          userImage: profileImage,
             serviceTitle: serviceTitle.text.trim(),
+            serviceImage: "",
             category: selectedCategory.value,
             city: cityController.text.trim(),
             location: locationController.text.trim(),
@@ -629,19 +648,54 @@ class AuthController extends GetxController {
 
   Future<List<AddServicesModel>> fetchServicesByCategory(String categoryValue) async {
     try {
-      //print('Fetching services for category: $categoryValue');
       final querySnapshot = await _firestore.collection('services')
-          .where('category', isEqualTo: categoryValue).get();
-      print('Number of services found: ${querySnapshot.docs.length}');
-      return querySnapshot.docs.map((doc) {
-        print('Service Data: ${doc.data()}');
-        return AddServicesModel.fromMap(doc.data());
-      }).toList();
+          .where('category', isEqualTo: categoryValue)
+          .get();
+
+      List<AddServicesModel> services = [];
+
+      for (var doc in querySnapshot.docs) {
+        final serviceData = doc.data();
+        final userId = serviceData['userId'];
+
+        // Fetch user details dynamically
+        final userDetails = await fetchUserDetails(userId);
+
+        final service = AddServicesModel(
+          userId: userId,
+          userName: '${userDetails?['First Name'] ?? 'Unknown'} ${userDetails?['Last Name'] ?? 'User'}', // Fetch user's full name
+          userImage: userDetails?['profileImage'] ?? '', // Fetch user's profile image
+          serviceTitle: serviceData['serviceTitle'],
+          serviceImage: serviceData['serviceImage'],
+          category: serviceData['category'],
+          city: serviceData['city'],
+          location: serviceData['location'],
+          experience: serviceData['experience'],
+          price: serviceData['price'],
+          description: serviceData['description'],
+          timestamp: serviceData['timestamp'].toDate(),
+        );
+
+        services.add(service);
+      }
+
+      return services;
     } catch (e) {
-      print('Error fetching services: $e');
       ErrorSnackBar('Error', 'Failed to fetch services: $e');
       rethrow;
     }
+  }
+
+  //FetchSpecific user
+  Future<List<AddServicesModel>> fetchUserServices(String userId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('services')
+        .where('userId', isEqualTo: userId)
+        .get();
+
+    return snapshot.docs.map((doc) {
+      return AddServicesModel.fromMap(doc.data());
+    }).toList();
   }
 
 

@@ -130,173 +130,175 @@ class _CategoryOpenState extends State<CategoryOpen> {
               ],
             ),
             SizedBox(height: 30..h),
-            FutureBuilder<List<AddServicesModel>>(
-              future: authController.fetchServicesByCategory(widget.category.category),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No services found for this category'));
-                } else {
-                  final services = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: services.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      final service = services[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: GestureDetector(
-                          onTap: (){
-                            navigateToNextScreen(context, Details(service: service,));
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Color(0xFFFBFBFB),
-                              borderRadius: BorderRadius.circular(10..r),
-                              border: Border.all(
-                                color: Color(0xFFEEEEEE),
+            Expanded(
+              child: FutureBuilder<List<AddServicesModel>>(
+                future: authController.fetchServicesByCategory(widget.category.category),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No services found for this category'));
+                  } else {
+                    final services = snapshot.data!;
+                    return ListView.builder(
+                      itemCount: services.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final service = services[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: GestureDetector(
+                            onTap: (){
+                              navigateToNextScreen(context, Details(service: service,));
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFFBFBFB),
+                                borderRadius: BorderRadius.circular(10..r),
+                                border: Border.all(
+                                  color: Color(0xFFEEEEEE),
+                                ),
                               ),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Stack(
-                                  children: [
-                                    Container(
-                                      width: 130..w,
-                                      height: 160..h,
-                                      decoration: BoxDecoration(
-                                        color: AppColor.white,
-                                        image: DecorationImage(
-                                          image: authController.imagePath.isNotEmpty
-                                              ? NetworkImage(authController.imagePath.value)
-                                              :AssetImage('${imagePath}painter.png'),
-                                          fit: BoxFit.cover,
-                                        ),
-                                        borderRadius: BorderRadius.circular(5..r),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 5,
-                                      right: 5,
-                                      child: GestureDetector(
-                                        onTap: (){
-                                          setState(() {
-                                            favorite = !favorite;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 25..w,
-                                          height: 25..h,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: AppColor.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: AppColor.k0xFFEEEEEE,
-                                                blurRadius: 5,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Center(
-                                              child: favorite ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 18,) :
-                                              Icon(Icons.favorite,color: AppColor.red,size: 18,)
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 5,
-                                      left: 5,
-                                      child: Container(
-                                        width: 85..w,
-                                        height: 20..h,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Container(
+                                        width: 130..w,
+                                        height: 160..h,
                                         decoration: BoxDecoration(
-                                          color: AppColor.primaryColor,
+                                          color: AppColor.white,
+                                          image: DecorationImage(
+                                            image: authController.imagePath.isNotEmpty
+                                                ? NetworkImage(authController.imagePath.value)
+                                                :AssetImage('${imagePath}painter.png'),
+                                            fit: BoxFit.cover,
+                                          ),
                                           borderRadius: BorderRadius.circular(5..r),
                                         ),
-                                        child: Center(
-                                          child: Text18(
-                                            text: 'Level two',
-                                            color: AppColor.white,
-                                            fontSize: 12..sp,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 10..w),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(height: 2..h),
-                                          MainText(
-                                            text: service.serviceTitle,
-                                          ),
-                                          SubText(
-                                            text: service.category,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Icon(Icons.star,size: 16,color: Color(0xFFFFD800)),
-                                              SizedBox(width: 3..w),
-                                              MainText(
-                                                text: '4.5',
-                                                fontSize: 15..sp,
-                                                fontWeight: FontWeight.w500,
-                                              )
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              SvgPicture.asset('${iconPath}map-pin.svg'),
-                                              SizedBox(width: 10..w),
-                                              Expanded(
-                                                child: Text12(
-                                                  text: service.location,
+                                      Positioned(
+                                        top: 5,
+                                        right: 5,
+                                        child: GestureDetector(
+                                          onTap: (){
+                                            setState(() {
+                                              favorite = !favorite;
+                                            });
+                                          },
+                                          child: Container(
+                                            width: 25..w,
+                                            height: 25..h,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: AppColor.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: AppColor.k0xFFEEEEEE,
+                                                  blurRadius: 5,
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
+                                            child: Center(
+                                                child: favorite ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 18,) :
+                                                Icon(Icons.favorite,color: AppColor.red,size: 18,)
+                                            ),
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                      SizedBox(height: 25..h),
-                                      Container(
-                                        height: 40..h,
-                                        decoration: BoxDecoration(
-                                          color: AppColor.primaryColor,
-                                          borderRadius: BorderRadius.circular(10..r),
-                                        ),
-                                        child: Center(
-                                          child: Text16(
-                                            text: 'Book Now',
-                                            color: AppColor.white,
-                                            fontWeight: FontWeight.w700,
+                                      Positioned(
+                                        bottom: 5,
+                                        left: 5,
+                                        child: Container(
+                                          width: 85..w,
+                                          height: 20..h,
+                                          decoration: BoxDecoration(
+                                            color: AppColor.primaryColor,
+                                            borderRadius: BorderRadius.circular(5..r),
+                                          ),
+                                          child: Center(
+                                            child: Text18(
+                                              text: 'Level two',
+                                              color: AppColor.white,
+                                              fontSize: 12..sp,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                           ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
-                                )
-                              ],
+                                  SizedBox(width: 10..w),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(height: 2..h),
+                                            MainText(
+                                              text: service.serviceTitle,
+                                            ),
+                                            SubText(
+                                              text: service.category,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(Icons.star,size: 16,color: Color(0xFFFFD800)),
+                                                SizedBox(width: 3..w),
+                                                MainText(
+                                                  text: '4.5',
+                                                  fontSize: 15..sp,
+                                                  fontWeight: FontWeight.w500,
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset('${iconPath}map-pin.svg'),
+                                                SizedBox(width: 10..w),
+                                                Expanded(
+                                                  child: Text12(
+                                                    text: service.location,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 25..h),
+                                        Container(
+                                          height: 40..h,
+                                          decoration: BoxDecoration(
+                                            color: AppColor.primaryColor,
+                                            borderRadius: BorderRadius.circular(10..r),
+                                          ),
+                                          child: Center(
+                                            child: Text16(
+                                              text: 'Book Now',
+                                              color: AppColor.white,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
           ],
         ),

@@ -4,6 +4,7 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/message_screen/chat_screen/chat_screen.dart';
 
 class MessageScreen extends StatelessWidget {
   const MessageScreen({super.key});
@@ -44,76 +45,81 @@ class MessageScreen extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               itemBuilder: (context,index){
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                      border: Border(
-                          bottom: BorderSide(
-                            color: AppColor.black.withOpacity(.1),
-                          )
-                      ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 50..w,
-                            height: 50..h,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColor.white
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50..r),
-                              child: Image.asset('${imagePath}image.png',
-                                fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: (){
+                    navigateToNextScreen(context, ChatScreen());
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                        border: Border(
+                            bottom: BorderSide(
+                              color: AppColor.black.withOpacity(.1),
+                            )
+                        ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 50..w,
+                              height: 50..h,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColor.white
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50..r),
+                                child: Image.asset('${imagePath}image.png',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 15..w),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MainText(
-                                text: 'Martha Smith',
-                                fontSize: 16..sp,
-                              ),
-                              SubText(
-                                text: 'Typing..',
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          SubText(
-                            text: '23 min',
-                            fontWeight: FontWeight.w700,
-                          ),
-                          Container(
-                            width: 20..w,
-                            height: 20..h,
-                            decoration: BoxDecoration(
-                              color: AppColor.primaryColor,
-                              shape: BoxShape.circle,
+                            SizedBox(width: 15..w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                MainText(
+                                  text: 'Martha Smith',
+                                  fontSize: 16..sp,
+                                ),
+                                SubText(
+                                  text: 'Typing..',
+                                ),
+                              ],
                             ),
-                            child: Center(
-                              child: Text12(
-                                text: '1',
-                                color: AppColor.white,
-                                fontWeight: FontWeight.w700,
-                              ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            SubText(
+                              text: '23 min',
+                              fontWeight: FontWeight.w700,
                             ),
-                          )
-                        ],
-                      )
-                    ],
+                            Container(
+                              width: 20..w,
+                              height: 20..h,
+                              decoration: BoxDecoration(
+                                color: AppColor.primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text12(
+                                  text: '1',
+                                  color: AppColor.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 );
               },

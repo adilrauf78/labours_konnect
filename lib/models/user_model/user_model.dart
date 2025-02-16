@@ -1,29 +1,24 @@
 class UserModel {
-  final String userId; // Unique ID of the user
-  final String userName; // Name of the user
-  final String profilePicture; // URL or path to the user's profile picture
-  final String email; // User's email (optional)
-  final bool isOnline; // Online/offline status of the user
-  final DateTime lastSeen; // Last seen timestamp
+  final String? userId; // Nullable
+  final String? firstName; // Nullable
+  final String? lastName; // Nullable
+  final String? email; // Nullable
+  final String? profileImage; // Nullable
 
   UserModel({
-    required this.userId,
-    required this.userName,
-    this.profilePicture = 'default_image.png', // Default image if none is provided
-    this.email = '',
-    this.isOnline = false,
-    required this.lastSeen,
+    this.userId,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.profileImage,
   });
-
-  // Convert UserModel to JSON for Firestore
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,
-      'userName': userName,
-      'profilePicture': profilePicture,
+      'firstName': firstName,
+      'lastName': lastName,
       'email': email,
-      'isOnline': isOnline,
-      'lastSeen': lastSeen,
+      'profileImage': profileImage,
     };
   }
 
@@ -31,11 +26,10 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       userId: json['userId'],
-      userName: json['userName'],
-      profilePicture: json['profilePicture'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
       email: json['email'],
-      isOnline: json['isOnline'],
-      lastSeen: json['lastSeen'].toDate(),
+      profileImage: json['profileImage'],
     );
   }
 }

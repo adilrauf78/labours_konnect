@@ -47,7 +47,7 @@ class MessageScreen extends StatelessWidget {
               itemBuilder: (context,index){
                 return GestureDetector(
                   onTap: (){
-                    navigateToNextScreen(context, ChatScreen());
+                    //navigateToNextScreen(context, ChatScreen());
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width,

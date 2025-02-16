@@ -9,6 +9,7 @@ import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
+import 'package:labours_konnect/models/chat_model/chat_model.dart';
 import 'package:labours_konnect/models/user_model/user_model.dart';
 import 'package:labours_konnect/view/home_screen/book_now/book_now.dart';
 import 'package:labours_konnect/view/message_screen/chat_screen/chat_screen.dart';
@@ -674,12 +675,9 @@ class _DetailsState extends State<Details> {
                     GestureDetector(
                       onTap: (){
                         navigateToNextScreen(context, ChatScreen(
-                          user: UserModel(
-                            userId: widget.service.userId,
-                            userName: widget.service.userName ?? 'Unknown User',
-                            profilePicture: widget.service.profilePicture ?? 'default_image.png', lastSeen: null,
-                          ),
-                        ));
+                          userName: widget.service.userName ?? 'Unknown User',
+                          userId: widget.service.userId,
+                        ),);
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width*.4,

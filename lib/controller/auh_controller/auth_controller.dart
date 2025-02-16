@@ -31,7 +31,7 @@ class AuthController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   TextEditingController emailController = TextEditingController();
   TextEditingController otpController = TextEditingController();
-
+  String get currentUserId => _auth.currentUser?.uid ?? '';
   //User Details
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();

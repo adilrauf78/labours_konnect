@@ -29,13 +29,17 @@ class _ChatScreenState extends State<ChatScreen> {
   String get senderId => chatController.currentUserId;
   // Get the receiver ID (service user's ID)
   String get receiverId => widget.userId;
-
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-
+  @override
+  void initState() {
+    super.initState();
+    final chatController = Get.find<ChatController>();
+      chatController.markMessagesAsSeen(widget.userId);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,6 +117,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       itemBuilder: (context, index) {
                         final message = messages[index];
                         final isSender = message.senderId == senderId;
+                        //update seen 
+                        if (messages.isNotEmpty) {
+                          chatController.markMessagesAsSeen(receiverId);
+                        }
 
                         // Scroll to the bottom when new messages arrive
                         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -120,7 +128,6 @@ class _ChatScreenState extends State<ChatScreen> {
                             _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
                           }
                         });
-
                         return Align(
                           alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
                           child: Column(
@@ -160,6 +167,18 @@ class _ChatScreenState extends State<ChatScreen> {
                                               fontSize: 8,
                                             ),
                                           ),
+                                          SizedBox(width: 4),
+                                          // Display ticks based on message status
+                                          if (isSender)
+                                            Icon(
+                                              message.status == 'seen'
+                                                  ? Icons.done_all
+                                                  : Icons.done,
+                                              size: 12,
+                                              color: message.status == 'seen'
+                                                  ? Colors.blue
+                                                  : Colors.grey,
+                                            ),
                                         ],
                                       ),
                                     ],

@@ -19,6 +19,7 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   final ChatController chatController = Get.put(ChatController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,104 +49,157 @@ class _MessageScreenState extends State<MessageScreen> {
               ],
             ),
             SizedBox(height: 25..h),
-        StreamBuilder<List<Map<String, dynamic>>>(
-          stream: chatController.getChattedUsers(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
-            final users = snapshot.data ?? [];
+            Expanded(
+              child: StreamBuilder<List<Map<String, dynamic>>>(
+                stream: chatController.getChattedUsers(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  final users = snapshot.data ?? [];
 
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                final user = users[index];
-                return GestureDetector(
-                  onTap: () {
-                    // Navigate to the chat screen
-                    Get.to(() => ChatScreen(userId: user['chatId'], userName: '',));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      border: Border(
-                          bottom: BorderSide(
-                            color: AppColor.black.withOpacity(.1),
-                          )
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 50..w,
-                              height: 50..h,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColor.white
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50..r),
-                                child: Image.asset('${imagePath}image.png',
-                                  fit: BoxFit.cover,
-                                ),
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: users.length,
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    itemBuilder: (context, index) {
+                      final user = users[index];
+                      final timestamp = (user['timestamp'] as Timestamp).toDate();
+                      final timeAgo = DateFormat('hh:mm a').format(timestamp);
+
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(() => ChatScreen(
+                            userId: user['userId'],
+                            userName: user['userName'],
+                          ));
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border(
+                              bottom: BorderSide(
+                                color: AppColor.black.withOpacity(.1),
                               ),
                             ),
-                            SizedBox(width: 15..w),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                MainText(
-                                  text: user['userId'],
-                                  fontSize: 16..sp,
-                                ),
-                                SubText(
-                                  text: user['lastMessage'],
-                                ),
-                              ],
-                            ),
-                          ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  StreamBuilder<Map<String, dynamic>>(
+                                    stream: chatController.getUserStatus(user['userId']),
+                                    builder: (context, statusSnapshot) {
+                                      final isOnline = statusSnapshot.data?['status'] == 'online';
+
+                                      return Stack(
+                                        children: [
+                                          Container(
+                                            width: 50..w,
+                                            height: 50..h,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: AppColor.white,
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(50..r),
+                                              child: user['profilePicture'].isNotEmpty
+                                                  ? Image.network(
+                                                user['profilePicture'],
+                                                fit: BoxFit.cover,
+                                              )
+                                                  : Image.asset(
+                                                '${imagePath}image.png',
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          if (isOnline)
+                                            Positioned(
+                                              right: 0,
+                                              bottom: 0,
+                                              child: Container(
+                                                width: 12..w,
+                                                height: 12..h,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.green,
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: AppColor.white,
+                                                    width: 2,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(width: 15..w),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      MainText(
+                                        text: user['userName'],
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16..sp,
+                                      ),
+                                      Container(
+                                        width: MediaQuery.of(context).size.width*.4,
+                                        child: Text(
+                                           user['lastMessage'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: AppColor.k0xFF818080,
+                                            fontSize: 14..sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  SubText(
+                                    text: timeAgo, // Display formatted timestamp
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  if ((user['unreadCount'] ?? 0) > 0) // Handle null values
+                                    Container(
+                                      width: 20..w,
+                                      height: 20..h,
+                                      decoration: BoxDecoration(
+                                        color: AppColor.primaryColor,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Text12(
+                                          text: (user['unreadCount'] ?? 0) > 9 ? '9+' : (user['unreadCount'] ?? 0).toString(), // Handle null values
+                                          color: AppColor.white,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SubText(
-                              text: '23 min',
-                              fontWeight: FontWeight.w700,
-                            ),
-                            Container(
-                              width: 20..w,
-                              height: 20..h,
-                              decoration: BoxDecoration(
-                                color: AppColor.primaryColor,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: Text12(
-                                  text: '1',
-                                  color: AppColor.white,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        )
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

@@ -18,10 +18,7 @@ class ChatController {
   }
 
   // Send a message
-  Future<void> sendMessage({
-    required String receiverId,
-    required String message,
-  }) async {
+  Future<void> sendMessage({required String receiverId, required String message,}) async {
     try {
       if (message.trim().isEmpty) {
         throw Exception('Message cannot be empty');
@@ -36,6 +33,7 @@ class ChatController {
         receiverId: receiverId,
         message: message.trim(),
         timestamp:  null,
+        status: 'sent',
       );
       messageController.clear();
       // Add the message to the "messages" subcollection
@@ -76,17 +74,59 @@ class ChatController {
     });
   }
 
-
+  //fetch message screen all messages user
   Stream<List<Map<String, dynamic>>> getChattedUsers() {
     return _firestore
         .collection('chats')
         .where('participants', arrayContains: currentUserId)
         .snapshots()
-        .map((snapshot) {
+        .asyncMap((snapshot) async {
       final List<Map<String, dynamic>> users = [];
+      final Set<String> userIds = {};
 
+      //Collect all unique user IDs
       for (final doc in snapshot.docs) {
-        final participants = List<String>.from(doc['participants']);
+        final data = doc.data();
+        if (!data.containsKey('participants')) continue;
+
+        final participants = List<String>.from(data['participants']);
+        final otherUserId = participants.firstWhere(
+              (id) => id != currentUserId,
+          orElse: () => '',
+        );
+
+        if (otherUserId.isNotEmpty) {
+          userIds.add(otherUserId);
+        }
+      }
+
+      // fetch user details
+      final List<DocumentSnapshot> userDocs = await Future.wait(
+        userIds.map((id) => _firestore.collection('users').doc(id).get()),
+      );
+
+      final Map<String, Map<String, dynamic>> userDetails = {};
+      for (var doc in userDocs) {
+        if (doc.exists) {
+          final data = doc.data() as Map<String, dynamic>;
+          final firstName = data['First Name'] ?? '';
+          final lastName = data['Last Name'] ?? '';
+          final fullName = '$firstName $lastName'.trim();
+          final profilePicture = data['profilePicture'] ?? ''; // Fetch profile picture URL
+
+          userDetails[doc.id] = {
+            'userName': fullName.isNotEmpty ? fullName : 'Unknown',
+            'profilePicture': profilePicture, // Include profile picture
+          };
+        }
+      }
+
+      // chat documents and add user data
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        if (!data.containsKey('participants')) continue;
+
+        final participants = List<String>.from(data['participants']);
         final otherUserId = participants.firstWhere(
               (id) => id != currentUserId,
           orElse: () => '',
@@ -95,9 +135,11 @@ class ChatController {
         if (otherUserId.isNotEmpty) {
           users.add({
             'userId': otherUserId,
+            'userName': userDetails[otherUserId]?['userName'] ?? 'Unknown',
+            'profilePicture': userDetails[otherUserId]?['profilePicture'] ?? '',
             'chatId': doc.id,
-            'lastMessage': doc['lastMessage'],
-            'timestamp': doc['timestamp'],
+            'lastMessage': data['lastMessage'] ?? '',
+            'timestamp': data.containsKey('timestamp') ? data['timestamp'] : null,
           });
         }
       }
@@ -106,6 +148,32 @@ class ChatController {
     });
   }
 
+  //seen & unseen function
+
+  Future<void> markMessagesAsSeen(String otherUserId) async {
+    try {
+      // Generate the chat ID
+      final chatId = _generateChatId(currentUserId, otherUserId);
+
+      // Fetch all messages in the chat where the receiver is the current user
+      final messages = await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .where('receiverId', isEqualTo: currentUserId)
+          .where('status', whereIn: ['sent', 'delivered'])
+          .get();
+
+      for (final doc in messages.docs) {
+        final messageId = doc.id;
+        print('Updating message $messageId to "seen"');
+
+        await doc.reference.update({'status': 'seen'});
+      }
+    } catch (e) {
+      throw Exception('Failed to mark messages as seen: $e');
+    }
+  }
 
   // Update user status
   Future<void> updateUserStatus(String userId, bool isOnline) async {

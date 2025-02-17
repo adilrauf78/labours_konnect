@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
@@ -23,10 +24,18 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final ChatController chatController = Get.put(ChatController());
-  String get senderId => chatController.currentUserId;
+  final ScrollController _scrollController = ScrollController();
 
+  String get senderId => chatController.currentUserId;
   // Get the receiver ID (service user's ID)
   String get receiverId => widget.userId;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +46,6 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             SizedBox(height: 55..h),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
                   onTap: () {
@@ -48,6 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     size: 18,
                   ),
                 ),
+                SizedBox(width: 20..w),
                 Row(
                   children: [
                     Container(
@@ -64,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 15..w),
+                    SizedBox(width: 10..w),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -79,48 +88,91 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ],
                 ),
-                SizedBox(width: 20..w),
               ],
             ),
             SizedBox(height: 25..h),
             Expanded(
-              child: StreamBuilder<List<ChatModel>>(
-                stream: chatController.getMessages(senderId, receiverId),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-                  final messages = snapshot.data ?? [];
-                  return ListView.builder(
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final message = messages[index];
-                      final isSender = message.senderId == senderId;
-                      return Align(
-                        alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                          decoration: BoxDecoration(
-                            color: isSender ? AppColor.primaryColor : Colors.grey,
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(12),
-                            ),
+              child: SingleChildScrollView(
+                reverse: true,
+                child: StreamBuilder<List<ChatModel>>(
+                  stream: chatController.getMessages(senderId, receiverId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+                    final messages = snapshot.data ?? [];
+                    return ListView.builder(
+                      controller: _scrollController,
+                      shrinkWrap: true,
+                      reverse: false,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        final message = messages[index];
+                        final isSender = message.senderId == senderId;
+
+                        // Scroll to the bottom when new messages arrive
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (_scrollController.hasClients) {
+                            _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+                          }
+                        });
+
+                        return Align(
+                          alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                            children: [
+                              IntrinsicWidth(
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 4),
+                                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: isSender ? AppColor.primaryColor : Colors.grey.withOpacity(.3),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(12),
+                                      topRight: Radius.circular(12),
+                                      bottomLeft: isSender ? Radius.circular(15) : Radius.circular(0),
+                                      bottomRight: isSender ? Radius.circular(0) : Radius.circular(12),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        message.message,
+                                        style: TextStyle(
+                                          color: isSender ? AppColor.white : AppColor.black,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            DateFormat('hh:mm a').format(
+                                              message.timestamp ?? DateTime.now(),),
+                                            style: TextStyle(
+                                              color: isSender ? Colors.white70 : Colors.black54,
+                                              fontSize: 8,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          child: Text(
-                            message.message,
-                            style: TextStyle(
-                              color: isSender ? AppColor.white : AppColor.black,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
             SizedBox(height:20),

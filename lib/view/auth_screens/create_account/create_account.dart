@@ -87,7 +87,7 @@ class CreateAccount extends StatelessWidget {
                   height: MediaQuery
                       .of(context)
                       .size
-                      .height * .67,
+                      .height * .8,
                   child: TabBarView(
                     children: [
                       Padding(

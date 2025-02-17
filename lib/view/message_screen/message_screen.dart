@@ -1,14 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/chat_controller/chat_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/message_screen/chat_screen/chat_screen.dart';
 
-class MessageScreen extends StatelessWidget {
+class MessageScreen extends StatefulWidget {
   const MessageScreen({super.key});
 
+  @override
+  State<MessageScreen> createState() => _MessageScreenState();
+}
+
+class _MessageScreenState extends State<MessageScreen> {
+  final ChatController chatController = Get.put(ChatController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,27 +48,37 @@ class MessageScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 25..h),
-            ListView.builder(
-              itemCount: 5,
+        StreamBuilder<List<Map<String, dynamic>>>(
+          stream: chatController.getChattedUsers(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            final users = snapshot.data ?? [];
+
+            return ListView.builder(
               shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              physics: NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context,index){
+              itemCount: users.length,
+              itemBuilder: (context, index) {
+                final user = users[index];
                 return GestureDetector(
-                  onTap: (){
-                    //navigateToNextScreen(context, ChatScreen());
+                  onTap: () {
+                    // Navigate to the chat screen
+                    Get.to(() => ChatScreen(userId: user['chatId'], userName: '',));
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.symmetric(vertical: 15),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
-                        border: Border(
-                            bottom: BorderSide(
-                              color: AppColor.black.withOpacity(.1),
-                            )
-                        ),
+                      border: Border(
+                          bottom: BorderSide(
+                            color: AppColor.black.withOpacity(.1),
+                          )
+                      ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,8 +89,8 @@ class MessageScreen extends StatelessWidget {
                               width: 50..w,
                               height: 50..h,
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColor.white
+                                  shape: BoxShape.circle,
+                                  color: AppColor.white
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50..r),
@@ -84,11 +104,11 @@ class MessageScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 MainText(
-                                  text: 'Martha Smith',
+                                  text: user['userId'],
                                   fontSize: 16..sp,
                                 ),
                                 SubText(
-                                  text: 'Typing..',
+                                  text: user['lastMessage'],
                                 ),
                               ],
                             ),
@@ -123,7 +143,9 @@ class MessageScreen extends StatelessWidget {
                   ),
                 );
               },
-            )
+            );
+          },
+        )
           ],
         ),
       ),

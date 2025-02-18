@@ -19,7 +19,14 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   final ChatController chatController = Get.put(ChatController());
+  @override
+  void initState() {
+    super.initState();
+    final chatController = Get.find<ChatController>();
+    // Mark user as online when the app is opened
+    chatController.updateUserStatus(chatController.currentUserId, true);
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,21 +101,26 @@ class _MessageScreenState extends State<MessageScreen> {
                               Row(
                                 children: [
                                   StreamBuilder<Map<String, dynamic>>(
-                                    stream: chatController.getUserStatus(user['userId']),
+                                    stream: chatController.Online(user['userId']),
                                     builder: (context, statusSnapshot) {
+                                      if (statusSnapshot.connectionState == ConnectionState.waiting) {
+                                        return CircularProgressIndicator(); // If still loading, show loader
+                                      }
+                                      if (statusSnapshot.hasError) {
+                                        return Text("Error: ${statusSnapshot.error}");
+                                      }
                                       final isOnline = statusSnapshot.data?['status'] == 'online';
-
                                       return Stack(
                                         children: [
                                           Container(
-                                            width: 50..w,
-                                            height: 50..h,
+                                            width: 50.w,
+                                            height: 50.h,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               color: AppColor.white,
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(50..r),
+                                              borderRadius: BorderRadius.circular(50.r),
                                               child: user['profilePicture'].isNotEmpty
                                                   ? Image.network(
                                                 user['profilePicture'],
@@ -125,8 +137,8 @@ class _MessageScreenState extends State<MessageScreen> {
                                               right: 0,
                                               bottom: 0,
                                               child: Container(
-                                                width: 12..w,
-                                                height: 12..h,
+                                                width: 12.w,
+                                                height: 12.h,
                                                 decoration: BoxDecoration(
                                                   color: Colors.green,
                                                   shape: BoxShape.circle,
@@ -141,6 +153,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                       );
                                     },
                                   ),
+
                                   SizedBox(width: 15..w),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,

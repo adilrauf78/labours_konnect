@@ -39,6 +39,8 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     final chatController = Get.find<ChatController>();
       chatController.markMessagesAsSeen(widget.userId);
+    final chatId = chatController.generateChatId(chatController.currentUserId, widget.userId);
+    chatController.resetUnreadCount(chatId);
   }
   @override
   Widget build(BuildContext context) {
@@ -117,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       itemBuilder: (context, index) {
                         final message = messages[index];
                         final isSender = message.senderId == senderId;
-                        //update seen 
+                        //update seen
                         if (messages.isNotEmpty) {
                           chatController.markMessagesAsSeen(receiverId);
                         }

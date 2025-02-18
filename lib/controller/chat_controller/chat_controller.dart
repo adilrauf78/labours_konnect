@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
@@ -12,7 +13,7 @@ class ChatController {
 
 
 // Generate a unique chat ID for two users
-  String _generateChatId(String user1, String user2) {
+  String generateChatId(String user1, String user2) {
     final List<String> users = [user1, user2]..sort();
     return users.join('_'); // e.g., "user1_user2"
   }
@@ -25,7 +26,7 @@ class ChatController {
       }
 
       // Generate the chat ID
-      final chatId = _generateChatId(currentUserId, receiverId);
+      final chatId = generateChatId(currentUserId, receiverId);
 
       // Create the message
       final chat = ChatModel(
@@ -58,7 +59,7 @@ class ChatController {
   // Get messages between two users
   Stream<List<ChatModel>> getMessages(String senderId, String receiverId) {
     // Generate the chat ID
-    final chatId = _generateChatId(senderId, receiverId);
+    final chatId = generateChatId(senderId, receiverId);
 
     // Fetch messages from the "messages" subcollection
     return _firestore
@@ -140,6 +141,7 @@ class ChatController {
             'chatId': doc.id,
             'lastMessage': data['lastMessage'] ?? '',
             'timestamp': data.containsKey('timestamp') ? data['timestamp'] : null,
+            'unreadCount': data['unreadCount'] ?? 0,
           });
         }
       }
@@ -148,12 +150,24 @@ class ChatController {
     });
   }
 
+  //reset unread
+  Future<void> resetUnreadCount(String chatId) async {
+    try {
+      await _firestore.collection('chats').doc(chatId).update({
+        'unreadCount': 0, // Reset unreadCount to 0
+      });
+      print('Unread count reset for chatId: $chatId'); // Debug log
+    } catch (e) {
+      print('Failed to reset unread count: $e');
+    }
+  }
+
   //seen & unseen function
 
   Future<void> markMessagesAsSeen(String otherUserId) async {
     try {
       // Generate the chat ID
-      final chatId = _generateChatId(currentUserId, otherUserId);
+      final chatId = generateChatId(currentUserId, otherUserId);
 
       // Fetch all messages in the chat where the receiver is the current user
       final messages = await _firestore
@@ -165,8 +179,8 @@ class ChatController {
           .get();
 
       for (final doc in messages.docs) {
-        final messageId = doc.id;
-        print('Updating message $messageId to "seen"');
+        // final messageId = doc.id;
+        // print('Updating message $messageId to "seen"');
 
         await doc.reference.update({'status': 'seen'});
       }
@@ -174,14 +188,28 @@ class ChatController {
       throw Exception('Failed to mark messages as seen: $e');
     }
   }
-
-  // Update user status
   Future<void> updateUserStatus(String userId, bool isOnline) async {
-    await _firestore.collection('users').doc(userId).update({
-      'status': isOnline ? 'online' : 'offline',
-      'lastSeen': DateTime.now(),
+    try {
+      await FirebaseDatabase.instance.ref('users/$userId').update({
+        'status': isOnline ? 'online' : 'offline',
+      });
+      print('Updated user $userId status to ${isOnline ? 'online' : 'offline'}'); // Debug log
+    } catch (e) {
+      print('Failed to update user status: $e');
+    }
+  }
+  // Update user status
+  Stream<Map<String, dynamic>> Online(String userId) {
+    return FirebaseDatabase.instance
+        .ref('users/$userId/status')
+        .onValue
+        .map((event) {
+      final status = event.snapshot.value ?? 'offline';
+      print('Fetched status for user $userId: $status'); // Debug log
+      return {'status': status};
     });
   }
+
 
   // Get user status
   Stream<Map<String, dynamic>> getUserStatus(String userId) {

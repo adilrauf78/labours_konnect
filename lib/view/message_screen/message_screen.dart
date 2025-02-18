@@ -27,6 +27,7 @@ class _MessageScreenState extends State<MessageScreen> {
     chatController.updateUserStatus(chatController.currentUserId, true);
 
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,22 +38,12 @@ class _MessageScreenState extends State<MessageScreen> {
           children: [
             SizedBox(height: 55..h),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    navigateBackWithAnimation(context);
-                  },
-                  child: Icon(Icons.arrow_back_ios,
-                    color: AppColor.black,
-                    size: 18,
-                  ),
-                ),
                 MainText(
                   text: 'Messages',
                   fontWeight: FontWeight.w500,
                 ),
-                SizedBox(width: 20..w),
               ],
             ),
             SizedBox(height: 25..h),
@@ -82,6 +73,7 @@ class _MessageScreenState extends State<MessageScreen> {
                           Get.to(() => ChatScreen(
                             userId: user['userId'],
                             userName: user['userName'],
+                            chatId: chatController.generateChatId(chatController.currentUserId, user['userId']),
                           ));
                         },
                         child: Container(
@@ -104,7 +96,6 @@ class _MessageScreenState extends State<MessageScreen> {
                                     stream: chatController.Online(user['userId']),
                                     builder: (context, statusSnapshot) {
                                       if (statusSnapshot.connectionState == ConnectionState.waiting) {
-                                        return CircularProgressIndicator(); // If still loading, show loader
                                       }
                                       if (statusSnapshot.hasError) {
                                         return Text("Error: ${statusSnapshot.error}");
@@ -153,7 +144,6 @@ class _MessageScreenState extends State<MessageScreen> {
                                       );
                                     },
                                   ),
-
                                   SizedBox(width: 15..w),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,

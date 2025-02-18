@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
+import 'package:labours_konnect/controller/chat_controller/chat_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
@@ -25,6 +26,7 @@ class Details extends StatefulWidget {
 
 class _DetailsState extends State<Details> {
   final AuthController authController = Get.find<AuthController>();
+  final ChatController chatController = Get.put(ChatController());
   bool favorite = true;
   bool favorite1 = true;
   double _rating = 5;
@@ -677,6 +679,7 @@ class _DetailsState extends State<Details> {
                         navigateToNextScreen(context, ChatScreen(
                           userName: widget.service.userName ?? 'Unknown User',
                           userId: widget.service.userId,
+                          chatId: chatController.generateChatId(chatController.currentUserId, widget.service.userId,)
                         ),);
                       },
                       child: Container(

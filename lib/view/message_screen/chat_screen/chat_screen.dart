@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,26 +14,31 @@ import 'package:labours_konnect/models/chat_model/chat_model.dart';
 
 
 class ChatScreen extends StatefulWidget {
+  final String chatId;
   final String userName;
   final String userId;
-  const ChatScreen({super.key,required this.userName, required this.userId,
+  const ChatScreen({super.key,required this.userName, required this.userId, required this.chatId,
   });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver{
   final ChatController chatController = Get.put(ChatController());
   final ScrollController _scrollController = ScrollController();
 
   String get senderId => chatController.currentUserId;
   // Get the receiver ID (service user's ID)
   String get receiverId => widget.userId;
+
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      // App is in the background or closed
+      chatController.updateTypingStatus(widget.chatId, chatController.currentUserId, false);
+    }
   }
   @override
   void initState() {
@@ -41,6 +47,13 @@ class _ChatScreenState extends State<ChatScreen> {
       chatController.markMessagesAsSeen(widget.userId);
     final chatId = chatController.generateChatId(chatController.currentUserId, widget.userId);
     chatController.resetUnreadCount(chatId);
+    WidgetsBinding.instance.addObserver(this);
+  }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    chatController.updateTypingStatus(widget.chatId, chatController.currentUserId, false);
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -83,12 +96,59 @@ class _ChatScreenState extends State<ChatScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        MainText(
-                          text: widget.userName,
-                          fontWeight: FontWeight.w500,
+                        StreamBuilder<Map<String, dynamic>>(
+                          stream: chatController.Online(widget.userId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            }
+                            if (snapshot.hasError) {
+                              return Text("Error: ${snapshot.error}");
+                            }
+                            final isOnline = snapshot.data?['status'] == 'online';
+                            return Row(
+                              children: [
+                                MainText(
+                                  text: widget.userName,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color: isOnline ? Colors.green : Colors.grey,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                        SubText(
-                          text: 'Typing..',
+                        StreamBuilder<Map<String, dynamic>>(
+                          stream: chatController.getTypingStatus(widget.chatId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return SizedBox();
+                            }
+                            if (snapshot.hasError) {
+                              return Text("Error: ${snapshot.error}");
+                            }
+                            final typingStatus = snapshot.data ?? {};
+                            final isTyping = typingStatus[widget.userId] == true;
+
+                            return isTyping
+                                ? Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 0),
+                              child: Text(
+                                "typing...",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            )
+                                : SizedBox();
+                          },
                         ),
                       ],
                     ),
@@ -208,6 +268,14 @@ class _ChatScreenState extends State<ChatScreen> {
                     height: 45
                       ..h,
                     child: TextField(
+                      onChanged: (text) {
+                        // Update typing status when user starts typing
+                        if (text.isNotEmpty) {
+                          chatController.updateTypingStatus(widget.chatId, chatController.currentUserId, true);
+                        } else {
+                          chatController.updateTypingStatus(widget.chatId, chatController.currentUserId, false);
+                        }
+                      },
                       controller: chatController.messageController,
                       cursorColor: AppColor.black.withOpacity(.5),
                       decoration: InputDecoration(
@@ -242,7 +310,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 SizedBox(width: 10..w),
                 InkWell(
                   onTap: (){
+
                     chatController.sendMessage(receiverId: receiverId, message: chatController.messageController.text.trim());
+                    chatController.updateTypingStatus(widget.chatId, chatController.currentUserId, false);
                   },
                   child: Container(
                     width: 40..w,

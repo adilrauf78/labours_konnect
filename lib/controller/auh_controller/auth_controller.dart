@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -493,6 +494,12 @@ class AuthController extends GetxController {
 
   Future<void> SignOut() async {
     try {
+      String? userId = _auth.currentUser?.uid;
+      if (userId != null) {
+        await FirebaseDatabase.instance.ref('users/$userId').update({
+          'status': 'offline',
+        });
+      }
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', false);
       await resetToggleState();

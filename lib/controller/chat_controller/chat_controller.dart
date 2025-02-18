@@ -210,7 +210,21 @@ class ChatController {
     });
   }
 
+  // Update typing status
+  Future<void> updateTypingStatus(String chatId, String userId, bool isTyping) async {
+    await _firestore.collection('chats').doc(chatId).update({
+      'typingStatus': {
+        userId: isTyping,
+      },
+    });
+  }
 
+  // Stream to listen to typing status
+  Stream<Map<String, dynamic>> getTypingStatus(String chatId) {
+    return _firestore.collection('chats').doc(chatId).snapshots().map((snapshot) {
+      return snapshot.data()?['typingStatus'] ?? {};
+    });
+  }
   // Get user status
   Stream<Map<String, dynamic>> getUserStatus(String userId) {
     return _firestore.collection('users').doc(userId).snapshots().map((snapshot) {

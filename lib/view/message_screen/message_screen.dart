@@ -58,16 +58,14 @@ class _MessageScreenState extends State<MessageScreen> {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   }
                   final users = snapshot.data ?? [];
-
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: users.length,
                     padding: EdgeInsets.symmetric(horizontal: 5),
                     itemBuilder: (context, index) {
                       final user = users[index];
-                      final timestamp = (user['timestamp'] as Timestamp).toDate();
+                      final timestamp = (user['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now();
                       final timeAgo = DateFormat('hh:mm a').format(timestamp);
-
                       return GestureDetector(
                         onTap: () {
                           Get.to(() => ChatScreen(

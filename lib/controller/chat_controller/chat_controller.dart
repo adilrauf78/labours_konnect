@@ -48,6 +48,7 @@ class ChatController {
         'participants': [currentUserId, receiverId],
         'lastMessage': message.trim(),
         'timestamp': FieldValue.serverTimestamp(),
+        'unreadCount': FieldValue.increment(1),
       }, SetOptions(merge: true));
 
 
@@ -141,8 +142,9 @@ class ChatController {
             'chatId': doc.id,
             'lastMessage': data['lastMessage'] ?? '',
             'timestamp': data.containsKey('timestamp') ? data['timestamp'] : null,
-            'unreadCount': data['unreadCount'] ?? 0,
+            //'unreadCount': data['unreadCount'] ?? 0,
           });
+
         }
       }
 
@@ -184,6 +186,10 @@ class ChatController {
 
         await doc.reference.update({'status': 'seen'});
       }
+      // Reset unreadCount to 0
+      // await _firestore.collection('chats').doc(chatId).update({
+      //   'unreadCount': 0,
+      // });
     } catch (e) {
       throw Exception('Failed to mark messages as seen: $e');
     }

@@ -66,6 +66,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       final user = users[index];
                       final timestamp = (user['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now();
                       final timeAgo = DateFormat('hh:mm a').format(timestamp);
+                      final isReceiver = user['userId'] != chatController.currentUserId;
                       return GestureDetector(
                         onTap: () {
                           Get.to(() => ChatScreen(
@@ -174,7 +175,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                     text: timeAgo, // Display formatted timestamp
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  if ((user['unreadCount'] ?? 0) > 0) // Handle null values
+                                  if (isReceiver && (user['unreadCount'] ?? 0) > 0) // Handle null values
                                     Container(
                                       width: 20..w,
                                       height: 20..h,

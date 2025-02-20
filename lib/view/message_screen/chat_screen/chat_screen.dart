@@ -45,6 +45,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver{
     super.initState();
     final chatController = Get.find<ChatController>();
       chatController.markMessagesAsSeen(widget.userId);
+
     final chatId = chatController.generateChatId(chatController.currentUserId, widget.userId);
     chatController.resetUnreadCount(chatId);
     WidgetsBinding.instance.addObserver(this);

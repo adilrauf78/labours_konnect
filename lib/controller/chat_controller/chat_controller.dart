@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/models/chat_model/chat_model.dart';
+import 'package:labours_konnect/services/notification/notification.dart';
 
 class ChatController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -51,6 +52,8 @@ class ChatController {
         'unreadCount': FieldValue.increment(1),
       }, SetOptions(merge: true));
 
+      // Send a notification to the receiver
+      await sendNotification(receiverId: receiverId, message: message);
 
     } catch (e) {
       throw Exception('Failed to send message: $e');
@@ -142,7 +145,7 @@ class ChatController {
             'chatId': doc.id,
             'lastMessage': data['lastMessage'] ?? '',
             'timestamp': data.containsKey('timestamp') ? data['timestamp'] : null,
-            //'unreadCount': data['unreadCount'] ?? 0,
+            'unreadCount': data['unreadCount'] ?? 0,
           });
 
         }
@@ -158,7 +161,7 @@ class ChatController {
       await _firestore.collection('chats').doc(chatId).update({
         'unreadCount': 0, // Reset unreadCount to 0
       });
-      print('Unread count reset for chatId: $chatId'); // Debug log
+      //print('Unread count reset for chatId: $chatId'); // Debug log
     } catch (e) {
       print('Failed to reset unread count: $e');
     }
@@ -199,7 +202,7 @@ class ChatController {
       await FirebaseDatabase.instance.ref('users/$userId').update({
         'status': isOnline ? 'online' : 'offline',
       });
-      print('Updated user $userId status to ${isOnline ? 'online' : 'offline'}'); // Debug log
+      //print('Updated user $userId status to ${isOnline ? 'online' : 'offline'}'); // Debug log
     } catch (e) {
       print('Failed to update user status: $e');
     }
@@ -211,7 +214,7 @@ class ChatController {
         .onValue
         .map((event) {
       final status = event.snapshot.value ?? 'offline';
-      print('Fetched status for user $userId: $status'); // Debug log
+      //print('Fetched status for user $userId: $status'); // Debug log
       return {'status': status};
     });
   }

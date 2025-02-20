@@ -53,7 +53,7 @@ class ChatController {
       }, SetOptions(merge: true));
 
       // Send a notification to the receiver
-      await sendNotification(receiverId: receiverId, message: message);
+      await NotificationServices().sendNotification(receiverId: receiverId, message: message);
 
     } catch (e) {
       throw Exception('Failed to send message: $e');

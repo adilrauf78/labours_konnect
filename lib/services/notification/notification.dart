@@ -4,13 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
+import 'package:labours_konnect/controller/chat_controller/chat_controller.dart';
 import 'package:labours_konnect/view/message_screen/chat_screen/chat_screen.dart';
-
+import 'package:http/http.dart' as http;
 
 
 class NotificationServices{
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   String get currentUserId => Get.find<AuthController>().currentUserId;
+  final ChatController chatController = ChatController();
 
 //Request Notification Permissions
   Future<void> requestNotificationPermissions() async {
@@ -105,10 +107,11 @@ class NotificationServices{
       // Navigate to the chat screen
       String senderId = message.data['senderId'];
       String receiverId = message.data['receiverId'];
+      final chatId = chatController.generateChatId(senderId, receiverId);
       Get.to(() => ChatScreen(
         userId: senderId,
         userName: 'Sender Name', // Fetch sender's name from Firestore
-        chatId: generateChatId(senderId, receiverId),
+        chatId: chatId,
       ));
     });
   }

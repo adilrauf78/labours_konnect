@@ -8,6 +8,7 @@ import 'package:labours_konnect/services/notification/notification.dart';
 
 class ChatController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationServices notificationServices = NotificationServices();
   final TextEditingController messageController = TextEditingController();
   // Get the current user's ID from AuthController
   String get currentUserId => Get.find<AuthController>().currentUserId;
@@ -51,9 +52,8 @@ class ChatController {
         'timestamp': FieldValue.serverTimestamp(),
         'unreadCount': FieldValue.increment(1),
       }, SetOptions(merge: true));
-
       // Send a notification to the receiver
-      await NotificationServices().sendNotification(receiverId: receiverId, message: message);
+      await notificationServices.sendNotification(receiverId: receiverId, message: message);
 
     } catch (e) {
       throw Exception('Failed to send message: $e');

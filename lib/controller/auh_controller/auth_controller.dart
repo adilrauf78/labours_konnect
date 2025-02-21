@@ -13,6 +13,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:labours_konnect/constants/utils.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
+import 'package:labours_konnect/services/notification/notification.dart';
 import 'package:labours_konnect/view/auth_screens/enable_location/enable_location.dart';
 import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
 import 'package:labours_konnect/view/auth_screens/user_details/user_details.dart';
@@ -30,6 +31,7 @@ class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationServices notificationServices = NotificationServices();
   TextEditingController emailController = TextEditingController();
   TextEditingController otpController = TextEditingController();
   String get currentUserId => _auth.currentUser?.uid ?? '';
@@ -49,6 +51,7 @@ class AuthController extends GetxController {
     super.onInit();
     loadSwitchState();
     _firebaseUser.bindStream(_auth.authStateChanges());
+    notificationServices.setupFCMTokenListener();
   }
 
   //Email show text in verify screen
@@ -186,8 +189,12 @@ class AuthController extends GetxController {
           'First Name': firstName.text.trim(),
           'Last Name': lastName.text.trim(),
           'Email': emailController.text.trim(),
+          'fcmToken': '',
+
 
         });
+        // Save FCM token
+        await notificationServices.saveFCMToken(userCredential.user!.uid);
         firstName.clear();
         lastName.clear();
         password.clear();
@@ -227,10 +234,14 @@ class AuthController extends GetxController {
           email: emailLogin.text.trim(),
           password: passwordLogin.text.trim(),
         );
+        // Save FCM token
+        await notificationServices.saveFCMToken(user!.uid);
 
         await fetchAndStoreUserData();
         isLoading = false;
+
         update();
+
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);

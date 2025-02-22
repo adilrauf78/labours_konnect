@@ -14,12 +14,14 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await NotificationServices().initialize();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
   ));
-
+  final notificationServices = NotificationServices();
+  notificationServices.initializeNotifications();
+  // Setup Firebase Messaging Listener
+  notificationServices.setupFirebaseMessagingListener();
   runApp(const MyApp());
 }
 

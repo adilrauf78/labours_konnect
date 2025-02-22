@@ -51,7 +51,7 @@ class AuthController extends GetxController {
     super.onInit();
     loadSwitchState();
     _firebaseUser.bindStream(_auth.authStateChanges());
-    notificationServices.setupFCMTokenListener();
+    //notificationServices.setupFCMTokenListener();
   }
 
   //Email show text in verify screen

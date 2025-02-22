@@ -52,9 +52,12 @@ class ChatController {
         'timestamp': FieldValue.serverTimestamp(),
         'unreadCount': FieldValue.increment(1),
       }, SetOptions(merge: true));
-      // Send a notification to the receiver
-      await NotificationServices.instance.sendNotification(receiverId: receiverId, message: message);
-
+      // Send notification to the receiver
+      await notificationServices.sendNotification(
+        receiverId: receiverId,
+        senderId: currentUserId,
+        message: message, receiverToken: '', title: '', body: '',
+      );
     } catch (e) {
       throw Exception('Failed to send message: $e');
     }

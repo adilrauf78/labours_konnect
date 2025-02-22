@@ -53,7 +53,7 @@ class ChatController {
         'unreadCount': FieldValue.increment(1),
       }, SetOptions(merge: true));
       // Send a notification to the receiver
-      await notificationServices.sendNotification(receiverId: receiverId, message: message);
+      await NotificationServices.instance.sendNotification(receiverId: receiverId, message: message);
 
     } catch (e) {
       throw Exception('Failed to send message: $e');

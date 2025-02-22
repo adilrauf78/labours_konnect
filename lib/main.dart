@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/controller/chat_controller/chat_controller.dart';
 import 'package:labours_konnect/firebase_options.dart';
+import 'package:labours_konnect/services/notification/notification.dart';
 import 'package:labours_konnect/view/splash_screen/splash_screen.dart';
 
 Future<void> main() async {
@@ -13,13 +14,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await NotificationServices().initialize();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
   ));
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  String? token = await messaging.getToken();
-  print("FCM Token: $token");
+
   runApp(const MyApp());
 }
 

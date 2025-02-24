@@ -54,6 +54,7 @@ class ChatController {
       }, SetOptions(merge: true));
       // Send notification to the receiver
       await notificationServices.sendNotification(
+        
         receiverId: receiverId,
         senderId: currentUserId,
         message: message, receiverToken: '', title: '', body: '',

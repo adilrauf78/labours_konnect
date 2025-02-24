@@ -7,6 +7,7 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/controller/chat_controller/chat_controller.dart';
+import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
@@ -25,7 +26,7 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
-  final AuthController authController = Get.find<AuthController>();
+  final ServiceController serviceController = Get.find<ServiceController>();
   final ChatController chatController = Get.put(ChatController());
   bool favorite = true;
   bool favorite1 = true;
@@ -330,7 +331,7 @@ class _DetailsState extends State<Details> {
                           child: Column(
                             children: [
                               FutureBuilder<List<AddServicesModel>>(
-                                future: authController.fetchUserServices(widget.service.userId), // Fetch services for specific user
+                                future: serviceController.fetchUserServices(widget.service.userId), // Fetch services for specific user
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return Center(child: CircularProgressIndicator());
@@ -372,8 +373,8 @@ class _DetailsState extends State<Details> {
                                                       decoration: BoxDecoration(
                                                         color: AppColor.white,
                                                         image: DecorationImage(
-                                                          image: authController.imagePath.isNotEmpty
-                                                              ? NetworkImage(authController.imagePath.value)
+                                                          image: serviceController.imagePath.isNotEmpty
+                                                              ? NetworkImage(serviceController.imagePath.value)
                                                               : AssetImage('${imagePath}pipe-fitting.png'),
                                                           fit: BoxFit.cover,
                                                         ),

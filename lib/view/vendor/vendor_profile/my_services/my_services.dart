@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
+import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
@@ -20,6 +21,7 @@ class MyServices extends StatefulWidget {
 }
 
 class _MyServicesState extends State<MyServices> {
+  final ServiceController serviceController = Get.find<ServiceController>();
   final AuthController authController = Get.find<AuthController>();
   double _rating = 5;
   @override
@@ -53,7 +55,7 @@ class _MyServicesState extends State<MyServices> {
             SizedBox(height: 30..h),
             Expanded(
               child: FutureBuilder<List<AddServicesModel>>(
-                future: authController.fetchServicesForUser(),
+                future: serviceController.fetchServicesForUser(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -109,8 +111,8 @@ class _MyServicesState extends State<MyServices> {
                                       ),
                                     ],
                                     image: DecorationImage(
-                                      image: authController.imagePath.isNotEmpty
-                                          ? NetworkImage(authController.imagePath.value)
+                                      image: serviceController.imagePath.isNotEmpty
+                                          ? NetworkImage(serviceController.imagePath.value)
                                           : AssetImage('${imagePath}pipe-fitting.png'),
                                       fit: BoxFit.cover,
                                     ),

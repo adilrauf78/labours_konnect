@@ -69,7 +69,7 @@ class _SelectMapState extends State<SelectMap> {
                   ),
                 ),
                 Positioned(
-                  bottom: 20,
+                  top: 20,
                   right: 20,
                   child: SizedBox(
                     width: 50..w,

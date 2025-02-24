@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
+import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
@@ -21,7 +22,7 @@ class CategoryOpen extends StatefulWidget {
 }
 
 class _CategoryOpenState extends State<CategoryOpen> {
-  final AuthController authController = Get.find<AuthController>();
+  final ServiceController serviceController = Get.put(ServiceController());
 
 
   void _showBottomSheet(BuildContext context) {
@@ -132,7 +133,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
             SizedBox(height: 30..h),
             Expanded(
               child: FutureBuilder<List<AddServicesModel>>(
-                future: authController.fetchServicesByCategory(widget.category.category),
+                future: serviceController.fetchServicesByCategory(widget.category.category),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -174,8 +175,8 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                         decoration: BoxDecoration(
                                           color: AppColor.white,
                                           image: DecorationImage(
-                                            image: authController.imagePath.isNotEmpty
-                                                ? NetworkImage(authController.imagePath.value)
+                                            image: serviceController.imagePath.isNotEmpty
+                                                ? NetworkImage(serviceController.imagePath.value)
                                                 :AssetImage('${imagePath}painter.png'),
                                             fit: BoxFit.cover,
                                           ),

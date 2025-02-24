@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/controller/category_controller/category_controller.dart';
+import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -25,19 +26,19 @@ class AddServices extends StatefulWidget {
 
 class _AddServicesState extends State<AddServices> {
   final CategoryController categoryController = Get.put(CategoryController());
-  final AuthController _authController = Get.put(AuthController());
+  final ServiceController serviceController = Get.put(ServiceController());
 
 
 
   @override
   void initState() {
     super.initState();
-    _authController.locationController = TextEditingController(text: widget.address);
+    serviceController.locationController = TextEditingController(text: widget.address);
   }
 
   @override
   void dispose() {
-    _authController.locationController.dispose();
+    serviceController.locationController.dispose();
     super.dispose();
   }
 
@@ -257,7 +258,7 @@ class _AddServicesState extends State<AddServices> {
                       height: 50
                         ..h,
                       child: TextField(
-                        controller: _authController.serviceTitle,
+                        controller: serviceController.serviceTitle,
                         cursorColor: AppColor.black.withOpacity(.5),
                         decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
@@ -306,7 +307,7 @@ class _AddServicesState extends State<AddServices> {
                           context, MaterialPageRoute(builder: (context) =>
                             Categories(isFromFilter: true),),);
                         if (selected != null) {
-                            _authController.updateSelectedCategory(selected);
+                          serviceController.updateSelectedCategory(selected);
                         }
                       },
                       child: Obx(() => Container(
@@ -329,7 +330,7 @@ class _AddServicesState extends State<AddServices> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SubText(
-                                text: _authController.selectedCategory.value,
+                                text: serviceController.selectedCategory.value,
                                 color: AppColor.black.withOpacity(.5),
                                 fontWeight: FontWeight.w400,
                               ),
@@ -393,7 +394,7 @@ class _AddServicesState extends State<AddServices> {
                       height: 50
                         ..h,
                       child: TextField(
-                        controller: _authController.cityController,
+                        controller: serviceController.cityController,
                         cursorColor: AppColor.black.withOpacity(.5),
                         decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
@@ -470,7 +471,7 @@ class _AddServicesState extends State<AddServices> {
                       ),
                       child: TextField(
                         maxLines: null,
-                        controller: _authController.locationController,
+                        controller: serviceController.locationController,
                         cursorColor: Color(0xFF9FA3A8),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(15),
@@ -505,7 +506,7 @@ class _AddServicesState extends State<AddServices> {
                       height: 50
                         ..h,
                       child: TextField(
-                        controller: _authController.experienceController,
+                        controller: serviceController.experienceController,
                         cursorColor: AppColor.black.withOpacity(.5),
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
@@ -557,7 +558,7 @@ class _AddServicesState extends State<AddServices> {
                       height: 50
                         ..h,
                       child: TextField(
-                        controller: _authController.priceController,
+                        controller: serviceController.priceController,
                         cursorColor: AppColor.black.withOpacity(.5),
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
@@ -620,7 +621,7 @@ class _AddServicesState extends State<AddServices> {
                         ],
                       ),
                       child: TextField(
-                        controller: _authController.descriptionController,
+                        controller: serviceController.descriptionController,
                         maxLines: null,
                         cursorColor: Color(0xFF9FA3A8),
                         decoration: InputDecoration(
@@ -650,7 +651,7 @@ class _AddServicesState extends State<AddServices> {
                     ),
                     SizedBox(height: 30
                       ..h),
-                    _authController.isLoading
+                    serviceController.isLoading
                         ? SpinKitRing(
                       color: AppColor.blue,
                       size: 40,
@@ -658,7 +659,7 @@ class _AddServicesState extends State<AddServices> {
                     )
                         : GestureDetector(
                       onTap: () {
-                        _authController.addService();
+                        serviceController.addService();
                       },
                       child: Button(
                         text: 'Submit',

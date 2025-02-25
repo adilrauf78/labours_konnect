@@ -1,59 +1,46 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class BookNowModel {
+  final String id;
   final String userId;
-  final String serviceTitle;
-  final String serviceImage;
-  final String category;
-  final String city;
-  final String location;
-  final String experience;
-  final String price;
-  final String description;
-  final DateTime? bookingDate;
-  final String detailedDescription;
+  final String vendorId;
+  final String serviceName;
+  final DateTime bookingDate;
+  final String bookingTime;
+  final String status;
 
   BookNowModel({
+    required this.id,
     required this.userId,
-    required this.serviceTitle,
-    required this.serviceImage,
-    required this.category,
-    required this.city,
-    required this.location,
-    required this.experience,
-    required this.price,
-    required this.description,
-    this.bookingDate,
-    required this.detailedDescription,
+    required this.vendorId,
+    required this.serviceName,
+    required this.bookingDate,
+    required this.bookingTime,
+    required this.status,
   });
 
+  // Convert Firestore DocumentSnapshot to Model
+  factory BookNowModel.fromMap(Map<String, dynamic> data, String documentId) {
+    return BookNowModel(
+      id: documentId,
+      userId: data['userId'] ?? '',
+      vendorId: data['vendorId'] ?? '',
+      serviceName: data['serviceName'] ?? '',
+      bookingDate: (data['bookingDate'] as Timestamp).toDate(),
+      bookingTime: data['bookingTime'] ?? '',
+      status: data['status'] ?? 'pending',
+    );
+  }
+
+  // Convert Model to Firestore Map
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
-      'serviceTitle': serviceTitle,
-      'serviceImage': serviceImage,
-      'category': category,
-      'city': city,
-      'location': location,
-      'experience': experience,
-      'price': price,
-      'description': description,
-      'bookingDate': bookingDate?.toIso8601String(),
-      'detailedDescription': detailedDescription,
+      'vendorId': vendorId,
+      'serviceName': serviceName,
+      'bookingDate': bookingDate,
+      'bookingTime': bookingTime,
+      'status': status,
     };
-  }
-
-  factory BookNowModel.fromMap(Map<String, dynamic> map) {
-    return BookNowModel(
-      userId: map['userId'] ?? '',
-      serviceTitle: map['serviceTitle'] ?? '',
-      serviceImage: map['serviceImage'] ?? '',
-      category: map['category'] ?? '',
-      city: map['city'] ?? '',
-      location: map['location'] ?? '',
-      experience: map['experience'] ?? '',
-      price: map['price'] ?? '',
-      description: map['description'] ?? '',
-      bookingDate: map['bookingDate'] != null ? DateTime.parse(map['bookingDate']) : null,
-      detailedDescription: map['detailedDescription'] ?? '',
-    );
   }
 }

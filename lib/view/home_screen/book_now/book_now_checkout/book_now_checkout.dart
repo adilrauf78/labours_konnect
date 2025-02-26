@@ -6,10 +6,12 @@ import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/view/home_screen/book_now/book_now_checkout/bottomsheet_confirm_booking/bottomsheet_confirm_booking.dart';
 
 class BookNowCheckout extends StatefulWidget {
-  const BookNowCheckout({super.key});
+  final AddServicesModel service;
+  const BookNowCheckout({super.key, required this.service});
 
   @override
   State<BookNowCheckout> createState() => _BookNowCheckoutState();
@@ -187,7 +189,7 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText(
-                              text: 'Jack Marston',
+                              text: widget.service.userName ?? 'null',
                               fontSize: 15..sp,
                             ),
                             Row(

@@ -712,7 +712,7 @@ class _DetailsState extends State<Details> {
                     ),
                     GestureDetector(
                       onTap: (){
-                        navigateToNextScreen(context, BookNow());
+                        navigateToNextScreen(context, BookNow(service: widget.service,));
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width*.4,

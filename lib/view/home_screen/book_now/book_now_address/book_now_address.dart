@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/location_controller/location_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/home_screen/book_now/book_now_checkout/book_now_checkout.dart';
+import 'package:labours_konnect/view/vendor/add_services/add_services.dart';
 
-class BookNowAddress extends StatelessWidget {
-  const BookNowAddress({super.key});
+class BookNowAddress extends StatefulWidget {
+  final AddServices services;
+  const BookNowAddress({super.key, required this.services});
 
+  @override
+  State<BookNowAddress> createState() => _BookNowAddressState();
+}
+
+class _BookNowAddressState extends State<BookNowAddress> {
+  final LocationController locationController = Get.put(LocationController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,14 +139,51 @@ class BookNowAddress extends StatelessWidget {
               ),
             ),
             SizedBox(height: 25..h),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height*.55,
-              decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage('${imagePath}map.png'),
-                    fit: BoxFit.fill
+            Stack(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height*.55,
+                  child: GoogleMap(
+                    onMapCreated: locationController.onMapCreated,
+                    markers: Set<Marker>.of(locationController.markers),
+                    initialCameraPosition: CameraPosition(
+                      target: locationController.initialPosition,
+                      zoom: 9.0,
+                    ),
+                    compassEnabled: false,
+                    mapType: MapType.normal,
+                    zoomControlsEnabled: false,
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: false,
+                  ),
                 ),
-              ),
+                Positioned(
+                  top: 20,
+                  right: 20,
+                  child: SizedBox(
+                    width: 50..w,
+                    height: 50..h,
+                    child: FloatingActionButton(
+                      backgroundColor: AppColor.white,
+                      child: locationController.isLoading.value
+                          ? Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
+                            color: AppColor.blue,
+                          ),
+                        ),
+                      )
+                          : Icon(Icons.my_location),
+                      onPressed: locationController.getCurrentLocation,
+
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20..h),
             Center(
@@ -155,11 +203,9 @@ class BookNowAddress extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15..r),
                   color: AppColor.black.withOpacity(.1),
                 ),
-                child: Text16(
-                  text: 'H#28 saleem Street # 17 Fiji garhi stop'
-                    ' Band Rd, Shera Kot, Lahore, Punjab 54000'
-                    'Pakistan',
-                ),
+                child: Obx(() => Text16(
+                  text: locationController.address.value,
+                )),
               ),
             ),
             SizedBox(height: 20..h),
@@ -167,7 +213,7 @@ class BookNowAddress extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: GestureDetector(
                 onTap: (){
-                  navigateToNextScreen(context, BookNowCheckout());
+                  navigateToNextScreen(context, BookNowCheckout(service: widget.services,));
                 },
                 child: Button(
                   text: 'Next',

@@ -1,58 +1,51 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/models/book_now_model/book_now_model.dart';
 
-class BookNowController extends GetxController {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  var bookings = <BookNowModel>[].obs;
-  var isLoading = false.obs;
+class BookingService {
+  bool isLoading = false;
+  final FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  TextEditingController description = TextEditingController();
+  TextEditingController location = TextEditingController();
 
-  @override
-  void onInit() {
-    fetchBookings();
-    super.onInit();
-  }
+  Future<void> bookService({
+    required AddServicesModel service,
+    required String userId,
+    required DateTime bookingDate,
+    required String bookingTime,
+  }) async {
+    // Create a new BookNowModel instance
+    BookNowModel booking = BookNowModel(
+      id: '',
+      userId: userId,
+      vendorId: service.userId,
+      serviceName: service.serviceTitle,
+      bookingDate: bookingDate,
+      bookingTime: bookingTime,
+      description: description.text.trim(),
+      location: location.text.trim(),
+      status: 'pending',
+    );
 
-  // Fetch Bookings from Firestore
-  void fetchBookings() async {
-    try {
-      isLoading(true);
-      var snapshot = await _firestore.collection('bookings').get();
-      bookings.value = snapshot.docs.map((doc) => BookNowModel.fromMap(doc.data(), doc.id)).toList();
-    } catch (e) {
-      print("Error fetching bookings: $e");
-    } finally {
-      isLoading(false);
-    }
+    // Save the booking to Firestore
+    await fireStore.collection('bookings').add(booking.toMap());
   }
+}
 
-  // Add a new Booking
-  Future<void> addBooking(BookNowModel booking) async {
-    try {
-      await _firestore.collection('bookings').add(booking.toMap());
-      fetchBookings();
-    } catch (e) {
-      print("Error adding booking: $e");
-    }
-  }
+void onBookNowPressed(AddServicesModel service) async {
+  // Assuming you have the userId, bookingDate, and bookingTime
+  String userId = 'currentUserId';
+  DateTime bookingDate = DateTime.now();
+  String bookingTime = '10:00 AM';
 
-  // Update Booking Status
-  Future<void> updateBookingStatus(String bookingId, String newStatus) async {
-    try {
-      await _firestore.collection('bookings').doc(bookingId).update({'status': newStatus});
-      fetchBookings();
-    } catch (e) {
-      print("Error updating booking status: $e");
-    }
-  }
+  BookingService bookingService = BookingService();
+  await bookingService.bookService(
+    service: service,
+    userId: userId,
+    bookingDate: bookingDate,
+    bookingTime: bookingTime,
+  );
 
-  // Delete Booking
-  Future<void> deleteBooking(String bookingId) async {
-    try {
-      await _firestore.collection('bookings').doc(bookingId).delete();
-      fetchBookings();
-    } catch (e) {
-      print("Error deleting booking: $e");
-    }
-  }
+  // Navigate to a confirmation screen or show a success message
 }

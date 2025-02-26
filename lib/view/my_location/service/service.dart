@@ -278,7 +278,7 @@ class _ServiceState extends State<Service> {
                   SizedBox(height: 50..h,),
                   GestureDetector(
                     onTap: (){
-                      navigateToNextScreen(context, BookNow());
+                      //navigateToNextScreen(context, BookNow());
                     },
                     child: Button(
                       text: 'Book Now',

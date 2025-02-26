@@ -9,10 +9,12 @@ import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/view/home_screen/book_now/book_now_address/book_now_address.dart';
 
 class BookNow extends StatefulWidget {
-  const BookNow({super.key});
+  final AddServicesModel service;
+  const BookNow({super.key, required this.service});
 
   @override
   State<BookNow> createState() => _BookNowState();
@@ -178,7 +180,7 @@ class _BookNowState extends State<BookNow> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText(
-                              text: 'Jack Marston',
+                              text: widget.service.userName ?? 'null',
                               fontSize: 15..sp,
                             ),
                             Row(
@@ -221,7 +223,7 @@ class _BookNowState extends State<BookNow> {
                           children: [
                             SizedBox(height: 5..h),
                             SubText(
-                              text: 'Pipe Fitting',
+                              text: widget.service.serviceTitle,
                               fontWeight: FontWeight.w700,
                             ),
                             SizedBox(height: 3..h),
@@ -263,7 +265,7 @@ class _BookNowState extends State<BookNow> {
                               ),
                               child: Center(
                                 child: MainText(
-                                  text: '\$ 20.00',
+                                  text: '\$ ${widget.service.price}',
                                   fontSize: 14..sp,
                                   color: AppColor.white,
                                 ),

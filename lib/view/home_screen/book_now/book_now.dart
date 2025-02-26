@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/book_now_controller/book_now_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -22,7 +24,35 @@ class BookNow extends StatefulWidget {
 
 class _BookNowState extends State<BookNow> {
   double _rating = 5;
-  DateTime? dateTime;
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  final BookNowController bookNowController = Get.put(BookNowController());
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null && picked != selectedTime) {
+      setState(() {
+        selectedTime = picked;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -265,7 +295,7 @@ class _BookNowState extends State<BookNow> {
                               ),
                               child: Center(
                                 child: MainText(
-                                  text: '\$ ${widget.service.price}',
+                                  text: '\$${widget.service.price}',
                                   fontSize: 14..sp,
                                   color: AppColor.white,
                                 ),
@@ -292,26 +322,8 @@ class _BookNowState extends State<BookNow> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: GestureDetector(
-                onTap: () {
-                  showCupertinoModalPopup<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 250.h,
-                        child: CupertinoDatePicker(
-                          backgroundColor: AppColor.white,
-                          initialDateTime: dateTime,
-                          mode: CupertinoDatePickerMode.date,
-                          onDateTimeChanged: (DateTime newTime) {
-                            setState(() {
-                              dateTime = newTime;
-                            });
-                          },
-                        ),
-                      );
-                    },
-                  );
+                onTap: (){
+                  _selectDate(context);
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -332,8 +344,43 @@ class _BookNowState extends State<BookNow> {
                       SvgPicture.asset('${iconPath}calendar.svg'),
                       SizedBox(width: 20..w),
                       Text16(
-                        text: dateTime== null
-                            ? 'Choose Date and Time' : '${DateFormat('MM/dd/yyyy').format(dateTime!)}',
+                        text: selectedDate == null ? 'Select Date' : DateFormat('MM/dd/yyyy').format(selectedDate!),
+                        fontSize: 14..sp,
+                        color: Color(0xFF999999),
+                        fontWeight: FontWeight.w500,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10..h),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: GestureDetector(
+                onTap: (){
+                  _selectTime(context);
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50..h,
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10..r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.k0xFFEEEEEE,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.access_time_rounded,color: Color(0xFF999999),),
+                      SizedBox(width: 20..w),
+                      Text16(
+                        text: selectedTime  == null ? 'Select Time' : '${selectedTime!.format(context)}',
                         fontSize: 14..sp,
                         color: Color(0xFF999999),
                         fontWeight: FontWeight.w500,
@@ -369,6 +416,7 @@ class _BookNowState extends State<BookNow> {
                   ],
                 ),
                 child: TextField(
+                  controller: bookNowController.descriptionController,
                   maxLines: null,
                   cursorColor: Color(0xFF9FA3A8),
                   decoration: InputDecoration(
@@ -389,7 +437,7 @@ class _BookNowState extends State<BookNow> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: GestureDetector(
                 onTap: (){
-                  navigateToNextScreen(context, BookNowAddress());
+                  navigateToNextScreen(context, BookNowAddress(service: widget.service,));
                 },
                 child: Button(
                   text: 'Next',

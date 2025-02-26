@@ -232,7 +232,7 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
                           children: [
                             SizedBox(height: 5..h),
                             SubText(
-                              text: 'Pipe Fitting',
+                              text: widget.service.serviceTitle,
                               fontWeight: FontWeight.w700,
                             ),
                             SizedBox(height: 3..h),
@@ -274,7 +274,7 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
                               ),
                               child: Center(
                                 child: MainText(
-                                  text: '\$ 20.00',
+                                  text: '\$${widget.service.price}',
                                   fontSize: 14..sp,
                                   color: AppColor.white,
                                 ),
@@ -382,7 +382,7 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
                           text: 'Price',
                         ),
                         Text16(
-                          text: '\$20.00',
+                          text: '\$${widget.service.price}',
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
                         ),

@@ -6,6 +6,7 @@ import 'package:labours_konnect/constants/utils.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 
 class ServiceController extends GetxController{
+
   bool isLoading = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -170,6 +171,4 @@ class ServiceController extends GetxController{
     }
     return null;
   }
-
-
 }

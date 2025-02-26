@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/models/book_now_model/book_now_model.dart';
 
-class BookingService {
+class BookNowController extends GetxController{
   bool isLoading = false;
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  TextEditingController description = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   TextEditingController location = TextEditingController();
 
   Future<void> bookService({
@@ -23,7 +24,7 @@ class BookingService {
       serviceName: service.serviceTitle,
       bookingDate: bookingDate,
       bookingTime: bookingTime,
-      description: description.text.trim(),
+      description: descriptionController.text.trim(),
       location: location.text.trim(),
       status: 'pending',
     );
@@ -39,7 +40,7 @@ void onBookNowPressed(AddServicesModel service) async {
   DateTime bookingDate = DateTime.now();
   String bookingTime = '10:00 AM';
 
-  BookingService bookingService = BookingService();
+  BookNowController bookingService = BookNowController();
   await bookingService.bookService(
     service: service,
     userId: userId,

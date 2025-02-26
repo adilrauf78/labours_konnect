@@ -8,12 +8,13 @@ import 'package:labours_konnect/controller/location_controller/location_controll
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/view/home_screen/book_now/book_now_checkout/book_now_checkout.dart';
 import 'package:labours_konnect/view/vendor/add_services/add_services.dart';
 
 class BookNowAddress extends StatefulWidget {
-  final AddServices services;
-  const BookNowAddress({super.key, required this.services});
+  final AddServicesModel service;
+  const BookNowAddress({super.key, required this.service});
 
   @override
   State<BookNowAddress> createState() => _BookNowAddressState();
@@ -213,7 +214,7 @@ class _BookNowAddressState extends State<BookNowAddress> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: GestureDetector(
                 onTap: (){
-                  navigateToNextScreen(context, BookNowCheckout(service: widget.services,));
+                  navigateToNextScreen(context, BookNowCheckout(service: widget.service,));
                 },
                 child: Button(
                   text: 'Next',

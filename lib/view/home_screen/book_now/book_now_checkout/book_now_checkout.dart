@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
@@ -11,13 +12,16 @@ import 'package:labours_konnect/view/home_screen/book_now/book_now_checkout/bott
 
 class BookNowCheckout extends StatefulWidget {
   final AddServicesModel service;
-  const BookNowCheckout({super.key, required this.service});
+  final DateTime selectedDate; // Add selectedDate
+  final String selectedTime;
+  const BookNowCheckout({super.key, required this.service,required this.selectedDate, required this.selectedTime});
 
   @override
   State<BookNowCheckout> createState() => _BookNowCheckoutState();
 }
 
 class _BookNowCheckoutState extends State<BookNowCheckout> {
+
   double _rating = 5;
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -33,6 +37,7 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
   }
   @override
   Widget build(BuildContext context) {
+    String formattedDate = DateFormat('dd MMM yyyy').format(widget.selectedDate);
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       body: SingleChildScrollView(
@@ -323,7 +328,7 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
                         ),
                         SizedBox(width: 10..w),
                         Text16(
-                          text: '17 Nov 2023',
+                          text: formattedDate,
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
                         ),
@@ -338,7 +343,7 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
                         ),
                         SizedBox(width: 10..w),
                         Text16(
-                          text: '03:30 pm',
+                          text: widget.selectedTime,
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
                         ),

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/constants/utils.dart';
 import 'package:labours_konnect/controller/book_now_controller/book_now_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
@@ -437,7 +438,21 @@ class _BookNowState extends State<BookNow> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: GestureDetector(
                 onTap: (){
-                  navigateToNextScreen(context, BookNowAddress(service: widget.service,));
+                   if (selectedTime == null && selectedDate == null) {
+                  showSnackBar(title: 'Please select a date & time');
+                  } else if (selectedDate == null) {
+                  showSnackBar(title: 'Please select a booking date');
+                  }else if (selectedTime == null) {
+                     showSnackBar(title: 'Please select a booking time');
+                   } else if (bookNowController.descriptionController.text.isEmpty) {
+                  showSnackBar(title: 'Please enter a description');
+                  }
+                  else{
+                  bookNowController.setService(widget.service);
+                  bookNowController.setBookingDetails(selectedDate!, selectedTime!.format(context));
+                     navigateToNextScreen(context, BookNowAddress(service: widget.service,selectedDate: selectedDate!,
+                       selectedTime: selectedTime!.format(context),));
+                   }
                 },
                 child: Button(
                   text: 'Next',

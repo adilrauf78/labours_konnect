@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/constants/utils.dart';
+import 'package:labours_konnect/controller/book_now_controller/book_now_controller.dart';
 import 'package:labours_konnect/controller/location_controller/location_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
@@ -14,7 +16,9 @@ import 'package:labours_konnect/view/vendor/add_services/add_services.dart';
 
 class BookNowAddress extends StatefulWidget {
   final AddServicesModel service;
-  const BookNowAddress({super.key, required this.service});
+  final DateTime selectedDate; // Add selectedDate
+  final String selectedTime;
+  const BookNowAddress({super.key, required this.service, required this.selectedDate, required this.selectedTime});
 
   @override
   State<BookNowAddress> createState() => _BookNowAddressState();
@@ -22,6 +26,14 @@ class BookNowAddress extends StatefulWidget {
 
 class _BookNowAddressState extends State<BookNowAddress> {
   final LocationController locationController = Get.put(LocationController());
+  final BookNowController bookNowController = Get.put(BookNowController());
+  String previousAddress = '';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    previousAddress = locationController.address.value;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,8 +225,16 @@ class _BookNowAddressState extends State<BookNowAddress> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: GestureDetector(
-                onTap: (){
-                  navigateToNextScreen(context, BookNowCheckout(service: widget.service,));
+                onTap: () {
+                  if (locationController.address.value == previousAddress) {
+                    showSnackBar(title: 'Please select a new location');
+                  }
+                  else {
+                    previousAddress = locationController.address.value; // Store new value
+                    bookNowController.locationController.text = locationController.address.value;
+                    navigateToNextScreen(context, BookNowCheckout(service: widget.service,selectedDate: widget.selectedDate!,
+                      selectedTime: widget.selectedTime,));
+                  }
                 },
                 child: Button(
                   text: 'Next',

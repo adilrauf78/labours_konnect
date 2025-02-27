@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/constants/utils.dart';
+import 'package:labours_konnect/controller/book_now_controller/book_now_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 
 
@@ -14,6 +17,7 @@ class ConfirmBooking extends StatefulWidget {
 }
 
 class _ConfirmBookingState extends State<ConfirmBooking> {
+  final BookNowController bookNowController = Get.put(BookNowController());
   bool isChecked = false;
   @override
   Widget build(BuildContext context) {
@@ -106,39 +110,54 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width*.4,
-                    height: 45..h,
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(10..r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColor.black.withOpacity(.25),
-                          blurRadius: 4,
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width*.4,
+                      height: 45..h,
+                      decoration: BoxDecoration(
+                        color: AppColor.white,
+                        borderRadius: BorderRadius.circular(10..r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColor.black.withOpacity(.25),
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text16(
+                          text: 'Cancel',
+                          fontWeight: FontWeight.w400,
+                          color: AppColor.black,
                         ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text16(
-                        text: 'Cancel',
-                        fontWeight: FontWeight.w400,
-                        color: AppColor.black,
                       ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width*.4,
-                    height: 45..h,
-                    decoration: BoxDecoration(
-                      color: AppColor.primaryColor,
-                      borderRadius: BorderRadius.circular(10..r),
-                    ),
-                    child: Center(
-                      child: Text16(
-                        text: 'Confirm',
-                        fontWeight: FontWeight.w700,
-                        color: AppColor.white,
+                  GestureDetector(
+                    onTap: () async {
+                      if(isChecked == null){
+                        showSnackBar(title: 'Please tick the box');
+                      }
+                      else{
+                        await bookNowController.bookService('currentUserId');
+                      }
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width*.4,
+                      height: 45..h,
+                      decoration: BoxDecoration(
+                        color: AppColor.primaryColor,
+                        borderRadius: BorderRadius.circular(10..r),
+                      ),
+                      child: Center(
+                        child: Text16(
+                          text: 'Confirm',
+                          fontWeight: FontWeight.w700,
+                          color: AppColor.white,
+                        ),
                       ),
                     ),
                   ),

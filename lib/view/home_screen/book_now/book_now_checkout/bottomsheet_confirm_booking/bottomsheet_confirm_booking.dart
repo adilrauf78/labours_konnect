@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
@@ -30,7 +31,19 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
             topLeft: Radius.circular(40..r),
           ),
         ),
-        child: Padding(
+        child: bookNowController.isLoading
+            ? Center(
+          child: Container(
+            color: Colors.white,
+            height: 100,
+            width: 100,
+            child: SpinKitRing(
+              color: AppColor.primaryColor,
+              size: 50.0,
+            ),
+          ),
+        )
+            :Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -137,14 +150,19 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () async {
-                      if(isChecked == null){
-                        showSnackBar(title: 'Please tick the box');
-                      }
-                      else{
-                        await bookNowController.bookService('currentUserId');
-                      }
-                    },
+                      onTap: () async {
+                        if (!isChecked) {
+                          showSnackBar(title: 'Please agree to the terms of service and privacy policy');
+                          return;
+                        }
+                        try {
+                          await bookNowController.bookService('userId'); // Replace 'userId' with actual user ID
+                          Get.back(); // Close the confirmation dialog
+                          Get.toNamed('/bookingScreen'); // Navigate to the booking screen
+                        } catch (e) {
+                          showSnackBar(title: 'Failed to book service: $e');
+                        }
+                      },
                     child: Container(
                       width: MediaQuery.of(context).size.width*.4,
                       height: 45..h,

@@ -24,7 +24,20 @@ class LocationController extends GetxController{
   //Floating Action Button Click Location in Text Show
   RxString address = 'H#28 saleem Street # 17 Fiji garhi stop Band Rd, Shera Kot, Lahore, Punjab 54000 Pakistan'.obs;
   Future<void> getCurrentLocation() async {
-      isLoading.value = true;
+    isLoading.value = true;
+    // Check if location permission is granted
+    var status = await Permission.location.status;
+    if (!status.isGranted) {
+      await requestLocationPermission();
+      status = await Permission.location.status;
+      if (!status.isGranted) {
+        isLoading.value = false;
+        ErrorSnackBar('Permission Denied', 'Please enable location access to use this feature.');
+        return;
+      }
+    }
+    isLoading.value = true;
+
     try {
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
@@ -97,7 +110,6 @@ class LocationController extends GetxController{
 
     if (status.isGranted) {
       SuccessSnackBar('Permission Granted', 'Location access enabled.');
-      Get.off(ConfirmLocation());
       await getCurrentLocation();
     } else if (status.isDenied) {
       ErrorSnackBar('Permission Denied', 'Please enable location access.');

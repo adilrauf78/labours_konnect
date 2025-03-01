@@ -21,6 +21,7 @@ class MyLocation extends StatefulWidget {
 class _MyLocationState extends State<MyLocation> {
   final LocationController locationController = Get.put(LocationController());
   int selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,14 +31,15 @@ class _MyLocationState extends State<MyLocation> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 55..h),
+              SizedBox(height: 55
+                ..h),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         navigateBackWithAnimation(context);
                       },
                       child: Icon(Icons.arrow_back_ios,
@@ -49,17 +51,25 @@ class _MyLocationState extends State<MyLocation> {
                       fontWeight: FontWeight.w500,
                     ),
                     Container(
-                      width: 20..w,
+                      width: 20
+                        ..w,
                     )
                   ],
                 ),
               ),
-              SizedBox(height: 20..h),
+              SizedBox(height: 20
+                ..h),
               Stack(
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height*.5,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * .5,
                     child: GoogleMap(
                       onMapCreated: locationController.onMapCreated,
                       markers: Set<Marker>.of(locationController.markers),
@@ -78,25 +88,26 @@ class _MyLocationState extends State<MyLocation> {
                     top: 20,
                     right: 20,
                     child: SizedBox(
-                      width: 50..w,
-                      height: 50..h,
-                      child: FloatingActionButton(
-                        backgroundColor: AppColor.white,
-                        child: locationController.isLoading.value
-                            ? Center(
-                          child: SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 3,
-                              color: AppColor.blue,
+                      width: 50
+                        ..w,
+                      height: 50
+                        ..h,
+                      child: Obx(() => FloatingActionButton(
+                          backgroundColor: AppColor.white,
+                          child: locationController.isLoading.value
+                              ? Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: AppColor.blue,
+                              ),
                             ),
-                          ),
-                        )
-                            : Icon(Icons.my_location),
-                        onPressed: locationController.getCurrentLocation,
-
-                      ),
+                          )
+                              : Icon(Icons.my_location),
+                          onPressed: locationController.getCurrentLocation,
+                        ),),
                     ),
                   ),
                 ],
@@ -106,34 +117,42 @@ class _MyLocationState extends State<MyLocation> {
           Positioned(
             bottom: 0,
             child: Container(
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppColor.white,
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20..r),
-                  topLeft: Radius.circular(20..r),
+                  topRight: Radius.circular(20
+                    ..r),
+                  topLeft: Radius.circular(20
+                    ..r),
                 ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    height: 2..h,
-                    width: 100..w,
+                    height: 2
+                      ..h,
+                    width: 100
+                      ..w,
                     decoration: BoxDecoration(
-                        color: AppColor.black.withOpacity(.25),
-                        borderRadius: BorderRadius.circular(1),
+                      color: AppColor.black.withOpacity(.25),
+                      borderRadius: BorderRadius.circular(1),
                     ),
                   ),
-                  SizedBox(height: 20..h),
+                  SizedBox(height: 20
+                    ..h),
                   ListView.builder(
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
                     scrollDirection: Axis.vertical,
                     itemCount: 2,
                     physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context,index){
+                    itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 20),
                         child: GestureDetector(
@@ -144,13 +163,17 @@ class _MyLocationState extends State<MyLocation> {
                             navigateToNextScreen(context, Service());
                           },
                           child: Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width,
                             padding: EdgeInsets.all(15),
                             decoration: BoxDecoration(
-                                color: selectedIndex == index
-                                    ? AppColor.primaryColor
-                                    : AppColor.white,
-                              borderRadius: BorderRadius.circular(10..r),
+                              color: selectedIndex == index
+                                  ? AppColor.primaryColor
+                                  : AppColor.white,
+                              borderRadius: BorderRadius.circular(10
+                                ..r),
                               boxShadow: [
                                 BoxShadow(
                                   color: AppColor.k0xFFEEEEEE,
@@ -165,32 +188,40 @@ class _MyLocationState extends State<MyLocation> {
                                 Row(
                                   children: [
                                     Container(
-                                      width: 70..w,
-                                      height: 70..h,
+                                      width: 70
+                                        ..w,
+                                      height: 70
+                                        ..h,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppColor.white,
                                         image: DecorationImage(
-                                          image: AssetImage('${imagePath}pipe.png'),
+                                          image: AssetImage(
+                                              '${imagePath}pipe.png'),
                                           fit: BoxFit.cover,
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 10..w),
+                                    SizedBox(width: 10
+                                      ..w),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start,
                                       children: [
                                         MainText(
                                           text: 'Jack Marston',
                                           color: selectedIndex == index
                                               ? AppColor.white
                                               : AppColor.black,
-                                          fontSize: 14..sp,
+                                          fontSize: 14
+                                            ..sp,
                                         ),
                                         Row(
                                           children: [
-                                            Icon(Icons.star,size: 14,color: Color(0xFFFFD800)),
-                                            SizedBox(width: 3..w),
+                                            Icon(Icons.star, size: 14,
+                                                color: Color(0xFFFFD800)),
+                                            SizedBox(width: 3
+                                              ..w),
                                             Text12(
                                               text: '4.5',
                                             ),
@@ -201,8 +232,10 @@ class _MyLocationState extends State<MyLocation> {
                                         ),
                                         Row(
                                           children: [
-                                            SvgPicture.asset('${iconPath}map-pin.svg'),
-                                            SizedBox(width: 5..w),
+                                            SvgPicture.asset(
+                                                '${iconPath}map-pin.svg'),
+                                            SizedBox(width: 5
+                                              ..w),
                                             Text12(
                                               text: 'Woodstock, GA',
                                             ),

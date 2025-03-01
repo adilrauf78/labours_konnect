@@ -18,7 +18,9 @@ class BookNowAddress extends StatefulWidget {
   final AddServicesModel service;
   final DateTime selectedDate; // Add selectedDate
   final String selectedTime;
-  const BookNowAddress({super.key, required this.service, required this.selectedDate, required this.selectedTime});
+
+  const BookNowAddress(
+      {super.key, required this.service, required this.selectedDate, required this.selectedTime});
 
   @override
   State<BookNowAddress> createState() => _BookNowAddressState();
@@ -28,12 +30,14 @@ class _BookNowAddressState extends State<BookNowAddress> {
   final LocationController locationController = Get.put(LocationController());
   final BookNowController bookNowController = Get.put(BookNowController());
   String previousAddress = '';
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     previousAddress = locationController.address.value;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +45,8 @@ class _BookNowAddressState extends State<BookNowAddress> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 55..h),
+            SizedBox(height: 55
+              ..h),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -60,19 +65,23 @@ class _BookNowAddressState extends State<BookNowAddress> {
                     text: 'Booking',
                     fontWeight: FontWeight.w500,
                   ),
-                  SizedBox(width: 20..w),
+                  SizedBox(width: 20
+                    ..w),
                 ],
               ),
             ),
-            SizedBox(height: 30..h),
+            SizedBox(height: 30
+              ..h),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Row(
                 children: [
                   Container(
-                    width: 30..w,
-                    height: 30..h,
+                    width: 30
+                      ..w,
+                    height: 30
+                      ..h,
                     decoration: BoxDecoration(
                       color: AppColor.primaryColor,
                       shape: BoxShape.circle,
@@ -84,24 +93,31 @@ class _BookNowAddressState extends State<BookNowAddress> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10..w),
+                  SizedBox(width: 10
+                    ..w),
                   Text16(
                     text: 'Detail',
                     color: AppColor.black,
                     fontWeight: FontWeight.w500,
                   ),
-                  SizedBox(width: 10..w),
+                  SizedBox(width: 10
+                    ..w),
                   Container(
-                    width: 25..w,
-                    height: 2..h,
+                    width: 25
+                      ..w,
+                    height: 2
+                      ..h,
                     decoration: BoxDecoration(
                       color: AppColor.k0xFF818080,
                     ),
                   ),
-                  SizedBox(width: 12..w),
+                  SizedBox(width: 12
+                    ..w),
                   Container(
-                    width: 30..w,
-                    height: 30..h,
+                    width: 30
+                      ..w,
+                    height: 30
+                      ..h,
                     decoration: BoxDecoration(
                       color: AppColor.primaryColor,
                       shape: BoxShape.circle,
@@ -113,24 +129,31 @@ class _BookNowAddressState extends State<BookNowAddress> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10..w),
+                  SizedBox(width: 10
+                    ..w),
                   Text16(
                     text: 'Address',
                     color: AppColor.black,
                     fontWeight: FontWeight.w500,
                   ),
-                  SizedBox(width: 10..w),
+                  SizedBox(width: 10
+                    ..w),
                   Container(
-                    width: 25..w,
-                    height: 2..h,
+                    width: 25
+                      ..w,
+                    height: 2
+                      ..h,
                     decoration: BoxDecoration(
                       color: AppColor.k0xFF818080,
                     ),
                   ),
-                  SizedBox(width: 12..w),
+                  SizedBox(width: 12
+                    ..w),
                   Container(
-                    width: 30..w,
-                    height: 30..h,
+                    width: 30
+                      ..w,
+                    height: 30
+                      ..h,
                     decoration: BoxDecoration(
                       color: AppColor.black.withOpacity(.25),
                       shape: BoxShape.circle,
@@ -142,7 +165,8 @@ class _BookNowAddressState extends State<BookNowAddress> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10..w),
+                  SizedBox(width: 10
+                    ..w),
                   Text16(
                     text: 'Checkout',
                     color: AppColor.black,
@@ -151,12 +175,19 @@ class _BookNowAddressState extends State<BookNowAddress> {
                 ],
               ),
             ),
-            SizedBox(height: 25..h),
+            SizedBox(height: 25
+              ..h),
             Stack(
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height*.55,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * .55,
                   child: GoogleMap(
                     onMapCreated: locationController.onMapCreated,
                     markers: Set<Marker>.of(locationController.markers),
@@ -175,64 +206,79 @@ class _BookNowAddressState extends State<BookNowAddress> {
                   top: 20,
                   right: 20,
                   child: SizedBox(
-                    width: 50..w,
-                    height: 50..h,
-                    child: FloatingActionButton(
-                      backgroundColor: AppColor.white,
-                      child: locationController.isLoading.value
-                          ? Center(
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3,
-                            color: AppColor.blue,
+                    width: 50
+                      ..w,
+                    height: 50
+                      ..h,
+                    child: Obx(() => FloatingActionButton(
+                        backgroundColor: AppColor.white,
+                        child: locationController.isLoading.value
+                            ? Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              color: AppColor.blue,
+                            ),
                           ),
-                        ),
-                      )
-                          : Icon(Icons.my_location),
-                      onPressed: locationController.getCurrentLocation,
-
-                    ),
+                        )
+                            : Icon(Icons.my_location),
+                        onPressed: locationController.getCurrentLocation,
+                      ),),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20..h),
+            SizedBox(height: 20
+              ..h),
             Center(
               child: SubText(
                 text: 'Confirm your Location',
-                fontSize: 16..sp,
+                fontSize: 16
+                  ..sp,
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(height: 15..h),
+            SizedBox(height: 15
+              ..h),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(horizontal: 20,vertical: 15),
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15..r),
+                  borderRadius: BorderRadius.circular(15
+                    ..r),
                   color: AppColor.black.withOpacity(.1),
                 ),
-                child: Obx(() => Text16(
-                  text: locationController.address.value,
-                )),
+                child: Obx(() =>
+                    Text16(
+                      text: locationController.address.value,
+                    )),
               ),
             ),
-            SizedBox(height: 20..h),
+            SizedBox(height: 20
+              ..h),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: GestureDetector(
                 onTap: () {
-                  if (locationController.address.value == previousAddress) {
+                  if (locationController.address.isEmpty) {
                     showSnackBar(title: 'Please select a new location');
+
                   }
                   else {
-                    previousAddress = locationController.address.value; // Store new value
-                    bookNowController.locationController.text = locationController.address.value;
-                    navigateToNextScreen(context, BookNowCheckout(service: widget.service,selectedDate: widget.selectedDate!,
+                    previousAddress =
+                        locationController.address.value; // Store new value
+                    bookNowController.locationController.text =
+                        locationController.address.value;
+                    navigateToNextScreen(context, BookNowCheckout(
+                      service: widget.service,
+                      selectedDate: widget.selectedDate!,
                       selectedTime: widget.selectedTime,));
                   }
                 },
@@ -241,7 +287,8 @@ class _BookNowAddressState extends State<BookNowAddress> {
                 ),
               ),
             ),
-            SizedBox(height: 20..h),
+            SizedBox(height: 20
+              ..h),
           ],
         ),
       ),

@@ -156,9 +156,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           return;
                         }
                         try {
-                          await bookNowController.bookService('userId'); // Replace 'userId' with actual user ID
-                          Get.back(); // Close the confirmation dialog
-                          Get.toNamed('/bookingScreen'); // Navigate to the booking screen
+                          await bookNowController.bookService('userId');
                         } catch (e) {
                           showSnackBar(title: 'Failed to book service: $e');
                         }

@@ -156,7 +156,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           return;
                         }
                         try {
-                          await bookNowController.bookService('userId');
+                          await bookNowController.bookService();
                         } catch (e) {
                           showSnackBar(title: 'Failed to book service: $e');
                         }

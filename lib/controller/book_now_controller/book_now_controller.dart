@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/utils.dart';
+import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/models/book_now_model/book_now_model.dart';
 
 class BookNowController extends GetxController {
   bool isLoading = false;
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final ServiceController serviceController = Get.put(ServiceController());
   // Controllers for description and location
   TextEditingController descriptionController = TextEditingController();
   TextEditingController locationController = TextEditingController();
@@ -30,7 +33,7 @@ class BookNowController extends GetxController {
   }
 
   // Book service
-  Future<void> bookService(String userId) async {
+  Future<void> bookService() async {
     if (service == null) {
       showSnackBar(title: 'Please select a service');
     } else if (bookingDate == null) {
@@ -44,13 +47,21 @@ class BookNowController extends GetxController {
     } else {
       try {
         isLoading = true;
+        final userId = _auth.currentUser!.uid;
+        final userDetails = await serviceController.fetchUserDetails(userId);
         update(); // Notify listeners
+        final firstName = userDetails?['First Name'] ?? 'Unknown';
+        print('User Details: $userDetails'); // Debugging statement
 
+        final lastName = userDetails?['Last Name'] ?? 'User';
+        final profileImage = userDetails?['profileImage'] ?? '';
         BookNowModel booking = BookNowModel(
-          id: '',
-          userId: userId,
+          userName: '$firstName $lastName',
+          userImage: profileImage,
+          userId: _auth.currentUser?.uid ?? '',
           vendorId: service!.userId,
           serviceName: service!.serviceTitle,
+          serviceImage: "",
           bookingDate: bookingDate!,
           bookingTime: bookingTime!,
           description: descriptionController.text.trim(),
@@ -74,6 +85,45 @@ class BookNowController extends GetxController {
         update(); // Notify listeners
         ErrorSnackBar('Error', 'Failed to book service: $e');
       }
+    }
+  }
+
+  // Fetch bookings for the current user
+  Future<List<BookNowModel>> fetchBookingsForUser() async {
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        throw Exception('User not logged in');
+      }
+
+      // Query Firestore for bookings where the userId matches
+      final querySnapshot = await fireStore
+          .collection('bookings')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      // Convert Firestore documents to BookNowModel objects
+      final bookings = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return BookNowModel(
+          userName: data['userName'],
+          userImage: data['userImage'],
+          userId: data['userId'],
+          vendorId: data['vendorId'],
+          serviceName: data['serviceName'],
+          serviceImage: data['serviceImage'],
+          bookingDate: (data['bookingDate'] as Timestamp).toDate(),
+          bookingTime: data['bookingTime'],
+          description: data['description'],
+          location: data['location'],
+          status: data['status'],
+        );
+      }).toList();
+
+      return bookings;
+    } catch (e) {
+      print('Error fetching bookings: $e');
+      throw Exception('Failed to fetch bookings: $e');
     }
   }
 }

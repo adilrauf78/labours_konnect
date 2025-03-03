@@ -70,7 +70,6 @@ class ServiceController extends GetxController{
         update();
 
         SuccessSnackBar('Success', 'Service added successfully');
-
         serviceTitle.clear();
         selectedCategory.value = 'Choose Category';
         cityController.clear();

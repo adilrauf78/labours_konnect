@@ -57,6 +57,7 @@ class BookNowController extends GetxController {
         final profileImage = userDetails?['profileImage'] ?? '';
         BookNowModel booking = BookNowModel(
           userName: '$firstName $lastName',
+          vendorName: '',
           userImage: profileImage,
           userId: _auth.currentUser?.uid ?? '',
           vendorId: service!.userId,
@@ -66,6 +67,8 @@ class BookNowController extends GetxController {
           bookingTime: bookingTime!,
           description: descriptionController.text.trim(),
           location: locationController.text.trim(),
+          price: "",
+          
           status: 'pending',
         );
 
@@ -107,6 +110,7 @@ class BookNowController extends GetxController {
         final data = doc.data();
         return BookNowModel(
           userName: data['userName'],
+          vendorName: data['vendorName'],
           userImage: data['userImage'],
           userId: data['userId'],
           vendorId: data['vendorId'],
@@ -114,6 +118,7 @@ class BookNowController extends GetxController {
           serviceImage: data['serviceImage'],
           bookingDate: (data['bookingDate'] as Timestamp).toDate(),
           bookingTime: data['bookingTime'],
+          price: data['price'],
           description: data['description'],
           location: data['location'],
           status: data['status'],

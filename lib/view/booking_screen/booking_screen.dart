@@ -152,7 +152,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                                           fontWeight: FontWeight.w700,
                                                         ),
                                                         Text16(
-                                                          text: '\$ ${booking.}',
+                                                          text: '\$ ${service.price}',
                                                           color: AppColor.black,
                                                           fontWeight: FontWeight.w500,
                                                         )

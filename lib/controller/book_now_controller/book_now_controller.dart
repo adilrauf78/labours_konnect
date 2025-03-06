@@ -68,9 +68,6 @@ class BookNowController extends GetxController {
           description: descriptionController.text.trim(),
           location: locationController.text.trim(),
           price: "",
-
-
-          
           status: 'pending',
         );
 

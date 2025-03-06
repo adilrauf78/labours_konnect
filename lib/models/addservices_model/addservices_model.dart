@@ -1,6 +1,6 @@
 class AddServicesModel {
   final String userId;
-  final String? userName;
+  final String userName;
   final String? userImage;
   final String serviceTitle;
   final String? serviceImage;
@@ -14,7 +14,7 @@ class AddServicesModel {
 
   AddServicesModel({
     required this.userId,
-    this.userName,
+    required this.userName,
     this.userImage,
     required this.serviceTitle,
     this.serviceImage,

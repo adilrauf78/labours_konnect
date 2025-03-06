@@ -51,13 +51,12 @@ class BookNowController extends GetxController {
         final userDetails = await serviceController.fetchUserDetails(userId);
         update(); // Notify listeners
         final firstName = userDetails?['First Name'] ?? 'Unknown';
-        print('User Details: $userDetails'); // Debugging statement
 
         final lastName = userDetails?['Last Name'] ?? 'User';
         final profileImage = userDetails?['profileImage'] ?? '';
         BookNowModel booking = BookNowModel(
           userName: '$firstName $lastName',
-          vendorName: '',
+          vendorName: service!.userName,
           userImage: profileImage,
           userId: _auth.currentUser?.uid ?? '',
           vendorId: service!.userId,
@@ -67,8 +66,8 @@ class BookNowController extends GetxController {
           bookingTime: bookingTime!,
           description: descriptionController.text.trim(),
           location: locationController.text.trim(),
-          price: "",
-          status: 'pending',
+          price: service!.price ?? "0",
+          status: 'Pending',
         );
 
         await fireStore.collection('bookings').add(booking.toMap());
@@ -130,4 +129,19 @@ class BookNowController extends GetxController {
       throw Exception('Failed to fetch bookings: $e');
     }
   }
+
+  //Cancel Booking
+  Future<void> cancelBooking(String bookingId) async {
+    try {
+      await fireStore.collection('bookings').doc(bookingId).update({
+        'status': 'Cancelled',
+      });
+
+      SuccessSnackBar('Success', 'Booking cancelled successfully!');
+      update(); // Notify UI about the update
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to cancel booking: $e');
+    }
+  }
+
 }

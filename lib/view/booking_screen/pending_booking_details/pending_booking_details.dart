@@ -2,21 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/book_now_controller/book_now_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/book_now_model/book_now_model.dart';
 
 
 class PendingBookingDetails extends StatefulWidget {
-  const PendingBookingDetails({super.key});
+  final BookNowModel booking;
+  const PendingBookingDetails({super.key, required this.booking});
 
   @override
   State<PendingBookingDetails> createState() => _PendingBookingDetailsState();
 }
 
 class _PendingBookingDetailsState extends State<PendingBookingDetails> {
+  final BookNowController bookNowController = Get.put(BookNowController());
   double _rating = 5;
   @override
   Widget build(BuildContext context) {
@@ -69,7 +75,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                 color: AppColor.black.withOpacity(.25),
               ),
               Text16(
-                text: 'Pipe Fitting',
+                text: widget.booking.serviceName,
                 fontWeight: FontWeight.w700,
                 fontSize: 20..sp,
               ),
@@ -88,7 +94,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                           ),
                           SizedBox(width: 10..w),
                           Text16(
-                            text: '17 Nov 2023',
+                            text: DateFormat('d MMMM y').format(widget.booking.bookingDate),
                             fontSize: 12..sp,
                             fontWeight: FontWeight.w700,
                             color: AppColor.black,
@@ -103,7 +109,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                           ),
                           SizedBox(width: 10..w),
                           Text16(
-                            text: '03:30 pm',
+                            text: widget.booking.bookingTime,
                             fontSize: 12..sp,
                             fontWeight: FontWeight.w700,
                             color: AppColor.black,
@@ -112,7 +118,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                       ),
                       SizedBox(height: 5..h),
                       Text16(
-                        text: '\$ 120.00',
+                        text: '\$${widget.booking.price}',
                         color: AppColor.black,
                         fontWeight: FontWeight.w500,
                       ),
@@ -128,7 +134,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                           child: Text15(
                             fontWeight: FontWeight.w500,
                             color: AppColor.red,
-                            text: 'Pending',
+                            text: widget.booking.status,
                           ),
                         ),
                       ),
@@ -161,9 +167,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
               Padding(
                 padding: const EdgeInsets.only(right: 25),
                 child: Text16(
-                  text: 'H#28 saleem Street # 17 Fiji garhi stop'
-                  'Band Rd, Shera Kot, Lahore, Punjab 54000 '
-                  'Pakistan',
+                  text: widget.booking.location,
                   fontSize: 15..sp,
                 ),
               ),
@@ -200,7 +204,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                           text: 'Price',
                         ),
                         Text16(
-                          text: '\$20.00',
+                          text: '\$${widget.booking.price}',
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
                         ),
@@ -248,7 +252,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                           text: 'Total Amount',
                         ),
                         Text16(
-                          text: '\$20.00',
+                          text: '\$${widget.booking.price}',
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
                         ),
@@ -299,7 +303,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text16(
-                                text: 'Jack Marston',
+                                text: widget.booking.vendorName,
                                 fontWeight: FontWeight.w700,
                                 color: AppColor.white,
                               ),
@@ -404,7 +408,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
               SizedBox(height: 30..h),
               GestureDetector(
                 onTap: (){
-                  navigateBackWithAnimation(context);
+                  bookNowController.cancelBooking(widget.booking.vendorName);
                 },
                 child: Button(
                   text: 'Cancel Booking',

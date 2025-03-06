@@ -13,7 +13,7 @@ class BookNowModel {
   final String status;
   final String description;
   final String location;
-  final double price; // Added price field
+  final String price; // Added price field
 
   BookNowModel({
     required this.userName,
@@ -46,7 +46,7 @@ class BookNowModel {
       status: data['status'] ?? 'pending',
       description: data['description'] ?? '',
       location: data['location'] ?? '',
-      price: (data['price'] as num?)?.toDouble() ?? 0.0, // Fetch price from Firestore
+      price: data['price'] ?? '', // Fetch price from Firestore
     );
   }
 

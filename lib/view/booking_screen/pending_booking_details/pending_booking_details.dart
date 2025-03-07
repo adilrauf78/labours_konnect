@@ -11,6 +11,7 @@ import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/book_now_model/book_now_model.dart';
+import 'package:labours_konnect/view/account_screen/payment_method/payment_method.dart';
 
 
 class PendingBookingDetails extends StatefulWidget {
@@ -127,14 +128,14 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                         width: 95..w,
                         height: 30..h,
                         decoration: BoxDecoration(
-                          color: AppColor.bgred,
+                          color: widget.booking.status == 'Accepted' ? AppColor.bgblue : AppColor.bgred,
                           borderRadius: BorderRadius.circular(5..r),
                         ),
                         child: Center(
                           child: Text15(
                             fontWeight: FontWeight.w500,
-                            color: AppColor.red,
-                            text: widget.booking.status,
+                            color: widget.booking.status == 'Accepted' ? AppColor.blue : AppColor.red,
+                            text: widget.booking.status == 'Accepted' ? 'Accepted' : widget.booking.status,
                           ),
                         ),
                       ),
@@ -406,6 +407,32 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                 ),
               ),
               SizedBox(height: 30..h),
+              if (widget.booking.status == 'Accepted')
+              GestureDetector(
+                onTap: (){
+                  navigateToNextScreen(context, PaymentMethod());
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50..h,
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10..r),
+                    border: Border.all(
+                      color: AppColor.black,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text16(
+                      text: 'Pay Now',
+                      color: AppColor.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+              if (widget.booking.status == 'Accepted')
+              SizedBox(height: 20..h),
               GestureDetector(
                 onTap: (){
                   bookNowController.cancelBooking(widget.booking.vendorName);

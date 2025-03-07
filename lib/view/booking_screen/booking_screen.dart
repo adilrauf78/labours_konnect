@@ -134,14 +134,14 @@ class _BookingScreenState extends State<BookingScreen> {
                                                         width: 95..w,
                                                         height: 30..h,
                                                         decoration: BoxDecoration(
-                                                          color: AppColor.bgred,
+                                                          color: booking.status == 'Accepted' ? AppColor.bgblue : AppColor.bgred,
                                                           borderRadius: BorderRadius.circular(5..r),
                                                         ),
                                                         child: Center(
                                                           child: Text15(
                                                             fontWeight: FontWeight.w500,
-                                                            color: AppColor.red,
-                                                            text: booking.status,
+                                                            color: booking.status == 'Accepted' ? AppColor.blue : AppColor.red,
+                                                            text: booking.status == 'Accepted' ? 'Accepted' : booking.status,
                                                           ),
                                                         ),
                                                       ),
@@ -218,6 +218,28 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 ],
                                               ),
                                               SizedBox(height: 10..h),
+                                              if (booking.status == 'Accepted')
+                                              GestureDetector(
+                                                onTap: (){
+                                                  navigateToNextScreen(context, PaymentMethod());
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context).size.width,
+                                                  height: 30..h,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColor.primaryColor,
+                                                    borderRadius: BorderRadius.circular(10..r),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text16(
+                                                      text: 'Pay Now',
+                                                      fontSize: 15..sp,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: AppColor.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           ),
                                         ),

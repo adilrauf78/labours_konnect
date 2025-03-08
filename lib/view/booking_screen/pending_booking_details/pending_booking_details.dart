@@ -163,6 +163,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                 text: 'Address',
                 color: AppColor.black,
                 fontWeight: FontWeight.w500,
+                
               ),
               SizedBox(height: 5..h),
               Padding(

@@ -96,11 +96,48 @@ class BookNowController extends GetxController {
       if (userId == null) {
         throw Exception('User not logged in');
       }
-
-      // Query Firestore for bookings where the userId matches
       final querySnapshot = await fireStore
           .collection('bookings')
           .where('userId', isEqualTo: userId)
+          .get();
+      final bookings = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return BookNowModel(
+          userName: data['userName'],
+          vendorName: data['vendorName'],
+          userImage: data['userImage'],
+          userId: data['userId'],
+          vendorId: data['vendorId'],
+          serviceName: data['serviceName'],
+          serviceImage: data['serviceImage'],
+          bookingDate: (data['bookingDate'] as Timestamp).toDate(),
+          bookingTime: data['bookingTime'],
+          price: data['price'],
+          description: data['description'],
+          location: data['location'],
+          status: data['status'],
+        );
+      }).toList();
+
+      return bookings;
+    } catch (e) {
+      print('Error fetching bookings: $e');
+      throw Exception('Failed to fetch bookings: $e');
+    }
+  }
+
+  // Fetch bookings for the vendor (current user)
+  Future<List<BookNowModel>> fetchBookingsForVendor() async {
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        throw Exception('User not logged in');
+      }
+
+      // Query Firestore for bookings where the vendorId matches the current user's ID
+      final querySnapshot = await fireStore
+          .collection('bookings')
+          .where('vendorId', isEqualTo: userId)
           .get();
 
       // Convert Firestore documents to BookNowModel objects
@@ -125,8 +162,8 @@ class BookNowController extends GetxController {
 
       return bookings;
     } catch (e) {
-      print('Error fetching bookings: $e');
-      throw Exception('Failed to fetch bookings: $e');
+      print('Error fetching vendor bookings: $e');
+      throw Exception('Failed to fetch vendor bookings: $e');
     }
   }
 

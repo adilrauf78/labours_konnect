@@ -273,7 +273,7 @@ class _VendorHomeState extends State<VendorHome> {
 
                                     return GestureDetector(
                                       onTap: (){
-                                        navigateToNextScreen(context, VendorBookingPending());
+                                        navigateToNextScreen(context, VendorBookingPending(booking: booking));
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.only(bottom: 20),

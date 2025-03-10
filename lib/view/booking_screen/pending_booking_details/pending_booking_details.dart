@@ -147,7 +147,9 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10..r),
                       image: DecorationImage(
-                        image: AssetImage('${imagePath}pipe.png'),
+                        image: widget.booking.serviceImage.isNotEmpty
+                            ? NetworkImage(widget.booking.serviceImage)
+                            : AssetImage('${imagePath}pipe-fitting.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -294,7 +296,9 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                               shape: BoxShape.circle,
                               color: AppColor.white,
                               image: DecorationImage(
-                                image: AssetImage('${imagePath}pipe.png'),
+                                image: widget.booking.serviceImage.isNotEmpty
+                                    ? NetworkImage(widget.booking.userImage)
+                                    : AssetImage('${imagePath}pipe-fitting.png'),
                                 fit: BoxFit.cover,
                               ),
                             ),

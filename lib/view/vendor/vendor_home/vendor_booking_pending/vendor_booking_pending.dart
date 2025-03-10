@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/book_now_controller/book_now_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/book_now_model/book_now_model.dart';
 
 class VendorBookingPending extends StatefulWidget {
-  const VendorBookingPending({super.key});
+  final BookNowModel booking;
+  const VendorBookingPending({super.key, required this.booking});
 
   @override
   State<VendorBookingPending> createState() => _VendorBookingPendingState();
 }
 
 class _VendorBookingPendingState extends State<VendorBookingPending> {
+  final BookNowController bookNowController = Get.put(BookNowController());
   double _rating = 5;
   @override
   Widget build(BuildContext context) {
@@ -67,7 +73,7 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                 color: AppColor.black.withOpacity(.25),
               ),
               Text16(
-                text: 'Pipe Fitting',
+                text: widget.booking.serviceName,
                 fontWeight: FontWeight.w700,
                 fontSize: 20..sp,
               ),
@@ -86,7 +92,7 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                           ),
                           SizedBox(width: 10..w),
                           Text16(
-                            text: '17 Nov 2023',
+                            text: DateFormat('d MMMM y').format(widget.booking.bookingDate),
                             fontSize: 12..sp,
                             fontWeight: FontWeight.w700,
                             color: AppColor.black,
@@ -101,7 +107,7 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                           ),
                           SizedBox(width: 10..w),
                           Text16(
-                            text: '03:30 pm',
+                            text: widget.booking.bookingTime,
                             fontSize: 12..sp,
                             fontWeight: FontWeight.w700,
                             color: AppColor.black,
@@ -110,7 +116,7 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                       ),
                       SizedBox(height: 5..h),
                       Text16(
-                        text: '\$ 120.00',
+                        text: '\$${widget.booking.price}',
                         color: AppColor.black,
                         fontWeight: FontWeight.w500,
                       ),
@@ -119,14 +125,14 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                         width: 95..w,
                         height: 30..h,
                         decoration: BoxDecoration(
-                          color: AppColor.bgred,
+                          color: widget.booking.status == 'Accepted' ? AppColor.bgblue : AppColor.bgred,
                           borderRadius: BorderRadius.circular(5..r),
                         ),
                         child: Center(
                           child: Text15(
                             fontWeight: FontWeight.w500,
-                            color: AppColor.red,
-                            text: 'Pending',
+                            color: widget.booking.status == 'Accepted' ? AppColor.blue : AppColor.red,
+                            text: widget.booking.status == 'Accepted' ? 'Accepted' : widget.booking.status,
                           ),
                         ),
                       ),
@@ -138,7 +144,9 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10..r),
                       image: DecorationImage(
-                        image: AssetImage('${imagePath}pipe.png'),
+                        image: widget.booking.serviceImage.isNotEmpty
+                            ? NetworkImage(widget.booking.serviceImage)
+                            : AssetImage('${imagePath}pipe-fitting.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -179,9 +187,7 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
               Padding(
                 padding: const EdgeInsets.only(right: 25),
                 child: Text16(
-                  text: 'H#28 saleem Street # 17 Fiji garhi stop'
-                      'Band Rd, Shera Kot, Lahore, Punjab 54000 '
-                      'Pakistan',
+                  text: widget.booking.location,
                   fontSize: 15..sp,
                 ),
               ),
@@ -218,7 +224,7 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                           text: 'Price',
                         ),
                         Text16(
-                          text: '\$20.00',
+                          text: '\$${widget.booking.price}',
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
                         ),
@@ -266,7 +272,7 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                           text: 'Total Amount',
                         ),
                         Text16(
-                          text: '\$20.00',
+                          text: '\$${widget.booking.price}',
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
                         ),
@@ -306,7 +312,9 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                               shape: BoxShape.circle,
                               color: AppColor.white,
                               image: DecorationImage(
-                                image: AssetImage('${imagePath}pipe.png'),
+                                image: widget.booking.serviceImage.isNotEmpty
+                                    ? NetworkImage(widget.booking.userName)
+                                    : AssetImage('${imagePath}pipe-fitting.png'),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -317,7 +325,7 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text16(
-                                text: 'Jack Marston',
+                                text: widget.booking.userName,
                                 fontWeight: FontWeight.w700,
                                 color: AppColor.white,
                               ),

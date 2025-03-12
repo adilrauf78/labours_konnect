@@ -103,14 +103,13 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                         children: [
                           Text16(
                             text: 'Time: ',
-
                             fontSize: 14..sp,
                           ),
                           SizedBox(width: 10..w),
                           Text16(
                             text: widget.booking.bookingTime,
-                            
                             fontSize: 12..sp,
+                            
                             fontWeight: FontWeight.w700,
                             color: AppColor.black,
                           ),

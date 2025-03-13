@@ -6,10 +6,12 @@ import 'package:labours_konnect/constants/utils.dart';
 import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/models/book_now_model/book_now_model.dart';
+import 'package:labours_konnect/notification_controller/notification_controller.dart';
 
 class BookNowController extends GetxController {
   bool isLoading = false;
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  final NotificationController notificationController = Get.put(NotificationController());
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final ServiceController serviceController = Get.put(ServiceController());
   // Controllers for description and location
@@ -80,6 +82,10 @@ class BookNowController extends GetxController {
         update(); // Notify listeners
 
         SuccessSnackBar('Success','Booking confirmed successfully!');
+        await notificationController.sendNotification(
+          service!.userId, // Vendor's user ID
+          'You have a new booking for ${service!.serviceTitle} by $firstName $lastName.',
+        );
         Get.back(); // Go back to the previous screen
       } catch (e) {
         isLoading = false;

@@ -22,4 +22,24 @@ class NotificationController extends GetxController{
       );
     }
   }
+
+  /// Booking Send Push Notification to User**
+  Future<void> sendBookingNotification(String vendorId, String serviceName) async {
+    try {
+      DocumentSnapshot userDoc = await _fireStore.collection('users').doc(vendorId).get();
+      String? token = userDoc['fcmToken'];
+
+      if (token != null) {
+        await _firebaseMessaging.sendMessage(
+          to: token,
+          data: {
+            'title': 'New Booking Received',
+            'body': 'You have a new booking for $serviceName.',
+          },
+        );
+      }
+    } catch (e) {
+      print('Error sending notification: $e');
+    }
+  }
 }

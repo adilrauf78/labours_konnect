@@ -81,6 +81,7 @@ class BookNowController extends GetxController {
         isLoading = false;
         update(); // Notify listeners
 
+        
         SuccessSnackBar('Success','Booking confirmed successfully!');
         await notificationController.sendNotification(
           service!.userId, // Vendor's user ID

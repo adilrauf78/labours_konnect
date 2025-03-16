@@ -73,24 +73,21 @@ class BookNowController extends GetxController {
         );
 
         await fireStore.collection('bookings').add(booking.toMap());
-
-        // Clear controllers after booking
         descriptionController.clear();
         locationController.clear();
 
         isLoading = false;
-        update(); // Notify listeners
-
+        update();
 
         SuccessSnackBar('Success','Booking confirmed successfully!');
         await notificationController.sendNotification(
           service!.userId, // Vendor's user ID
           'You have a new booking for ${service!.serviceTitle} by $firstName $lastName.',
         );
-        Get.back(); // Go back to the previous screen
+        Get.back();
       } catch (e) {
         isLoading = false;
-        update(); // Notify listeners
+        update();
         ErrorSnackBar('Error', 'Failed to book service: $e');
       }
     }
@@ -147,7 +144,6 @@ class BookNowController extends GetxController {
           .where('vendorId', isEqualTo: userId)
           .get();
 
-      // Convert Firestore documents to BookNowModel objects
       final bookings = querySnapshot.docs.map((doc) {
         final data = doc.data();
         return BookNowModel(

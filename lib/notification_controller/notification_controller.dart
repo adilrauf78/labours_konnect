@@ -23,7 +23,7 @@ class NotificationController extends GetxController{
     }
   }
 
-  /// Booking Send Push Notification to User**
+  /// Booking Send Push Notification to User
   Future<void> sendBookingNotification(String vendorId, String serviceName) async {
     try {
       DocumentSnapshot userDoc = await _fireStore.collection('users').doc(vendorId).get();

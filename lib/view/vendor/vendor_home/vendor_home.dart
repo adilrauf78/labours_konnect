@@ -270,7 +270,6 @@ class _VendorHomeState extends State<VendorHome> {
                                   itemBuilder: (context, index) {
                                     final booking = bookings[index];
                                     final formattedDate = DateFormat('d MMMM y').format(booking.bookingDate);
-
                                     return GestureDetector(
                                       onTap: (){
                                         navigateToNextScreen(context, VendorBookingPending(booking: booking));

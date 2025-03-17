@@ -85,6 +85,7 @@ class BookNowController extends GetxController {
           'You have a new booking for ${service!.serviceTitle} by $firstName $lastName.',
         );
         Get.back();
+        
       } catch (e) {
         isLoading = false;
         update();

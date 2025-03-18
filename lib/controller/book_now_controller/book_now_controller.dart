@@ -51,7 +51,7 @@ class BookNowController extends GetxController {
         isLoading = true;
         final userId = _auth.currentUser!.uid;
         final userDetails = await serviceController.fetchUserDetails(userId);
-        update(); // Notify listeners
+        update(); 
         final firstName = userDetails?['First Name'] ?? 'Unknown';
 
         final lastName = userDetails?['Last Name'] ?? 'User';
@@ -81,11 +81,11 @@ class BookNowController extends GetxController {
 
         SuccessSnackBar('Success','Booking confirmed successfully!');
         await notificationController.sendNotification(
-          service!.userId, // Vendor's user ID
+          service!.userId,
           'You have a new booking for ${service!.serviceTitle} by $firstName $lastName.',
         );
         Get.back();
-        
+
       } catch (e) {
         isLoading = false;
         update();

@@ -51,7 +51,7 @@ class BookNowController extends GetxController {
         isLoading = true;
         final userId = _auth.currentUser!.uid;
         final userDetails = await serviceController.fetchUserDetails(userId);
-        update();
+        update(); // Notify listeners
         final firstName = userDetails?['First Name'] ?? 'Unknown';
 
         final lastName = userDetails?['Last Name'] ?? 'User';
@@ -71,21 +71,17 @@ class BookNowController extends GetxController {
           price: service!.price ?? "0",
           status: 'Pending',
         );
-
         await fireStore.collection('bookings').add(booking.toMap());
         descriptionController.clear();
         locationController.clear();
-
         isLoading = false;
         update();
-
         SuccessSnackBar('Success','Booking confirmed successfully!');
         await notificationController.sendNotification(
           service!.userId,
           'You have a new booking for ${service!.serviceTitle} by $firstName $lastName.',
         );
         Get.back();
-
       } catch (e) {
         isLoading = false;
         update();

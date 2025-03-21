@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookNowModel {
+  final String bookingId;
   final String userName;
   final String userImage;
   final String userId;
   final String vendorId;
-  final String vendorName; // Added vendorName field
+  final String vendorName;
   final String serviceName;
   final String serviceImage;
   final DateTime bookingDate;
@@ -13,14 +14,15 @@ class BookNowModel {
   final String status;
   final String description;
   final String location;
-  final String price; // Added price field
+  final String price;
 
   BookNowModel({
+    required this.bookingId,
     required this.userName,
     required this.userImage,
     required this.userId,
     required this.vendorId,
-    required this.vendorName, // Added to constructor
+    required this.vendorName,
     required this.serviceName,
     required this.serviceImage,
     required this.bookingDate,
@@ -28,17 +30,18 @@ class BookNowModel {
     required this.status,
     required this.description,
     required this.location,
-    required this.price, // Added to constructor
+    required this.price,
   });
 
   // Convert Firestore DocumentSnapshot to Model
-  factory BookNowModel.fromMap(Map<String, dynamic> data) {
+  factory BookNowModel.fromMap(Map<String, dynamic> data, String bookingId) {
     return BookNowModel(
+      bookingId: bookingId, // Assign the bookingId
       userName: data['userName'] ?? '',
       userImage: data['userImage'] ?? '',
       userId: data['userId'] ?? '',
       vendorId: data['vendorId'] ?? '',
-      vendorName: data['vendorName'] ?? '', // Fetch vendorName from Firestore
+      vendorName: data['vendorName'] ?? '',
       serviceName: data['serviceName'] ?? '',
       serviceImage: data['serviceImage'] ?? '',
       bookingDate: (data['bookingDate'] as Timestamp).toDate(),
@@ -46,7 +49,7 @@ class BookNowModel {
       status: data['status'] ?? 'pending',
       description: data['description'] ?? '',
       location: data['location'] ?? '',
-      price: data['price'] ?? '', // Fetch price from Firestore
+      price: data['price'] ?? '',
     );
   }
 
@@ -57,15 +60,15 @@ class BookNowModel {
       'userImage': userImage,
       'userId': userId,
       'vendorId': vendorId,
-      'vendorName': vendorName, // Include vendorName in Firestore document
+      'vendorName': vendorName,
       'serviceName': serviceName,
       'serviceImage': serviceImage,
-      'bookingDate': Timestamp.fromDate(bookingDate), // Convert DateTime to Timestamp
+      'bookingDate': Timestamp.fromDate(bookingDate),
       'bookingTime': bookingTime,
       'status': status,
       'description': description,
       'location': location,
-      'price': price, // Include price in Firestore document
+      'price': price,
     };
   }
 }

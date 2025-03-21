@@ -57,6 +57,7 @@ class BookNowController extends GetxController {
         final lastName = userDetails?['Last Name'] ?? 'User';
         final profileImage = userDetails?['profileImage'] ?? '';
         BookNowModel booking = BookNowModel(
+          bookingId: '',
           userName: '$firstName $lastName',
           vendorName: service!.userName,
           userImage: profileImage,
@@ -104,6 +105,7 @@ class BookNowController extends GetxController {
       final bookings = querySnapshot.docs.map((doc) {
         final data = doc.data();
         return BookNowModel(
+          bookingId: '',
           userName: data['userName'],
           vendorName: data['vendorName'],
           userImage: data['userImage'],
@@ -144,6 +146,7 @@ class BookNowController extends GetxController {
       final bookings = querySnapshot.docs.map((doc) {
         final data = doc.data();
         return BookNowModel(
+          bookingId: '',
           userName: data['userName'],
           vendorName: data['vendorName'],
           userImage: data['userImage'],

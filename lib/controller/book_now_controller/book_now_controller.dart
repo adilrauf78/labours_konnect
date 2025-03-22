@@ -137,7 +137,6 @@ class BookNowController extends GetxController {
         throw Exception('User not logged in');
       }
 
-      // Query Firestore for bookings where the vendorId matches the current user's ID
       final querySnapshot = await fireStore
           .collection('bookings')
           .where('vendorId', isEqualTo: userId)

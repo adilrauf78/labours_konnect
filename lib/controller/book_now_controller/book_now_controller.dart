@@ -56,8 +56,9 @@ class BookNowController extends GetxController {
 
         final lastName = userDetails?['Last Name'] ?? 'User';
         final profileImage = userDetails?['profileImage'] ?? '';
+        final bookingRef = fireStore.collection('bookings').doc();
         BookNowModel booking = BookNowModel(
-          bookingId: '',
+          bookingId: bookingRef.id,
           userName: '$firstName $lastName',
           vendorName: service!.userName,
           userImage: profileImage,
@@ -72,17 +73,21 @@ class BookNowController extends GetxController {
           price: service!.price ?? "0",
           status: 'Pending',
         );
-        await fireStore.collection('bookings').add(booking.toMap());
+
+        await bookingRef.set(booking.toMap());
         descriptionController.clear();
         locationController.clear();
+
         isLoading = false;
         update();
+
         SuccessSnackBar('Success','Booking confirmed successfully!');
         await notificationController.sendNotification(
           service!.userId,
           'You have a new booking for ${service!.serviceTitle} by $firstName $lastName.',
         );
         Get.back();
+
       } catch (e) {
         isLoading = false;
         update();
@@ -98,28 +103,17 @@ class BookNowController extends GetxController {
       if (userId == null) {
         throw Exception('User not logged in');
       }
+
+      // Query Firestore for bookings where the userId matches the current user's ID
       final querySnapshot = await fireStore
           .collection('bookings')
           .where('userId', isEqualTo: userId)
           .get();
+
+      // Map Firestore documents to BookNowModel objects
       final bookings = querySnapshot.docs.map((doc) {
         final data = doc.data();
-        return BookNowModel(
-          bookingId: '',
-          userName: data['userName'],
-          vendorName: data['vendorName'],
-          userImage: data['userImage'],
-          userId: data['userId'],
-          vendorId: data['vendorId'],
-          serviceName: data['serviceName'],
-          serviceImage: data['serviceImage'],
-          bookingDate: (data['bookingDate'] as Timestamp).toDate(),
-          bookingTime: data['bookingTime'],
-          price: data['price'],
-          description: data['description'],
-          location: data['location'],
-          status: data['status'],
-        );
+        return BookNowModel.fromMap(data, doc.id); // Pass doc.id as bookingId
       }).toList();
 
       return bookings;
@@ -129,7 +123,6 @@ class BookNowController extends GetxController {
     }
   }
 
-  // Fetch bookings for the vendor (current user)
   Future<List<BookNowModel>> fetchBookingsForVendor() async {
     try {
       final userId = _auth.currentUser?.uid;
@@ -137,29 +130,16 @@ class BookNowController extends GetxController {
         throw Exception('User not logged in');
       }
 
+      // Query Firestore for bookings where the vendorId matches the current user's ID
       final querySnapshot = await fireStore
           .collection('bookings')
           .where('vendorId', isEqualTo: userId)
           .get();
 
+      // Map Firestore documents to BookNowModel objects
       final bookings = querySnapshot.docs.map((doc) {
         final data = doc.data();
-        return BookNowModel(
-          bookingId: '',
-          userName: data['userName'],
-          vendorName: data['vendorName'],
-          userImage: data['userImage'],
-          userId: data['userId'],
-          vendorId: data['vendorId'],
-          serviceName: data['serviceName'],
-          serviceImage: data['serviceImage'],
-          bookingDate: (data['bookingDate'] as Timestamp).toDate(),
-          bookingTime: data['bookingTime'],
-          price: data['price'],
-          description: data['description'],
-          location: data['location'],
-          status: data['status'],
-        );
+        return BookNowModel.fromMap(data, doc.id); // Pass doc.id as bookingId
       }).toList();
 
       return bookings;

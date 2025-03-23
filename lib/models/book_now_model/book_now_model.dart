@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookNowModel {
-  final String bookingId;
+  final String bookingId; // Ensure this field exists
   final String userName;
   final String userImage;
   final String userId;
@@ -17,7 +17,7 @@ class BookNowModel {
   final String price;
 
   BookNowModel({
-    required this.bookingId,
+    required this.bookingId, // Make bookingId required
     required this.userName,
     required this.userImage,
     required this.userId,

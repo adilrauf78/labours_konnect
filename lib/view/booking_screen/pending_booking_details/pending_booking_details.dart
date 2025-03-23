@@ -440,7 +440,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
               SizedBox(height: 20..h),
               GestureDetector(
                 onTap: (){
-                  bookNowController.cancelBooking(widget.booking.vendorName);
+                  bookNowController.cancelBooking(widget.booking.bookingId);
                 },
                 child: Button(
                   text: 'Cancel Booking',

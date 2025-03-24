@@ -103,17 +103,30 @@ class BookNowController extends GetxController {
       if (userId == null) {
         throw Exception('User not logged in');
       }
-
-      // Query Firestore for bookings where the userId matches the current user's ID
       final querySnapshot = await fireStore
           .collection('bookings')
           .where('userId', isEqualTo: userId)
+          .orderBy('bookingDate', descending: true) // Sort by date
           .get();
-
-      // Map Firestore documents to BookNowModel objects
       final bookings = querySnapshot.docs.map((doc) {
         final data = doc.data();
-        return BookNowModel.fromMap(data, doc.id); // Pass doc.id as bookingId
+        final bookingRef = fireStore.collection('bookings').doc();
+        return BookNowModel(
+          bookingId: bookingRef.id,
+          userName: data['userName'],
+          vendorName: data['vendorName'],
+          userImage: data['userImage'],
+          userId: data['userId'],
+          vendorId: data['vendorId'],
+          serviceName: data['serviceName'],
+          serviceImage: data['serviceImage'],
+          bookingDate: (data['bookingDate'] as Timestamp).toDate(),
+          bookingTime: data['bookingTime'],
+          price: data['price'],
+          description: data['description'],
+          location: data['location'],
+          status: data['status'],
+        );
       }).toList();
 
       return bookings;
@@ -123,6 +136,7 @@ class BookNowController extends GetxController {
     }
   }
 
+  // Fetch bookings for the vendor (current user)
   Future<List<BookNowModel>> fetchBookingsForVendor() async {
     try {
       final userId = _auth.currentUser?.uid;
@@ -162,5 +176,45 @@ class BookNowController extends GetxController {
       ErrorSnackBar('Error', 'Failed to cancel booking: $e');
     }
   }
+// Accept a booking
+  Future<void> acceptBooking(String bookingId) async {
+    try {
+      await fireStore.collection('bookings').doc(bookingId).update({
+        'status': 'Accepted', // Update status to 'Accepted'
+      });
 
+      SuccessSnackBar('Success', 'Booking accepted successfully!');
+      update(); // Notify UI about the update
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to accept booking: $e');
+    }
+  }
+
+// Mark a booking as On Going
+  Future<void> markBookingAsOnGoing(String bookingId) async {
+    try {
+      await fireStore.collection('bookings').doc(bookingId).update({
+        'status': 'On Going', // Update status to 'On Going'
+      });
+
+      SuccessSnackBar('Success', 'Booking marked as On Going!');
+      update(); // Notify UI about the update
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to update booking status: $e');
+    }
+  }
+
+// Mark a booking as Completed
+  Future<void> markBookingAsCompleted(String bookingId) async {
+    try {
+      await fireStore.collection('bookings').doc(bookingId).update({
+        'status': 'Completed', // Update status to 'Completed'
+      });
+
+      SuccessSnackBar('Success', 'Booking marked as Completed!');
+      update(); // Notify UI about the update
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to complete booking: $e');
+    }
+  }
 }

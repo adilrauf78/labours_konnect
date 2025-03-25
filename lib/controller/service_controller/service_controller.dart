@@ -121,13 +121,14 @@ class ServiceController extends GetxController{
         final serviceData = doc.data();
         final userId = serviceData['userId'];
 
+
         // Fetch user details dynamically
         final userDetails = await fetchUserDetails(userId);
 
         final service = AddServicesModel(
           userId: userId,
-          userName: '${userDetails?['First Name'] ?? 'Unknown'} ${userDetails?['Last Name'] ?? 'User'}', // Fetch user's full name
-          userImage: userDetails?['profileImage'] ?? '', // Fetch user's profile image
+          userName: '${userDetails?['First Name'] ?? 'Unknown'} ${userDetails?['Last Name'] ?? 'User'}',
+          userImage: userDetails?['profileImage'] ?? '',
           serviceTitle: serviceData['serviceTitle'],
           serviceImage: serviceData['serviceImage'],
           category: serviceData['category'],

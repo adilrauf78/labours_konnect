@@ -106,7 +106,7 @@ class BookNowController extends GetxController {
       final querySnapshot = await fireStore
           .collection('bookings')
           .where('userId', isEqualTo: userId)
-          .orderBy('bookingDate', descending: true) // Sort by date
+          .orderBy('bookingDate', descending: true)
           .get();
       final bookings = querySnapshot.docs.map((doc) {
         final data = doc.data();
@@ -171,7 +171,7 @@ class BookNowController extends GetxController {
       });
 
       SuccessSnackBar('Success', 'Booking cancelled successfully!');
-      update(); // Notify UI about the update
+      update();
     } catch (e) {
       ErrorSnackBar('Error', 'Failed to cancel booking: $e');
     }
@@ -180,11 +180,11 @@ class BookNowController extends GetxController {
   Future<void> acceptBooking(String bookingId) async {
     try {
       await fireStore.collection('bookings').doc(bookingId).update({
-        'status': 'Accepted', // Update status to 'Accepted'
+        'status': 'Accepted',
       });
 
       SuccessSnackBar('Success', 'Booking accepted successfully!');
-      update(); // Notify UI about the update
+      update();
     } catch (e) {
       ErrorSnackBar('Error', 'Failed to accept booking: $e');
     }
@@ -194,11 +194,11 @@ class BookNowController extends GetxController {
   Future<void> markBookingAsOnGoing(String bookingId) async {
     try {
       await fireStore.collection('bookings').doc(bookingId).update({
-        'status': 'On Going', // Update status to 'On Going'
+        'status': 'On Going',
       });
 
       SuccessSnackBar('Success', 'Booking marked as On Going!');
-      update(); // Notify UI about the update
+      update();
     } catch (e) {
       ErrorSnackBar('Error', 'Failed to update booking status: $e');
     }

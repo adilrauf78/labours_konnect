@@ -46,7 +46,6 @@ class ServiceController extends GetxController{
         final userId = _auth.currentUser!.uid;
         final userDetails = await fetchUserDetails(userId);
 
-        // Check if userDetails is null and provide default values
         final firstName = userDetails?['First Name'] ?? 'Unknown';
         final lastName = userDetails?['Last Name'] ?? 'User';
         final profileImage = userDetails?['profileImage'] ?? '';

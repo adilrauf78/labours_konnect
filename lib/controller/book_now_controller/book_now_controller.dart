@@ -14,11 +14,9 @@ class BookNowController extends GetxController {
   final NotificationController notificationController = Get.put(NotificationController());
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final ServiceController serviceController = Get.put(ServiceController());
-  // Controllers for description and location
   TextEditingController descriptionController = TextEditingController();
   TextEditingController locationController = TextEditingController();
 
-  // Variables to store booking details
   AddServicesModel? service;
   DateTime? bookingDate;
   String? bookingTime;

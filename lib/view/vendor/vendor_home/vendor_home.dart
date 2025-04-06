@@ -403,36 +403,46 @@ class _VendorHomeState extends State<VendorHome> {
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  Container(
-                                                    width: MediaQuery.of(context).size.width*.4,
-                                                    height: 45..h,
-                                                    decoration: BoxDecoration(
-                                                      color: AppColor.primaryColor,
-                                                      borderRadius: BorderRadius.circular(10..r),
-                                                    ),
-                                                    child: Center(
-                                                      child: Text16(
-                                                        text: 'Accept',
-                                                        color: AppColor.white,
-                                                        fontWeight: FontWeight.w700,
+                                                  GestureDetector(
+                                                    onTap: (){
+                                                      bookNowController.acceptBooking(booking.bookingId);
+                                                    },
+                                                    child: Container(
+                                                      width: MediaQuery.of(context).size.width*.4,
+                                                      height: 45..h,
+                                                      decoration: BoxDecoration(
+                                                        color: AppColor.primaryColor,
+                                                        borderRadius: BorderRadius.circular(10..r),
+                                                      ),
+                                                      child: Center(
+                                                        child: Text16(
+                                                          text: 'Accept',
+                                                          color: AppColor.white,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  Container(
-                                                    width: MediaQuery.of(context).size.width*.4,
-                                                    height: 45..h,
-                                                    decoration: BoxDecoration(
-                                                      color: AppColor.white,
-                                                      borderRadius: BorderRadius.circular(10..r),
-                                                      border: Border.all(
-                                                        color: AppColor.black,
+                                                  GestureDetector(
+                                                    onTap: (){
+                                                      bookNowController.cancelBooking(booking.bookingId);
+                                                    },
+                                                    child: Container(
+                                                      width: MediaQuery.of(context).size.width*.4,
+                                                      height: 45..h,
+                                                      decoration: BoxDecoration(
+                                                        color: AppColor.white,
+                                                        borderRadius: BorderRadius.circular(10..r),
+                                                        border: Border.all(
+                                                          color: AppColor.black,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    child: Center(
-                                                      child: Text16(
-                                                        text: 'Decline',
-                                                        color: AppColor.black,
-                                                        fontWeight: FontWeight.w700,
+                                                      child: Center(
+                                                        child: Text16(
+                                                          text: 'Decline',
+                                                          color: AppColor.black,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
                                                       ),
                                                     ),
                                                   )

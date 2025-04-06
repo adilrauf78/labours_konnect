@@ -52,14 +52,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-
     final currentUserId = chatController.currentUserId;
-
     if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
       // App is in the background or closed
+
       chatController.updateUserStatus(currentUserId, false); // Mark user as offline
     } else if (state == AppLifecycleState.resumed) {
       // App is in the foreground
+
       chatController.updateUserStatus(currentUserId, true); // Mark user as online
     }
   }

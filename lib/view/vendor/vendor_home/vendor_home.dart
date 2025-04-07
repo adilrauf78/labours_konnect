@@ -272,7 +272,7 @@ class _VendorHomeState extends State<VendorHome> {
                                     final formattedDate = DateFormat('d MMMM y').format(booking.bookingDate);
                                     return GestureDetector(
                                       onTap: (){
-                                        navigateToNextScreen(context, VendorBookingPending(booking: booking));
+                                        //navigateToNextScreen(context, VendorBookingPending(booking: booking));
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.only(bottom: 20),

@@ -78,7 +78,10 @@ class _BookingScreenState extends State<BookingScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: _buildBookingList(bookNowController.fetchBookingsForUser()),
+                      child: _buildBookingList(bookNowController.fetchBookingsForUser(),
+                        filter: (booking) =>
+                        booking.status == 'Pending' || booking.status == 'Accepted',
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),

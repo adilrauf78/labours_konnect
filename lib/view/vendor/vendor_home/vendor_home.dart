@@ -279,6 +279,7 @@ class _VendorHomeState extends State<VendorHome> {
   }
 }
 
+
 // Add this reusable widget function outside your build method
 Widget _buildVendorBookingList(
     Future<List<BookNowModel>> futureBookings, {
@@ -288,6 +289,7 @@ Widget _buildVendorBookingList(
   return FutureBuilder<List<BookNowModel>>(
     future: futureBookings,
     builder: (context, snapshot) {
+      final BookNowController bookNowController = Get.put(BookNowController());
       if (snapshot.connectionState == ConnectionState.waiting) {
         return Center(child: CircularProgressIndicator());
       } else if (snapshot.hasError) {
@@ -342,13 +344,25 @@ Widget _buildVendorBookingList(
                               width: 95..w,
                               height: 30..h,
                               decoration: BoxDecoration(
-                                color: _getStatusBackgroundColor(booking.status),
+                                color: booking.status == 'Accepted'
+                                    ? AppColor.bgblue
+                                    : booking.status == 'On Going'
+                                    ? AppColor.bggreen
+                                    : booking.status == 'Completed'
+                                    ? AppColor.primaryColor
+                                    : AppColor.bgred,
                                 borderRadius: BorderRadius.circular(5..r),
                               ),
                               child: Center(
                                 child: Text15(
                                   fontWeight: FontWeight.w500,
-                                  color: _getStatusTextColor(booking.status),
+                                  color: booking.status == 'Accepted'
+                                      ? AppColor.blue
+                                      : booking.status == 'On Going'
+                                      ? AppColor.green
+                                      : booking.status == 'Completed'
+                                      ? AppColor.white
+                                      : AppColor.red,
                                   text: booking.status,
                                 ),
                               ),
@@ -451,7 +465,7 @@ Widget _buildVendorBookingList(
                       children: [
                         GestureDetector(
                           onTap: () {
-                            //bookNowController.acceptBooking(booking.bookingId);
+                            bookNowController.acceptBooking(booking.bookingId);
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width * .4,
@@ -471,7 +485,7 @@ Widget _buildVendorBookingList(
                         ),
                         GestureDetector(
                           onTap: () {
-                            //bookNowController.cancelBooking(booking.bookingId);
+                            bookNowController.cancelBooking(booking.bookingId);
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width * .4,

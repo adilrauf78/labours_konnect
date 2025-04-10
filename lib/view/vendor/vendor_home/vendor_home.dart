@@ -313,7 +313,14 @@ Widget _buildVendorBookingList(
 
           return GestureDetector(
             onTap: () {
-              //_navigateToBookingDetails(context, booking);
+              navigateToNextScreen(
+                context,
+                booking.status == 'Accepted'
+                    ? VendorBookingPending(booking: booking)
+                    : booking.status == 'On Going'
+                    ? VendorBookingPending(booking: booking)
+                    : VendorBookingPending(booking: booking),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),

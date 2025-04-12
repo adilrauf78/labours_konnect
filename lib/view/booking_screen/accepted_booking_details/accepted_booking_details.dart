@@ -404,7 +404,7 @@ class _AcceptedBookingDetailsState extends State<AcceptedBookingDetails> {
               SizedBox(height: 30..h),
               GestureDetector(
                 onTap: (){
-                  navigateToNextScreen(context, PaymentMethod());
+                  //navigateToNextScreen(context, PaymentMethod());
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,

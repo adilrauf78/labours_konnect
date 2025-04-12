@@ -128,14 +128,26 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                         width: 95..w,
                         height: 30..h,
                         decoration: BoxDecoration(
-                          color: widget.booking.status == 'Accepted' ? AppColor.bgblue : AppColor.bgred,
+                          color: widget.booking.status == 'Accepted'
+                              ? AppColor.bgblue
+                              : widget.booking.status == 'On Going'
+                              ? AppColor.bggreen
+                              : widget.booking.status == 'Completed'
+                              ? AppColor.primaryColor
+                              : AppColor.bgred,
                           borderRadius: BorderRadius.circular(5..r),
                         ),
                         child: Center(
                           child: Text15(
                             fontWeight: FontWeight.w500,
-                            color: widget.booking.status == 'Accepted' ? AppColor.blue : AppColor.red,
-                            text: widget.booking.status == 'Accepted' ? 'Accepted' : widget.booking.status,
+                            color: widget.booking.status == 'Accepted'
+                                ? AppColor.blue
+                                : widget.booking.status == 'On Going'
+                                ? AppColor.green
+                                : widget.booking.status == 'Completed'
+                                ? AppColor.primaryColor
+                                : AppColor.red,
+                            text: widget.booking.status,
                           ),
                         ),
                       ),
@@ -415,7 +427,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
               if (widget.booking.status == 'Accepted')
               GestureDetector(
                 onTap: (){
-                  navigateToNextScreen(context, PaymentMethod());
+                  navigateToNextScreen(context, PaymentMethod(booking: widget.booking));
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -441,6 +453,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
               GestureDetector(
                 onTap: (){
                   bookNowController.cancelBooking(widget.booking.bookingId);
+                  Get.back();
                 },
                 child: Button(
                   text: 'Cancel Booking',

@@ -109,11 +109,11 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 }
 Widget _buildBookingList(
-    Future<List<BookNowModel>> futureBookings, {
+    Stream<List<BookNowModel>> bookingStream, {
       bool Function(BookNowModel)? filter,
     }) {
-  return FutureBuilder<List<BookNowModel>>(
-    future: futureBookings,
+  return StreamBuilder<List<BookNowModel>>(
+    stream: bookingStream,
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return Center(child: CircularProgressIndicator());
@@ -275,7 +275,7 @@ Widget _buildBookingList(
                       if (booking.status == 'Accepted')
                         GestureDetector(
                           onTap: () {
-                            navigateToNextScreen(context, PaymentMethod());
+                            navigateToNextScreen(context, PaymentMethod(booking: booking));
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width,

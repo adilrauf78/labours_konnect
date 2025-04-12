@@ -95,22 +95,21 @@ class BookNowController extends GetxController {
   }
 
   // Fetch bookings for the current user
-  Future<List<BookNowModel>> fetchBookingsForUser() async {
-    try {
+  Stream<List<BookNowModel>> fetchBookingsForUser() {
       final userId = _auth.currentUser?.uid;
       if (userId == null) {
         throw Exception('User not logged in');
       }
-      final querySnapshot = await fireStore
+      return fireStore
           .collection('bookings')
           .where('userId', isEqualTo: userId)
           .orderBy('bookingDate', descending: true)
-          .get();
-      final bookings = querySnapshot.docs.map((doc) {
+          .snapshots()
+          .map((querySnapshot) {
+        return querySnapshot.docs.map((doc) {
         final data = doc.data();
-        final bookingRef = fireStore.collection('bookings').doc();
         return BookNowModel(
-          bookingId: bookingRef.id,
+          bookingId: doc.id,
           userName: data['userName'],
           vendorName: data['vendorName'],
           userImage: data['userImage'],
@@ -126,39 +125,28 @@ class BookNowController extends GetxController {
           status: data['status'],
         );
       }).toList();
-
-      return bookings;
-    } catch (e) {
-      print('Error fetching bookings: $e');
-      throw Exception('Failed to fetch bookings: $e');
-    }
+      });
   }
 
   // Fetch bookings for the vendor (current user)
-  Future<List<BookNowModel>> fetchBookingsForVendor() async {
-    try {
+  Stream<List<BookNowModel>> fetchBookingsForVendor()  {
       final userId = _auth.currentUser?.uid;
       if (userId == null) {
         throw Exception('User not logged in');
       }
 
       // Query Firestore for bookings where the vendorId matches the current user's ID
-      final querySnapshot = await fireStore
+      return fireStore
           .collection('bookings')
           .where('vendorId', isEqualTo: userId)
-          .get();
-
-      // Map Firestore documents to BookNowModel objects
-      final bookings = querySnapshot.docs.map((doc) {
-        final data = doc.data();
-        return BookNowModel.fromMap(data, doc.id); // Pass doc.id as bookingId
+          .orderBy('bookingDate', descending: true)
+          .snapshots()
+          .map((querySnapshot) {
+        return querySnapshot.docs.map((doc) {
+          final data = doc.data();
+          return BookNowModel.fromMap(data, doc.id); // Pass doc.id as bookingId
       }).toList();
-
-      return bookings;
-    } catch (e) {
-      print('Error fetching vendor bookings: $e');
-      throw Exception('Failed to fetch vendor bookings: $e');
-    }
+      });
   }
 
   //Cancel Booking
@@ -189,7 +177,7 @@ class BookNowController extends GetxController {
   }
 
 // Mark a booking as On Going
-  Future<void> markBookingAsOnGoing(String bookingId) async {
+  Future<void> OnGoingBooking(String bookingId) async {
     try {
       await fireStore.collection('bookings').doc(bookingId).update({
         'status': 'On Going',

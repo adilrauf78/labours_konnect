@@ -352,7 +352,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ..h),
               GestureDetector(
                 onTap: () {
-                  navigateToNextScreen(context, PaymentMethod());
+                  navigateToNextScreen(context, PaymentMethod(booking: null,));
                 },
                 child: Container(
                   width: MediaQuery

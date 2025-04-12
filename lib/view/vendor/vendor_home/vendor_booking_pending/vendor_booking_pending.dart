@@ -125,14 +125,26 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                         width: 95..w,
                         height: 30..h,
                         decoration: BoxDecoration(
-                          color: widget.booking.status == 'Accepted' ? AppColor.bgblue : AppColor.bgred,
+                          color: widget.booking.status == 'Accepted'
+                              ? AppColor.bgblue
+                              : widget.booking.status == 'On Going'
+                              ? AppColor.bggreen
+                              : widget.booking.status == 'Completed'
+                              ? AppColor.primaryColor
+                              : AppColor.bgred,
                           borderRadius: BorderRadius.circular(5..r),
                         ),
                         child: Center(
                           child: Text15(
                             fontWeight: FontWeight.w500,
-                            color: widget.booking.status == 'Accepted' ? AppColor.blue : AppColor.red,
-                            text: widget.booking.status == 'Accepted' ? 'Accepted' : widget.booking.status,
+                            color: widget.booking.status == 'Accepted'
+                                ? AppColor.bgblue
+                                : widget.booking.status == 'On Going'
+                                ? AppColor.bggreen
+                                : widget.booking.status == 'Completed'
+                                ? AppColor.primaryColor
+                                : AppColor.bgred,
+                            text: widget.booking.status,
                           ),
                         ),
                       ),

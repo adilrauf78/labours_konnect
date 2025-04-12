@@ -282,12 +282,12 @@ class _VendorHomeState extends State<VendorHome> {
 
 // Add this reusable widget function outside your build method
 Widget _buildVendorBookingList(
-    Future<List<BookNowModel>> futureBookings, {
+    Stream<List<BookNowModel>> bookingStream, {
       bool Function(BookNowModel)? filter,
       bool showActions = false,
     }) {
-  return FutureBuilder<List<BookNowModel>>(
-    future: futureBookings,
+  return StreamBuilder<List<BookNowModel>>(
+    stream: bookingStream,
     builder: (context, snapshot) {
       final BookNowController bookNowController = Get.put(BookNowController());
       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -465,8 +465,8 @@ Widget _buildVendorBookingList(
                       ],
                     ),
                     // Action Buttons (only for Received tab)
-                    if (showActions && (booking.status == 'Pending' || booking.status == 'Accepted'))
                       SizedBox(height: 10..h),
+                    if (booking.status == 'Pending')
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

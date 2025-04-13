@@ -138,12 +138,12 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                           child: Text15(
                             fontWeight: FontWeight.w500,
                             color: widget.booking.status == 'Accepted'
-                                ? AppColor.bgblue
+                                ? AppColor.blue
                                 : widget.booking.status == 'On Going'
-                                ? AppColor.bggreen
+                                ? AppColor.green
                                 : widget.booking.status == 'Completed'
                                 ? AppColor.primaryColor
-                                : AppColor.bgred,
+                                : AppColor.red,
                             text: widget.booking.status,
                           ),
                         ),

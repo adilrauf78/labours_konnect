@@ -134,8 +134,6 @@ class BookNowController extends GetxController {
       if (userId == null) {
         throw Exception('User not logged in');
       }
-
-      // Query Firestore for bookings where the vendorId matches the current user's ID
       return fireStore
           .collection('bookings')
           .where('vendorId', isEqualTo: userId)
@@ -144,7 +142,7 @@ class BookNowController extends GetxController {
           .map((querySnapshot) {
         return querySnapshot.docs.map((doc) {
           final data = doc.data();
-          return BookNowModel.fromMap(data, doc.id); // Pass doc.id as bookingId
+          return BookNowModel.fromMap(data, doc.id);
       }).toList();
       });
   }
@@ -194,11 +192,11 @@ class BookNowController extends GetxController {
   Future<void> markBookingAsCompleted(String bookingId) async {
     try {
       await fireStore.collection('bookings').doc(bookingId).update({
-        'status': 'Completed', // Update status to 'Completed'
+        'status': 'Completed',
       });
 
       SuccessSnackBar('Success', 'Booking marked as Completed!');
-      update(); // Notify UI about the update
+      update(); 
     } catch (e) {
       ErrorSnackBar('Error', 'Failed to complete booking: $e');
     }

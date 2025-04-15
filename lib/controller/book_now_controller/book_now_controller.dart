@@ -188,6 +188,20 @@ class BookNowController extends GetxController {
     }
   }
 
+  // In Progress a booking
+  Future<void> InProgressBooking(String bookingId) async {
+    try {
+      await fireStore.collection('bookings').doc(bookingId).update({
+        'status': 'In Progress',
+      });
+
+      SuccessSnackBar('Success', 'Booking In progress successfully!');
+      update();
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to update booking status: $e');
+    }
+  }
+
 // Mark a booking as Completed
   Future<void> markBookingAsCompleted(String bookingId) async {
     try {
@@ -196,7 +210,7 @@ class BookNowController extends GetxController {
       });
 
       SuccessSnackBar('Success', 'Booking marked as Completed!');
-      update(); 
+      update();
     } catch (e) {
       ErrorSnackBar('Error', 'Failed to complete booking: $e');
     }

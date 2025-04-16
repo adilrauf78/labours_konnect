@@ -87,7 +87,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: _buildBookingList(
                         bookNowController.fetchBookingsForUser(),
-                        filter: (booking) => booking.status == 'On Going',
+                        filter: (booking) => booking.status == 'On Going' || booking.status == 'In Progress',
                       ),
                     ),
                     Padding(
@@ -180,6 +180,8 @@ Widget _buildBookingList(
                                       ? AppColor.bgblue
                                       : booking.status == 'On Going'
                                       ? AppColor.bggreen
+                                      : booking.status == 'In Progress'
+                                      ? AppColor.bgorange
                                       : booking.status == 'Completed'
                                       ? AppColor.primaryColor
                                       : AppColor.bgred,
@@ -192,6 +194,8 @@ Widget _buildBookingList(
                                         ? AppColor.blue
                                         : booking.status == 'On Going'
                                         ? AppColor.green
+                                        : booking.status == 'In Progress'
+                                        ? AppColor.orange
                                         : booking.status == 'Completed'
                                         ? AppColor.white
                                         : AppColor.red,

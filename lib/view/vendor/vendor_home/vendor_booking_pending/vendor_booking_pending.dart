@@ -11,6 +11,8 @@ import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/book_now_model/book_now_model.dart';
 
+import '../../../../custom_widgets/custom_button/custom_button.dart';
+
 class VendorBookingPending extends StatefulWidget {
   final BookNowModel booking;
   const VendorBookingPending({super.key, required this.booking});
@@ -129,6 +131,8 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                               ? AppColor.bgblue
                               : widget.booking.status == 'On Going'
                               ? AppColor.bggreen
+                              : widget.booking.status == 'In Progress'
+                              ? AppColor.bgorange
                               : widget.booking.status == 'Completed'
                               ? AppColor.primaryColor
                               : AppColor.bgred,
@@ -141,6 +145,8 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                                 ? AppColor.blue
                                 : widget.booking.status == 'On Going'
                                 ? AppColor.green
+                                : widget.booking.status == 'In Progress'
+                                ? AppColor.orange
                                 : widget.booking.status == 'Completed'
                                 ? AppColor.primaryColor
                                 : AppColor.red,
@@ -439,6 +445,101 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                   ],
                 ),
               ),
+              if (widget.booking.status == 'Accepted')
+              Column(
+                children: [
+                  SizedBox(height: 30..h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: (){
+                          bookNowController.OnGoingBooking(widget.booking.bookingId);
+                          Get.back();
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width*.4,
+                          height: 50..h,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF40C373),
+                            borderRadius: BorderRadius.circular(10..r),
+                          ),
+                          child: Center(
+                            child: Text16(
+                              text: 'On Going',
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          bookNowController.cancelBooking(widget.booking.bookingId);
+                          Get.back();
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width*.4,
+                          height: 50..h,
+                          decoration: BoxDecoration(
+                            color: AppColor.primaryColor,
+                            borderRadius: BorderRadius.circular(10..r),
+                          ),
+                          child: Center(
+                            child: Text16(
+                              text: 'Cancel',
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.white,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              if (widget.booking.status == 'On Going')
+              Column(
+                children: [
+                  SizedBox(height: 30..h),
+                  GestureDetector(
+                    onTap: (){
+                      bookNowController.InProgressBooking(widget.booking.bookingId);
+                      Get.back();
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50..h,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF40C373),
+                        borderRadius: BorderRadius.circular(10..r),
+                      ),
+                      child: Center(
+                        child: Text16(
+                          text: 'Start',
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (widget.booking.status == 'In Progress')
+                Column(
+                  children: [
+                    SizedBox(height: 30..h),
+                    GestureDetector(
+                      onTap: (){
+                        bookNowController.markBookingAsCompleted(widget.booking.bookingId);
+                        Get.back();
+                      },
+                      child: Button(
+                        text: 'In Progress',
+                      ),
+                    ),
+                  ],
+                ),
               SizedBox(height: 30..h),
             ],
           ),

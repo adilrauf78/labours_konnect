@@ -258,7 +258,7 @@ class _VendorHomeState extends State<VendorHome> {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: _buildVendorBookingList(
                   bookNowController.fetchBookingsForVendor(),
-                  filter: (booking) => booking.status == 'On Going',
+                  filter: (booking) => booking.status == 'On Going' || booking.status == 'In Progress',
                 ),
               ),
               Padding(
@@ -355,6 +355,8 @@ Widget _buildVendorBookingList(
                                     ? AppColor.bgblue
                                     : booking.status == 'On Going'
                                     ? AppColor.bggreen
+                                    : booking.status == 'In Progress'
+                                    ? AppColor.bgorange
                                     : booking.status == 'Completed'
                                     ? AppColor.primaryColor
                                     : AppColor.bgred,
@@ -367,6 +369,8 @@ Widget _buildVendorBookingList(
                                       ? AppColor.blue
                                       : booking.status == 'On Going'
                                       ? AppColor.green
+                                      : booking.status == 'In Progress'
+                                      ? AppColor.orange
                                       : booking.status == 'Completed'
                                       ? AppColor.white
                                       : AppColor.red,

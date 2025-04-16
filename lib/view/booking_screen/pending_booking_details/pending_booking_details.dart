@@ -13,6 +13,8 @@ import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/book_now_model/book_now_model.dart';
 import 'package:labours_konnect/view/account_screen/payment_method/payment_method.dart';
 
+import '../ongoing_booking_details/bottomsheet_complete_booking/bottomsheet_complete_booking.dart';
+
 
 class PendingBookingDetails extends StatefulWidget {
   final BookNowModel booking;
@@ -24,6 +26,18 @@ class PendingBookingDetails extends StatefulWidget {
 
 class _PendingBookingDetailsState extends State<PendingBookingDetails> {
   final BookNowController bookNowController = Get.put(BookNowController());
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          child: CompleteBooking(),
+        );
+      },
+    );
+  }
   double _rating = 5;
   @override
   Widget build(BuildContext context) {
@@ -132,6 +146,8 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                               ? AppColor.bgblue
                               : widget.booking.status == 'On Going'
                               ? AppColor.bggreen
+                              : widget.booking.status == 'In Progress'
+                              ? AppColor.bgorange
                               : widget.booking.status == 'Completed'
                               ? AppColor.primaryColor
                               : AppColor.bgred,
@@ -144,6 +160,8 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                                 ? AppColor.blue
                                 : widget.booking.status == 'On Going'
                                 ? AppColor.green
+                                : widget.booking.status == 'In Progress'
+                                ? AppColor.orange
                                 : widget.booking.status == 'Completed'
                                 ? AppColor.primaryColor
                                 : AppColor.red,
@@ -423,6 +441,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                   ],
                 ),
               ),
+              if (widget.booking.status == 'Accepted')
               SizedBox(height: 30..h),
               if (widget.booking.status == 'Accepted')
               GestureDetector(
@@ -448,8 +467,30 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                   ),
                 ),
               ),
-              if (widget.booking.status == 'Accepted')
               SizedBox(height: 20..h),
+              if (widget.booking.status == 'On Going')
+              GestureDetector(
+                onTap: (){
+                  bookNowController.InProgressBooking(widget.booking.bookingId);
+                  Get.back();
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50..h,
+                  decoration: BoxDecoration(
+                    color: AppColor.green.withOpacity(.8),
+                    borderRadius: BorderRadius.circular(10..r),
+                  ),
+                  child: Center(
+                    child: Text16(
+                      text: 'Start',
+                      color: AppColor.white,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+              if (widget.booking.status == 'Pending' && widget.booking.status == 'Accepted')
               GestureDetector(
                 onTap: (){
                   bookNowController.cancelBooking(widget.booking.bookingId);
@@ -459,6 +500,44 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                   text: 'Cancel Booking',
                 ),
               ),
+              if (widget.booking.status == 'In Progress')
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        bookNowController.markBookingAsCompleted(widget.booking.bookingId);
+                        setState(() {
+                          _showBottomSheet(context);
+                        });
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 50..h,
+                        decoration: BoxDecoration(
+                          color: AppColor.blue,
+                          borderRadius: BorderRadius.circular(10..r),
+                        ),
+                        child: Center(
+                          child: Text16(
+                            text: 'Done',
+                            color: AppColor.white,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20..h),
+                    GestureDetector(
+                      onTap: (){
+                        bookNowController.cancelBooking(widget.booking.bookingId);
+                        navigateBackWithAnimation(context);
+                      },
+                      child: Button(
+                        text: 'Cancel & Refund',
+                      ),
+                    ),
+                  ],
+                ),
               SizedBox(height: 40..h),
             ],
           ),

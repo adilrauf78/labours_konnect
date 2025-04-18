@@ -15,6 +15,7 @@ class VendorBookingAccepted extends StatefulWidget {
 }
 
 class _VendorBookingAcceptedState extends State<VendorBookingAccepted> {
+
   double _rating = 5;
   @override
   Widget build(BuildContext context) {

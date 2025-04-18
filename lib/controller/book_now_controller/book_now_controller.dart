@@ -49,7 +49,7 @@ class BookNowController extends GetxController {
         isLoading = true;
         final userId = _auth.currentUser!.uid;
         final userDetails = await serviceController.fetchUserDetails(userId);
-        update(); // Notify listeners
+        update();
         final firstName = userDetails?['First Name'] ?? 'Unknown';
 
         final lastName = userDetails?['Last Name'] ?? 'User';

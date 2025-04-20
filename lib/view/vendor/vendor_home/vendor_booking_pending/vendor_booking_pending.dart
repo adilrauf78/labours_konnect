@@ -394,28 +394,33 @@ class _VendorBookingPendingState extends State<VendorBookingPending> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width*.4,
-                            height: 40..h,
-                            decoration: BoxDecoration(
-                              color: AppColor.white,
-                              borderRadius: BorderRadius.circular(10..r),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColor.k0xFFEEEEEE,
-                                  blurRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset('${iconPath}call.svg'),
-                                SizedBox(width: 3..w),
-                                Text16(
-                                  text: 'Call',
-                                )
-                              ],
+                          GestureDetector(
+                            onTap: () {
+                              //launchUrl(Uri.parse('tel:${widget.booking.phoneNumber}'));
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width*.4,
+                              height: 40..h,
+                              decoration: BoxDecoration(
+                                color: AppColor.white,
+                                borderRadius: BorderRadius.circular(10..r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColor.k0xFFEEEEEE,
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset('${iconPath}call.svg'),
+                                  SizedBox(width: 3..w),
+                                  Text16(
+                                    text: 'Call',
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           GestureDetector(

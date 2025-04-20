@@ -13,9 +13,11 @@ class ServiceController extends GetxController{
   final TextEditingController serviceTitle = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   late  TextEditingController locationController = TextEditingController();
+  late  TextEditingController phoneController = TextEditingController();
   final TextEditingController experienceController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  String selectedCountryCode = "+92";
   RxString imagePath = ''.obs;
   //selected category
   RxString selectedCategory = 'Choose Category'.obs;
@@ -49,7 +51,7 @@ class ServiceController extends GetxController{
         final firstName = userDetails?['First Name'] ?? 'Unknown';
         final lastName = userDetails?['Last Name'] ?? 'User';
         final profileImage = userDetails?['profileImage'] ?? '';
-
+        String fullPhoneNumber = selectedCountryCode + phoneController.text.trim();
         final serviceData = AddServicesModel(
           userId: _auth.currentUser?.uid ?? '',
           userName: '$firstName $lastName',
@@ -59,6 +61,7 @@ class ServiceController extends GetxController{
           category: selectedCategory.value,
           city: cityController.text.trim(),
           location: locationController.text.trim(),
+          phoneNumber: fullPhoneNumber,
           experience: experienceController.text.trim(),
           price: priceController.text.trim(),
           description: descriptionController.text.trim(),
@@ -83,6 +86,7 @@ class ServiceController extends GetxController{
       }
     }
   }
+
 
   //Fetch AddServices Data
   Future<List<AddServicesModel>> fetchServicesForUser() async {
@@ -133,6 +137,7 @@ class ServiceController extends GetxController{
           category: serviceData['category'],
           city: serviceData['city'],
           location: serviceData['location'],
+          phoneNumber: serviceData['phoneNumber'],
           experience: serviceData['experience'],
           price: serviceData['price'],
           description: serviceData['description'],

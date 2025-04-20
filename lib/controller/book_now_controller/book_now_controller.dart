@@ -26,6 +26,7 @@ class BookNowController extends GetxController {
     this.service = service;
   }
 
+
   // Set booking date and time
   void setBookingDetails(DateTime bookingDate, String bookingTime) {
     this.bookingDate = bookingDate;
@@ -64,6 +65,7 @@ class BookNowController extends GetxController {
           vendorId: service!.userId,
           serviceName: service!.serviceTitle,
           serviceImage: "",
+          phoneNumber: service!.phoneNumber,
           bookingDate: bookingDate!,
           bookingTime: bookingTime!,
           description: descriptionController.text.trim(),
@@ -114,6 +116,7 @@ class BookNowController extends GetxController {
           vendorName: data['vendorName'],
           userImage: data['userImage'],
           userId: data['userId'],
+          phoneNumber: data['phoneNumber'],
           vendorId: data['vendorId'],
           serviceName: data['serviceName'],
           serviceImage: data['serviceImage'],

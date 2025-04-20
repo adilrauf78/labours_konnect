@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookNowModel {
-  final String bookingId; // Ensure this field exists
+  final String bookingId;
   final String userName;
   final String userImage;
   final String userId;
@@ -15,9 +15,10 @@ class BookNowModel {
   final String description;
   final String location;
   final String price;
+  final String phoneNumber;
 
   BookNowModel({
-    required this.bookingId, // Make bookingId required
+    required this.bookingId,
     required this.userName,
     required this.userImage,
     required this.userId,
@@ -31,12 +32,13 @@ class BookNowModel {
     required this.description,
     required this.location,
     required this.price,
+    required this.phoneNumber,
   });
 
   // Convert Firestore DocumentSnapshot to Model
   factory BookNowModel.fromMap(Map<String, dynamic> data, String bookingId) {
     return BookNowModel(
-      bookingId: bookingId, // Assign the bookingId
+      bookingId: bookingId,
       userName: data['userName'] ?? '',
       userImage: data['userImage'] ?? '',
       userId: data['userId'] ?? '',
@@ -50,6 +52,7 @@ class BookNowModel {
       description: data['description'] ?? '',
       location: data['location'] ?? '',
       price: data['price'] ?? '',
+      phoneNumber: data['phoneNumber'] ?? '',
     );
   }
 
@@ -69,6 +72,7 @@ class BookNowModel {
       'description': description,
       'location': location,
       'price': price,
+      'phoneNumber': phoneNumber,
     };
   }
 }

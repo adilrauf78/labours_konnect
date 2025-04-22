@@ -393,7 +393,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              launchUrl(Uri.parse('tel:${widget.booking.phoneNumber}'));
+                              //launchUrl(Uri.parse('tel:${widget.booking.phoneNumber}'));
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width*.4,

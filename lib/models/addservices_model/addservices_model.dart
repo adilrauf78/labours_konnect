@@ -7,7 +7,6 @@ class AddServicesModel {
   final String category;
   final String city;
   final String location;
-  final String phoneNumber;
   final String experience;
   final String price;
   final String description;
@@ -22,7 +21,6 @@ class AddServicesModel {
     required this.category,
     required this.city,
     required this.location,
-    required this.phoneNumber,
     required this.experience,
     required this.price,
     required this.description,
@@ -39,7 +37,6 @@ class AddServicesModel {
       'category': category,
       'city': city,
       'location': location,
-      'phoneNumber': phoneNumber,
       'experience': experience,
       'price': price,
       'description': description,
@@ -57,7 +54,6 @@ class AddServicesModel {
       category: map['category'] ?? '',
       city: map['city'] ?? '',
       location: map['location'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? '',
       experience: map['experience'] ?? '',
       price: map['price'] ?? '',
       description: map['description'] ?? '',

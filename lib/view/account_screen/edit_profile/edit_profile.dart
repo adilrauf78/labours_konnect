@@ -310,7 +310,10 @@ class _EditProfileState extends State<EditProfile> {
                               ..sp,
                             fontWeight: FontWeight.w400,
                           ),
-                          initialSelection: "KF",
+                          initialSelection: "PK",
+                          onChanged: (code) {
+                            authController.countryCodeController = code.dialCode!;
+                          },
                         ),
                       ),
                       SizedBox(width: 5
@@ -330,6 +333,7 @@ class _EditProfileState extends State<EditProfile> {
                             .size
                             .width * .55,
                         child: TextField(
+                          controller: authController.phoneNumberController,
                           cursorColor: AppColor.black.withOpacity(.5),
                           keyboardType: TextInputType.phone,
                           decoration: InputDecoration(

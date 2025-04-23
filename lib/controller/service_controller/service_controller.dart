@@ -13,11 +13,9 @@ class ServiceController extends GetxController{
   final TextEditingController serviceTitle = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   late  TextEditingController locationController = TextEditingController();
-  late  TextEditingController phoneController = TextEditingController();
   final TextEditingController experienceController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  String selectedCountryCode = "+92";
   RxString imagePath = ''.obs;
   //selected category
   RxString selectedCategory = 'Choose Category'.obs;
@@ -51,7 +49,6 @@ class ServiceController extends GetxController{
         final firstName = userDetails?['First Name'] ?? 'Unknown';
         final lastName = userDetails?['Last Name'] ?? 'User';
         final profileImage = userDetails?['profileImage'] ?? '';
-        String fullPhoneNumber = selectedCountryCode + phoneController.text.trim();
         final serviceData = AddServicesModel(
           userId: _auth.currentUser?.uid ?? '',
           userName: '$firstName $lastName',

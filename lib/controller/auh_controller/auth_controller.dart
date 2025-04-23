@@ -38,11 +38,12 @@ class AuthController extends GetxController {
   //User Details
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
+  TextEditingController phoneNumber = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController cnPassword = TextEditingController();
   TextEditingController emailLogin = TextEditingController();
   TextEditingController passwordLogin = TextEditingController();
-
+  String selectedCountryCode = "+92";
   Rxn<User> _firebaseUser = Rxn<User>();
   User? get user => _firebaseUser.value;
 
@@ -159,6 +160,9 @@ class AuthController extends GetxController {
     else if (lastName.text.isEmpty) {
       showSnackBar(title: 'Please Enter Your Last Name');
     }
+    else if (phoneNumber.text.isEmpty) {
+      showSnackBar(title: 'Please Enter Your Phone Number');
+    }
     else if (password.text.isEmpty) {
       showSnackBar(title: 'Please Enter a Password');
     }
@@ -184,10 +188,12 @@ class AuthController extends GetxController {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setBool('enableLocation', true);
         Get.off(EnableLocation());
-
+        //String combinedPhoneNumber = selectedCountryCode + phoneNumber.text.trim();
         await _firestore.collection('users').doc(userCredential.user!.uid).set({
           'First Name': firstName.text.trim(),
           'Last Name': lastName.text.trim(),
+          'Country Code': selectedCountryCode,
+          'Phone Number': phoneNumber.text.trim(),
           'Email': emailController.text.trim(),
           'fcmToken': '',
 
@@ -197,6 +203,7 @@ class AuthController extends GetxController {
         await notificationServices.saveFCMToken(userCredential.user!.uid);
         firstName.clear();
         lastName.clear();
+        phoneNumber.clear();
         password.clear();
         cnPassword.clear();
         emailController.clear();
@@ -260,6 +267,8 @@ class AuthController extends GetxController {
   // Function to fetch and store user data
   var email = ''.obs;
   var fullName = ''.obs;
+  var countryCode = ''.obs;
+  var phone = ''.obs;
   Future<void> fetchAndStoreUserData() async {
     try {
 
@@ -270,6 +279,8 @@ class AuthController extends GetxController {
         if (userDoc.exists) {
           email.value = userDoc['Email'];
           fullName.value = '${userDoc['First Name']} ${userDoc['Last Name']}';
+          countryCode.value = userDoc['Country Code'];
+          phone.value = userDoc['Phone Number'];
         } else {
           ErrorSnackBar('Error', 'User data not found');
         }
@@ -284,9 +295,11 @@ class AuthController extends GetxController {
   //Update User Name
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  String countryCodeController = "+92";
   Future<void> updateUserName() async {
     try {
-      if (firstNameController.text.isEmpty || lastNameController.text.isEmpty) {
+      if (firstNameController.text.isEmpty || lastNameController.text.isEmpty || phoneNumberController.text.isEmpty) {
         ErrorSnackBar('Error', 'First Name and Last Name cannot be empty');
         return;
       }
@@ -299,16 +312,21 @@ class AuthController extends GetxController {
         await _firestore.collection('users').doc(user.uid).update({
           'First Name': firstNameController.text,
           'Last Name': lastNameController.text,
+          'Country Code': countryCodeController,
+          'Phone Number': phoneNumberController.text,
         });
 
         await user.updateProfile(
             displayName: '${firstNameController.text} ${lastNameController.text}',
         );
         fullName.value = '${firstNameController.text} ${lastNameController.text}';
+        phone.value = phoneNumberController.text.trim();
+        countryCode.value = countryCodeController;
+
         isLoading = false;
         update();
 
-        SuccessSnackBar('Success', 'Name updated successfully');
+        SuccessSnackBar('Success', 'Updated successfully');
       } else {
         ErrorSnackBar('Error', 'No user is currently logged in');
       }

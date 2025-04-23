@@ -221,8 +221,13 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       SizedBox(height: 5
                         ..h),
+                      Obx(() =>
                       Text12(
-                        text: '(+1) 331 623 8413',
+                        text: authController.countryCode.value.isNotEmpty && authController.phone.value.isNotEmpty
+                            ? '(${authController.countryCode.value}) ${authController.phone.value}'
+                            : 'null',
+                      ),
+
                       ),
                       SizedBox(height: 5
                         ..h),

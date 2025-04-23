@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -155,6 +156,87 @@ class _UserDetailsState extends State<UserDetails> {
                     ),
                   ),
                 ),
+                SizedBox(height: 20..h),
+                Text15(
+                  text: 'Phone Number',
+                  fontWeight: FontWeight.w400,
+                ),
+                SizedBox(height: 10..h),
+                Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: 50
+                    ..h,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10
+                        ..r),
+                      color: AppColor.white,
+                      border: Border.all(
+                        color: Color(0xFFEEEEEE),
+                      )
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width * .25,
+                        child: CountryCodePicker(
+                          // flagWidth: 90,
+                          padding: const EdgeInsets.all(0),
+                          textStyle: TextStyle(
+                            color: Color(0xFF666666),
+                            fontSize: 14
+                              ..sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          initialSelection: "PK",
+                          onChanged: (code) {
+                            _authController.selectedCountryCode = code.dialCode!;
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 5
+                        ..w),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 7.0),
+                        child: VerticalDivider(
+                          color: Color(0xFF666666),
+                          thickness: 1,
+                        ),
+                      ),
+                      SizedBox(width: 5
+                        ..w),
+                      Container(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width * .55,
+                        child: TextField(
+                          controller: _authController.phoneNumberController,
+                          cursorColor: AppColor.black.withOpacity(
+                              .5),
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: '000 000 000',
+                              hintStyle: TextStyle(
+                                color: AppColor.black.withOpacity(
+                                    .3),
+                                fontSize: 15
+                                  ..sp,
+                                fontWeight: FontWeight.w400,
+                              )
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 20
                   ..h,),
                 Text15(
@@ -288,7 +370,8 @@ class _UserDetailsState extends State<UserDetails> {
                     onTap: () {
                       _authController.userDetails();
                     },
-                    child: Button(text: 'Submit'))
+                    child: Button(text: 'Submit')),
+                SizedBox(height: 20..h),
               ],
             ),
           ),

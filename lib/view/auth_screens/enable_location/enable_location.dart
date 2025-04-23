@@ -9,6 +9,7 @@ import 'package:labours_konnect/controller/location_controller/location_controll
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/auth_screens/confirm_location/confirm_location.dart';
 
 class EnableLocation extends StatefulWidget {
   const EnableLocation({super.key});
@@ -69,6 +70,7 @@ class _EnableLocationState extends State<EnableLocation> {
                   ) : GestureDetector(
                       onTap: () {
                         locationController.requestLocationPermission();
+                        navigateToNextScreen(context, ConfirmLocation());
                       },
                       child: Button(text: 'Enable your Location')),
                 ],

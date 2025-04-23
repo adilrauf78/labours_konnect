@@ -10,6 +10,7 @@ class AddServicesModel {
   final String experience;
   final String price;
   final String description;
+  final String phoneNumber;
   final DateTime timestamp;
 
   AddServicesModel({
@@ -24,6 +25,7 @@ class AddServicesModel {
     required this.experience,
     required this.price,
     required this.description,
+    required this.phoneNumber,
     required this.timestamp,
   });
 
@@ -40,6 +42,7 @@ class AddServicesModel {
       'experience': experience,
       'price': price,
       'description': description,
+      'phoneNumber': phoneNumber,
       'timestamp': timestamp,
     };
   }
@@ -47,7 +50,7 @@ class AddServicesModel {
   factory AddServicesModel.fromMap(Map<String, dynamic> map) {
     return AddServicesModel(
       userId: map['userId'] ?? '',
-      userName: map['userName'],
+      userName: map['userName'] ?? '',
       userImage: map['userImage'],
       serviceTitle: map['serviceTitle'] ?? '',
       serviceImage: map['serviceImage'],
@@ -57,6 +60,7 @@ class AddServicesModel {
       experience: map['experience'] ?? '',
       price: map['price'] ?? '',
       description: map['description'] ?? '',
+      phoneNumber: map['phoneNumber'] ?? '',
       timestamp: map['timestamp']?.toDate() ?? DateTime.now(),
     );
   }

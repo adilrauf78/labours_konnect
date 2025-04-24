@@ -21,6 +21,16 @@ class Categories extends StatefulWidget {
 
 class _CategoriesState extends State<Categories> {
   final CategoryController categoryController = Get.put(CategoryController());
+  List<Map<String, dynamic>> images =[
+    {'path': 'assets/images/electrician.png'},
+    {'path': 'assets/images/painterr.png'},
+    {'path': 'assets/images/plumber.png'},
+    {'path': 'assets/images/cleaner.png'},
+    {'path': 'assets/images/carpenter.png'},
+    {'path': 'assets/images/beauty.png'},
+    {'path': 'assets/images/cctv.png'},
+    {'path': 'assets/images/ac-repair.png'},
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,6 +149,7 @@ class _CategoriesState extends State<Categories> {
                                 Container(
                                   width: 60..w,
                                   height: 60..h,
+                                  padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: AppColor.white,
@@ -162,7 +173,7 @@ class _CategoriesState extends State<Categories> {
                                         return SvgPicture.asset('${iconPath}paint-roller.svg');
                                       },
                                     )
-                                        : SvgPicture.asset('${iconPath}paint-roller.svg'),
+                                        : Image.asset(images[index]['path']),
                                   ),
                                 ),
                                 SizedBox(width: 20..w),

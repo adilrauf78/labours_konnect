@@ -48,11 +48,14 @@ class ServiceController extends GetxController{
 
         final firstName = userDetails?['First Name'] ?? 'Unknown';
         final lastName = userDetails?['Last Name'] ?? 'User';
+        final countryCode = userDetails?['Country Code'] ?? 'Unknown';
+        final phoneNumber = userDetails?['Phone Number'] ?? 'Unknown';
         final profileImage = userDetails?['profileImage'] ?? '';
         final serviceData = AddServicesModel(
           userId: _auth.currentUser?.uid ?? '',
           userName: '$firstName $lastName',
           userImage: profileImage,
+          phoneNumber: '$countryCode $phoneNumber',
           serviceTitle: serviceTitle.text.trim(),
           serviceImage: "",
           category: selectedCategory.value,
@@ -127,6 +130,7 @@ class ServiceController extends GetxController{
         final service = AddServicesModel(
           userId: userId,
           userName: '${userDetails?['First Name'] ?? 'Unknown'} ${userDetails?['Last Name'] ?? 'User'}',
+          phoneNumber: '${userDetails?['Country Code'] ?? 'Unknown'} ${userDetails?['Phone Number'] ?? 'Unknown'}',
           userImage: userDetails?['profileImage'] ?? '',
           serviceTitle: serviceData['serviceTitle'],
           serviceImage: serviceData['serviceImage'],

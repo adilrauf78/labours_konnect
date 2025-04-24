@@ -52,13 +52,15 @@ class BookNowController extends GetxController {
         final userDetails = await serviceController.fetchUserDetails(userId);
         update();
         final firstName = userDetails?['First Name'] ?? 'Unknown';
-
         final lastName = userDetails?['Last Name'] ?? 'User';
+        final countryCode = userDetails?['Country Code'] ?? 'Unknown';
+        final phoneNumber = userDetails?['Phone Number'] ?? 'Unknown';
         final profileImage = userDetails?['profileImage'] ?? '';
         final bookingRef = fireStore.collection('bookings').doc();
         BookNowModel booking = BookNowModel(
           bookingId: bookingRef.id,
           userName: '$firstName $lastName',
+          phoneNumber: '$countryCode $phoneNumber',
           vendorName: service!.userName,
           userImage: profileImage,
           userId: _auth.currentUser?.uid ?? '',
@@ -112,6 +114,7 @@ class BookNowController extends GetxController {
         return BookNowModel(
           bookingId: doc.id,
           userName: data['userName'],
+          phoneNumber: data['phoneNumber'],
           vendorName: data['vendorName'],
           userImage: data['userImage'],
           userId: data['userId'],

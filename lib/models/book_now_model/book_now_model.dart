@@ -15,6 +15,7 @@ class BookNowModel {
   final String description;
   final String location;
   final String price;
+  final String phoneNumber;
 
   BookNowModel({
     required this.bookingId,
@@ -31,6 +32,7 @@ class BookNowModel {
     required this.description,
     required this.location,
     required this.price,
+    required this.phoneNumber,
   });
 
   // Convert Firestore DocumentSnapshot to Model
@@ -50,6 +52,7 @@ class BookNowModel {
       description: data['description'] ?? '',
       location: data['location'] ?? '',
       price: data['price'] ?? '',
+      phoneNumber: data['phoneNumber'] ?? '',
     );
   }
 
@@ -69,6 +72,7 @@ class BookNowModel {
       'description': description,
       'location': location,
       'price': price,
+      'phoneNumber': phoneNumber,
     };
   }
 }

@@ -13,6 +13,8 @@ import 'package:labours_konnect/view/home_screen/categories/categories.dart';
 import 'package:labours_konnect/view/home_screen/category_open/category_open.dart';
 import 'package:labours_konnect/view/home_screen/filter/filter.dart';
 
+import '../../controller/location_controller/location_controller.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -22,7 +24,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final CategoryController categoryController = Get.put(CategoryController());
+  final LocationController locationController = Get.put(LocationController());
   final Map<int, bool> _imageLoadingStates = {};
+
+  List<Map<String, dynamic>> images =[
+    {'path': 'assets/images/electrician.png'},
+    {'path': 'assets/images/painterr.png'},
+    {'path': 'assets/images/plumber.png'},
+    {'path': 'assets/images/cleaner.png'},
+    {'path': 'assets/images/carpenter.png'},
+    {'path': 'assets/images/beauty.png'},
+    {'path': 'assets/images/cctv.png'},
+    {'path': 'assets/images/ac-repair.png'},
+  ];
 
   @override
   void initState() {
@@ -275,6 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Container(
                                       width: 60..w,
                                       height: 60..h,
+                                      padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppColor.white,
@@ -299,10 +314,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             return CircularProgressIndicator();
                                           },
                                           errorBuilder: (context, error, stackTrace) {
-                                            return SvgPicture.asset('${iconPath}paint-roller.svg');
+                                            return Image.asset(images[index]['path']);
                                           },
                                         )
-                                            : SvgPicture.asset('${iconPath}paint-roller.svg'),
+                                            : Image.asset(images[index]['path']),
                                       ),
                                     ),
                                     SizedBox(height: 5..h),

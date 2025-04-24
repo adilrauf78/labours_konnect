@@ -217,7 +217,7 @@ class _UserDetailsState extends State<UserDetails> {
                             .size
                             .width * .55,
                         child: TextField(
-                          controller: _authController.phoneNumberController,
+                          controller: _authController.phoneNumber,
                           cursorColor: AppColor.black.withOpacity(
                               .5),
                           keyboardType: TextInputType.phone,

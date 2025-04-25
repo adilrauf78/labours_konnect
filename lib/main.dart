@@ -8,6 +8,8 @@ import 'package:labours_konnect/firebase_options.dart';
 import 'package:labours_konnect/services/notification/notification.dart';
 import 'package:labours_konnect/view/splash_screen/splash_screen.dart';
 
+import 'controller/location_controller/location_controller.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -21,6 +23,7 @@ Future<void> main() async {
   notificationServices.initializeNotifications();
   // Setup Firebase Messaging Listener
   notificationServices.setupFirebaseMessagingListener();
+  Get.lazyPut(() => LocationController());
   runApp(const MyApp());
 }
 

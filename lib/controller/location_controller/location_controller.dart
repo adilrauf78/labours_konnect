@@ -20,7 +20,43 @@ class LocationController extends GetxController{
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
+  @override
+  void onInit() {
+    super.onInit();
+    checkAndShowLocationOnStart();
+  }
+  Future<void> checkAndShowLocationOnStart() async {
+    isLoading.value = true;
+    locationText.value = "Checking location...";
 
+    // Check if location services are enabled
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      isLoading.value = false;
+      locationText.value = "Location services are disabled";
+      ErrorSnackBar('Location Disabled', 'Please enable location services');
+      return;
+    }
+
+    // Check location permission status
+    var status = await Permission.location.status;
+
+    if (status.isGranted) {
+      // Permission already granted - get current location
+      await getCurrentLocation();
+    } else if (status.isDenied) {
+      // Permission not granted - request it
+      locationText.value = "Requesting location access...";
+      await requestLocationPermission();
+    } else if (status.isPermanentlyDenied) {
+      // Permission permanently denied - show message to enable in settings
+      locationText.value = "Location access denied";
+      ErrorSnackBar('Permission Required', 'Please enable location access in app settings');
+      await openAppSettings();
+    }
+
+    isLoading.value = false;
+  }
   //Floating Action Button Click Location in Text Show
   RxString address = 'H#28 saleem Street # 17 Fiji garhi stop Band Rd, Shera Kot, Lahore, Punjab 54000 Pakistan'.obs;
   Future<void> getCurrentLocation() async {

@@ -20,11 +20,12 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   final CategoryController categoryController = Get.put(CategoryController());
-  final LocationController locationController = Get.put(LocationController());
+  final LocationController locationController = Get.find();
   final Map<int, bool> _imageLoadingStates = {};
 
   List<Map<String, dynamic>> images =[
@@ -113,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Container(
                                 child: Text12(
-                                  text: 'Barbican, Jamaica',
+                                  text: locationController.locationText.value,
                                   fontSize: 14..sp,
                                   color: AppColor.black,
                                   fontWeight: FontWeight.w400,

@@ -28,16 +28,16 @@ class _SplashScreenState extends State<SplashScreen> {
       Duration(seconds: 3),
           () async {
         if (onboardingController.isLaunched.isTrue) {
-          Get.off(OnboardingScreen()); // Pehli baar app chalane par OnboardingScreen par jao
+          Get.off(() => OnboardingScreen());// Pehli baar app chalane par OnboardingScreen par jao
         } else {
           // Check login status
           bool isLoggedIn = await authController.checkLoginStatus();
           if (isLoggedIn) {
             // Agar user logged in hai, toh toggle state check karo
             if (authController.isProfessionalMode.value) {
-              Get.off(VendorBottomNavigator()); // Agar toggle on hai, toh VendorBottomNavigator par jao
+              Get.off(() => VendorBottomNavigator()); // Agar toggle on hai, toh VendorBottomNavigator par jao
             } else {
-              Get.off(BottomNavigator()); // Agar toggle off hai, toh BottomNavigator par jao
+              Get.off(() =>BottomNavigator()); // Agar toggle off hai, toh BottomNavigator par jao
             }
           } else {
             Get.off(SignInScreen()); // Agar user logged in nahi hai, toh SignInScreen par jao

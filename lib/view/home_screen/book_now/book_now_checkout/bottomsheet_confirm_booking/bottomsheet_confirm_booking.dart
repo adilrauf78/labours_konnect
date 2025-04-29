@@ -8,6 +8,7 @@ import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/constants/utils.dart';
 import 'package:labours_konnect/controller/book_now_controller/book_now_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/view/bottom_navigator/bottom_navigator.dart';
 
 
 class ConfirmBooking extends StatefulWidget {
@@ -157,6 +158,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         }
                         try {
                           await bookNowController.bookService();
+                          Get.offAll(() => BottomNavigator());
                         } catch (e) {
                           showSnackBar(title: 'Failed to book service: $e');
                         }

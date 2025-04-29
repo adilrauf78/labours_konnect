@@ -167,7 +167,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                                 : widget.booking.status == 'In Progress'
                                 ? AppColor.orange
                                 : widget.booking.status == 'Completed'
-                                ? AppColor.primaryColor
+                                ? AppColor.white
                                 : AppColor.red,
                             text: widget.booking.status,
                           ),

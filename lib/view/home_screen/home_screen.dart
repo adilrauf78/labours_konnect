@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    locationController.getLiveLocation();
+    locationController.getCurrentLocation();
     // Initialize loading states for all categories
     for (int i = 0; i < 8; i++) {
       _imageLoadingStates[i] = true;
@@ -113,15 +113,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Row(
                             children: [
-                              SizedBox(
-                                width: 180..h,
-                                child: Container(
-                                  child: Text12(
-                                    text: locationController.homeAddress.value,
-                                    fontSize: 14..sp,
-                                    color: AppColor.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                              Container(
+                                child: Text12(
+                                  text: 'ji',
+                                  fontSize: 14..sp,
+                                  color: AppColor.black,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                               Icon(Icons.keyboard_arrow_down_outlined)

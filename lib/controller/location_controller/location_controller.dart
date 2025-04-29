@@ -20,50 +20,7 @@ class LocationController extends GetxController{
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
-  RxString homeAddress = "Fetching location...".obs;
-  RxDouble latitude = 0.0.obs;
-  RxDouble longitude = 0.0.obs;
-  Future<void> getLiveLocation() async {
-    isLoading.value = true;
 
-    var status = await Permission.location.status;
-    if (!status.isGranted) {
-      await requestLocationPermission();
-      status = await Permission.location.status;
-      if (!status.isGranted) {
-        address.value = "Location permission not granted.";
-        isLoading.value = false;
-        return;
-      }
-    }
-
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      latitude.value = position.latitude;
-      longitude.value = position.longitude;
-
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      if (placemarks.isNotEmpty) {
-        Placemark placemark = placemarks[0];
-        address.value =
-        '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
-      } else {
-        address.value = "Address not found.";
-      }
-    } catch (e) {
-      print("Error fetching location: $e");
-      address.value = "Error fetching location.";
-    } finally {
-      isLoading.value = false;
-    }
-  }
   //Floating Action Button Click Location in Text Show
   RxString address = 'H#28 saleem Street # 17 Fiji garhi stop Band Rd, Shera Kot, Lahore, Punjab 54000 Pakistan'.obs;
   Future<void> getCurrentLocation() async {
@@ -103,7 +60,7 @@ class LocationController extends GetxController{
       );
       if (placemarks.isNotEmpty) {
         Placemark placemark = placemarks[0];
-        address.value = '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.postalCode}, ${placemark.country}';
+        address.value = '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
       }
       isLoading.value = false;
     } catch (e) {

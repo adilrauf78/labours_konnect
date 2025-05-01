@@ -7,6 +7,7 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/controller/chat_controller/chat_controller.dart';
+import 'package:labours_konnect/controller/review_controller/review_controller.dart';
 import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -28,9 +29,18 @@ class Details extends StatefulWidget {
 class _DetailsState extends State<Details> {
   final ServiceController serviceController = Get.find<ServiceController>();
   final ChatController chatController = Get.put(ChatController());
+  final ReviewController reviewController = Get.put(ReviewController());
   bool favorite = true;
   bool favorite1 = true;
   double _rating = 5;
+  @override
+  void initState() {
+    super.initState();
+    // Fetch reviews when the page loads
+    if (widget.service.serviceId != null) {
+      reviewController.fetchReviews(widget.service.serviceId!);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -309,7 +319,7 @@ class _DetailsState extends State<Details> {
                                                 Icon(Icons.star,color: AppColor.white,size: 20,),
                                                 SizedBox(height: 2..h),
                                                 SubText(
-                                                  text: '5.0',
+                                                  text: '${widget.service.rating.toStringAsFixed(1)}',
                                                   fontSize: 18..sp,
                                                   fontWeight: FontWeight.w500,
                                                   color: AppColor.white,
@@ -461,24 +471,18 @@ class _DetailsState extends State<Details> {
                                                                   Row(
                                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                                     children: [
-                                                                      RatingBar.builder(
-                                                                          initialRating: 5,
-                                                                          minRating: 1,
-                                                                          itemCount: 5,
-                                                                          itemSize: 12,
-                                                                          itemPadding: EdgeInsets.only(right: 2),
-                                                                          direction: Axis.horizontal,
-                                                                          unratedColor: Color(0x4DF9E005),
-                                                                          itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                                                          onRatingUpdate: (rating1){
-                                                                            setState(() {
-                                                                              _rating = _rating;
-                                                                            });
-                                                                          }
+                                                                      RatingBarIndicator(
+                                                                        rating: service.rating,
+                                                                        itemCount: 5,
+                                                                        itemSize: 12,
+                                                                        itemPadding: EdgeInsets.only(right: 2),
+                                                                        direction: Axis.horizontal,
+                                                                        unratedColor: Color(0xFFF9E005).withOpacity(.5),
+                                                                        itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
                                                                       ),
                                                                       SizedBox(width: 5..w),
                                                                       Text(
-                                                                        '$_rating',
+                                                                        '${service.rating.toStringAsFixed(1)}',
                                                                         style: TextStyle(
                                                                           color: AppColor.black,
                                                                           fontSize: 10..sp,
@@ -533,128 +537,152 @@ class _DetailsState extends State<Details> {
                                     text: 'Reviews ',
                                     fontWeight: FontWeight.w700,
                                   ),
-                                  Text18(
-                                    text: '(64)',
+                                  Obx(() => Text18(
+                                    text: '(${reviewController.reviews.length})',
                                     fontWeight: FontWeight.w700,
                                     color: AppColor.black.withOpacity(.25),
-                                  ),
+                                  )),
                                 ],
                               ),
-                              SizedBox(height: 10..h,),
+                              SizedBox(height: 10..h),
                               Row(
                                 children: [
-                                  RatingBar.builder(
-                                      initialRating: 5,
-                                      minRating: 1,
-                                      itemCount: 5,
-                                      itemSize: 22,
-                                      itemPadding: EdgeInsets.only(right: 5),
-                                      direction: Axis.horizontal,
-                                      unratedColor: Color(0x4DF9E005),
-                                      itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                      onRatingUpdate: (rating1){
-                                        setState(() {
-                                          _rating = _rating;
-                                        });
-                                      }
+                                  RatingBarIndicator(
+                                    rating: widget.service.rating,
+                                    itemCount: 5,
+                                    itemSize: 22..sp,
+                                    itemPadding: EdgeInsets.only(right: 5..w),
+                                    unratedColor: Color(0x4DF9E005),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Color(0xFFFFD800),
+                                    ),
                                   ),
                                   SizedBox(width: 15..w),
                                   MainText(
-                                    text: '$_rating',
+                                    text: widget.service.rating.toStringAsFixed(1),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 10..h,),
+                              SizedBox(height: 10..h),
                               Divider(
                                 color: AppColor.black.withOpacity(.1),
                               ),
-                              SizedBox(height: 15..h,),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: 3,
-                                physics: NeverScrollableScrollPhysics(),
-                                scrollDirection: Axis.vertical,
-                                padding: EdgeInsets.zero,
-                                itemBuilder: (context,index){
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 20),
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    width: 30..w,
-                                                    height: 30..h,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: AppColor.white,
-                                                      image: DecorationImage(
-                                                        image: AssetImage('${imagePath}pipe.png'),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 15..w),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      MainText(
-                                                        text: 'Jack Marston',
-                                                        fontSize: 12..sp,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                      Text(
-                                                        'Nov 15, 2021',
-                                                        style: TextStyle(
-                                                          color: AppColor.black,
-                                                          fontSize: 8..sp,
-                                                          fontWeight: FontWeight.w400,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  RatingBar.builder(
-                                                      initialRating: 5,
-                                                      minRating: 1,
-                                                      itemCount: 5,
-                                                      itemSize: 12,
-                                                      itemPadding: EdgeInsets.only(right: 2),
-                                                      direction: Axis.horizontal,
-                                                      unratedColor: Color(0x4DF9E005),
-                                                      itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                                      onRatingUpdate: (rating1){
-                                                        setState(() {
-                                                          _rating = _rating;
-                                                        });
-                                                      }
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                              SizedBox(height: 15..h),
+                              // Reviews List
+                              Obx(() {
+                                if (reviewController.isLoading.value && reviewController.reviews.isEmpty) {
+                                  return Center(child: CircularProgressIndicator());
+                                }
+                                if (reviewController.reviews.isEmpty) {
+                                  return Center(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 40..h),
+                                        Icon(Icons.reviews, size: 50..sp, color: Colors.grey),
+                                        SizedBox(height: 10..h),
+                                        Text(
+                                          'No reviews yet',
+                                          style: TextStyle(
+                                            fontSize: 14..sp,
+                                            color: AppColor.black.withOpacity(0.6),
                                           ),
-                                          SizedBox(height: 15..h),
-                                          SubText(
-                                            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor '
-                                                'incididunt utertid labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud '
-                                                'exercitation ullamco aruun laboris nisi ut aliquip ex ea commodo consequat.',
-                                            fontSize: 12..sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   );
-                                },
-                              ),
+                                }
+
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: reviewController.reviews.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    final review = reviewController.reviews[index];
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: 20..h),
+                                      child: Container(
+                                        padding: EdgeInsets.all(12..w),
+                                        decoration: BoxDecoration(
+                                          color: AppColor.white,
+                                          borderRadius: BorderRadius.circular(10..r),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColor.k0xFFEEEEEE,
+                                              blurRadius: 5,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 30..w,
+                                                      height: 30..h,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: AppColor.white,
+                                                        image: DecorationImage(
+                                                          image: review.reviewerImage?.isNotEmpty ?? false
+                                                              ? NetworkImage(review.reviewerImage!)
+                                                              : AssetImage('${imagePath}pipe.png'),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 10..w),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        MainText(
+                                                          text: review.reviewerName,
+                                                          fontSize: 12..sp,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                        Text(
+                                                          '${review.timestamp.day}/${review.timestamp.month}/${review.timestamp.year}',
+                                                          style: TextStyle(
+                                                            color: AppColor.black,
+                                                            fontSize: 8..sp,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                RatingBarIndicator(
+                                                  rating: review.rating,
+                                                  itemCount: 5,
+                                                  itemSize: 12..sp,
+                                                  itemPadding: EdgeInsets.only(right: 2..w),
+                                                  direction: Axis.horizontal,
+                                                  unratedColor: Color(0x4DF9E005),
+                                                  itemBuilder: (context, _) => Icon(
+                                                    Icons.star,
+                                                    color: Color(0xFFFFD800),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10..h),
+                                            SubText(
+                                              text: review.comment,
+                                              fontSize: 12..sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }),
                             ],
                           ),
                         )

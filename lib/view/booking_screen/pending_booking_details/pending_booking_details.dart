@@ -37,7 +37,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
-          child: CompleteBooking(),
+          child: CompleteBooking(booking: widget.booking),
         );
       },
     );
@@ -523,10 +523,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        bookNowController.markBookingAsCompleted(widget.booking.bookingId);
-                        setState(() {
                           _showBottomSheet(context);
-                        });
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width,

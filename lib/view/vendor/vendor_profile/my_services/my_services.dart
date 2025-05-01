@@ -160,24 +160,18 @@ class _MyServicesState extends State<MyServices> {
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
-                                                      RatingBar.builder(
-                                                          initialRating: 5,
-                                                          minRating: 1,
+                                                      RatingBarIndicator(
+                                                          rating: service.rating,
                                                           itemCount: 5,
                                                           itemSize: 12,
                                                           itemPadding: EdgeInsets.only(right: 2),
                                                           direction: Axis.horizontal,
-                                                          unratedColor: Color(0x4DF9E005),
+                                                          unratedColor: Color(0xFFF9E005).withOpacity(.5),
                                                           itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                                          onRatingUpdate: (rating1){
-                                                            setState(() {
-                                                              _rating = _rating;
-                                                            });
-                                                          }
                                                       ),
                                                       SizedBox(width: 5..w),
                                                       Text(
-                                                        '$_rating',
+                                                        '${service.rating.toStringAsFixed(1)}',
                                                         style: TextStyle(
                                                           color: AppColor.black,
                                                           fontSize: 10..sp,

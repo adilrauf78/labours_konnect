@@ -17,18 +17,18 @@ class InProgress extends StatefulWidget {
 }
 
 class _InProgressState extends State<InProgress> {
-  void _showBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return Container(
-          child: CompleteBooking(),
-        );
-      },
-    );
-  }
+  // void _showBottomSheet(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     backgroundColor: Colors.transparent,
+  //     builder: (BuildContext context) {
+  //       return Container(
+  //         child: CompleteBooking(),
+  //       );
+  //     },
+  //   );
+  // }
   double _rating = 5;
   @override
   Widget build(BuildContext context) {
@@ -417,7 +417,7 @@ class _InProgressState extends State<InProgress> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                    _showBottomSheet(context);
+                    //_showBottomSheet(context);
                   });
                 },
                 child: Container(

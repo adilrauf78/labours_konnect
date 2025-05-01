@@ -23,7 +23,7 @@ Future<void> main() async {
   notificationServices.initializeNotifications();
   // Setup Firebase Messaging Listener
   notificationServices.setupFirebaseMessagingListener();
-  //Get.put(LocationController());
+  Get.put(LocationController());
   runApp(const MyApp());
 }
 

@@ -126,7 +126,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                                 Icon(Icons.star,size: 16,color: Color(0xFFFFD800)),
                                 SizedBox(width: 3..w),
                                 MainText(
-                                  text: '4.5',
+                                  text: '${widget.service.rating.toStringAsFixed(1)}',
                                   fontSize: 15..sp,
                                   fontWeight: FontWeight.w500,
                                 )

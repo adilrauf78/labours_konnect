@@ -24,6 +24,8 @@ class ServiceController extends GetxController{
   }
 
   //Add Services
+  double? latitude;
+  double? longitude;
   Future<void> addService() async {
     if (serviceTitle.text.isEmpty) {
       showSnackBar(title: 'Please select an image');
@@ -61,9 +63,13 @@ class ServiceController extends GetxController{
           category: selectedCategory.value,
           city: cityController.text.trim(),
           location: locationController.text.trim(),
+          latitude: latitude,
+          longitude: longitude,
           experience: experienceController.text.trim(),
           price: priceController.text.trim(),
           description: descriptionController.text.trim(),
+          rating: 0.0,
+          ratingDescription: '',
           timestamp: DateTime.now(),
         );
         await _firestore.collection('services').add(serviceData.toMap());
@@ -137,9 +143,13 @@ class ServiceController extends GetxController{
           category: serviceData['category'],
           city: serviceData['city'],
           location: serviceData['location'],
+          latitude: serviceData['latitude'],
+          longitude: serviceData['longitude'],
           experience: serviceData['experience'],
           price: serviceData['price'],
           description: serviceData['description'],
+          rating: serviceData['rating']?.toDouble() ?? 0.0,
+          ratingDescription: serviceData['ratingDescription'],
           timestamp: serviceData['timestamp'].toDate(),
         );
 
@@ -174,4 +184,5 @@ class ServiceController extends GetxController{
     }
     return null;
   }
+
 }

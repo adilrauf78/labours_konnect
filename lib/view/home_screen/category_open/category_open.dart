@@ -253,7 +253,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                                 Icon(Icons.star,size: 16,color: Color(0xFFFFD800)),
                                                 SizedBox(width: 3..w),
                                                 MainText(
-                                                  text: '${service.rating.toStringAsFixed(1)}',
+                                                  text: '',//'${service.rating.toStringAsFixed(1)}',
                                                   fontSize: 15..sp,
                                                   fontWeight: FontWeight.w500,
                                                 )

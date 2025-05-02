@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReviewModel {
-  final String id;
+  final String? id;
   final String serviceId;
   final String reviewerId;
   final String reviewerName;
@@ -12,7 +12,7 @@ class ReviewModel {
   final DateTime timestamp;
 
   ReviewModel({
-    required this.id,
+    this.id,
     required this.serviceId,
     required this.reviewerId,
     required this.reviewerName,

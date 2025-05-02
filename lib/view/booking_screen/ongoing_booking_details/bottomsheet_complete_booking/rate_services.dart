@@ -107,14 +107,14 @@ class _RateServicesState extends State<RateServices> {
                 onTap: reviewController.isLoading.value
                     ? null
                     : () async {
-                  await reviewController.addReview(
-                    serviceId: widget.booking.bookingId,
-                    serviceOwnerId: widget.booking.vendorId,
-                  );
+                  // await reviewController.addReview(
+                  //   //serviceId: widget.booking.serviceId,
+                  //   serviceOwnerId: widget.booking.vendorId,
+                  // );
                 },
                 child: reviewController.isLoading.value
-                    ? const CircularProgressIndicator()
-                    : const Button(text: 'Submit'),
+                    ? CircularProgressIndicator()
+                    : Button(text: 'Submit'),
               )),
             ],
           ),

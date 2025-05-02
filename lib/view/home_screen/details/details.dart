@@ -34,14 +34,6 @@ class _DetailsState extends State<Details> {
   bool favorite1 = true;
   double _rating = 5;
   @override
-  void initState() {
-    super.initState();
-    // Fetch reviews when the page loads
-    if (widget.service.serviceId != null) {
-      reviewController.fetchReviews(widget.service.serviceId!);
-    }
-  }
-  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
@@ -319,7 +311,7 @@ class _DetailsState extends State<Details> {
                                                 Icon(Icons.star,color: AppColor.white,size: 20,),
                                                 SizedBox(height: 2..h),
                                                 SubText(
-                                                  text: '${widget.service.rating.toStringAsFixed(1)}',
+                                                  text: '',//'${widget.service.rating.toStringAsFixed(1)}',
                                                   fontSize: 18..sp,
                                                   fontWeight: FontWeight.w500,
                                                   color: AppColor.white,
@@ -472,7 +464,7 @@ class _DetailsState extends State<Details> {
                                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                                     children: [
                                                                       RatingBarIndicator(
-                                                                        rating: service.rating,
+                                                                        //rating: service.rating,
                                                                         itemCount: 5,
                                                                         itemSize: 12,
                                                                         itemPadding: EdgeInsets.only(right: 2),
@@ -482,7 +474,7 @@ class _DetailsState extends State<Details> {
                                                                       ),
                                                                       SizedBox(width: 5..w),
                                                                       Text(
-                                                                        '${service.rating.toStringAsFixed(1)}',
+                                                                        '',//'${service.rating.toStringAsFixed(1)}',
                                                                         style: TextStyle(
                                                                           color: AppColor.black,
                                                                           fontSize: 10..sp,
@@ -548,7 +540,7 @@ class _DetailsState extends State<Details> {
                               Row(
                                 children: [
                                   RatingBarIndicator(
-                                    rating: widget.service.rating,
+                                   // rating: widget.service.rating,
                                     itemCount: 5,
                                     itemSize: 22..sp,
                                     itemPadding: EdgeInsets.only(right: 5..w),
@@ -560,7 +552,7 @@ class _DetailsState extends State<Details> {
                                   ),
                                   SizedBox(width: 15..w),
                                   MainText(
-                                    text: widget.service.rating.toStringAsFixed(1),
+                                    text: '',//widget.service.rating.toStringAsFixed(1),
                                   ),
                                 ],
                               ),

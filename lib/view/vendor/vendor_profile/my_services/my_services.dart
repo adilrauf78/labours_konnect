@@ -161,7 +161,7 @@ class _MyServicesState extends State<MyServices> {
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
                                                       RatingBarIndicator(
-                                                          rating: service.rating,
+                                                          //rating: service.rating,
                                                           itemCount: 5,
                                                           itemSize: 12,
                                                           itemPadding: EdgeInsets.only(right: 2),
@@ -170,8 +170,8 @@ class _MyServicesState extends State<MyServices> {
                                                           itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
                                                       ),
                                                       SizedBox(width: 5..w),
-                                                      Text(
-                                                        '${service.rating.toStringAsFixed(1)}',
+                                                      Text('',
+                                                        //'${service.rating.toStringAsFixed(1)}',
                                                         style: TextStyle(
                                                           color: AppColor.black,
                                                           fontSize: 10..sp,

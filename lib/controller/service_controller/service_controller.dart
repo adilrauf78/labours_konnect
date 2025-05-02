@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/utils.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
+import 'package:labours_konnect/view/vendor/vendor_bottom_navigator/vendor_bottom_navigator.dart';
 
 class ServiceController extends GetxController{
 
@@ -53,6 +54,7 @@ class ServiceController extends GetxController{
         final countryCode = userDetails?['Country Code'] ?? 'Unknown';
         final phoneNumber = userDetails?['Phone Number'] ?? 'Unknown';
         final profileImage = userDetails?['profileImage'] ?? '';
+        final serviceId = _firestore.collection('services').doc();
         final serviceData = AddServicesModel(
           userId: _auth.currentUser?.uid ?? '',
           userName: '$firstName $lastName',
@@ -68,14 +70,12 @@ class ServiceController extends GetxController{
           experience: experienceController.text.trim(),
           price: priceController.text.trim(),
           description: descriptionController.text.trim(),
-          rating: 0.0,
-          ratingDescription: '',
           timestamp: DateTime.now(),
         );
         await _firestore.collection('services').add(serviceData.toMap());
         isLoading = false;
         update();
-
+        Get.offAll(() =>VendorBottomNavigator());
         SuccessSnackBar('Success', 'Service added successfully');
         serviceTitle.clear();
         selectedCategory.value = 'Choose Category';
@@ -107,7 +107,7 @@ class ServiceController extends GetxController{
           .get();
 
       return querySnapshot.docs.map((doc) {
-        return AddServicesModel.fromMap(doc.data());
+        return AddServicesModel.fromMap(doc.data() ,doc.id);
       }).toList();
     } catch (e) {
       ErrorSnackBar('Error','Error fetching services for user: $e');
@@ -148,8 +148,6 @@ class ServiceController extends GetxController{
           experience: serviceData['experience'],
           price: serviceData['price'],
           description: serviceData['description'],
-          rating: serviceData['rating']?.toDouble() ?? 0.0,
-          ratingDescription: serviceData['ratingDescription'],
           timestamp: serviceData['timestamp'].toDate(),
         );
 
@@ -171,7 +169,7 @@ class ServiceController extends GetxController{
         .get();
 
     return snapshot.docs.map((doc) {
-      return AddServicesModel.fromMap(doc.data());
+      return AddServicesModel.fromMap(doc.data(),doc.id);
     }).toList();
   }
 

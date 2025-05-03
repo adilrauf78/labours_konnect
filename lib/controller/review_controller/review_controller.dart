@@ -3,12 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/utils.dart';
+import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/models/review_model/review_model.dart';
 
 class ReviewController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final ServiceController serviceController = Get.put(ServiceController());
   final RxList<ReviewModel> reviews = <ReviewModel>[].obs;
   final RxBool isLoading = false.obs;
   final TextEditingController reviewCommentController = TextEditingController();
@@ -25,9 +26,8 @@ class ReviewController extends GetxController {
     try {
       isLoading(true);
       final snapshot = await _firestore
-          .collection('services')
-          .doc(serviceId)
           .collection('reviews')
+          .where('serviceId', isEqualTo: serviceId)
           .orderBy('timestamp', descending: true)
           .get();
 
@@ -35,9 +35,7 @@ class ReviewController extends GetxController {
         return ReviewModel.fromMap(doc.data(), doc.id);
       }));
     } catch (e) {
-      ErrorSnackBar(
-        'Error',
-        'Failed to fetch reviews: $e',);
+      ErrorSnackBar('Error', 'Failed to fetch reviews: $e');
     } finally {
       isLoading(false);
     }
@@ -51,10 +49,12 @@ class ReviewController extends GetxController {
     try {
       if (selectedRating.value == 0) {
         showSnackBar(title: 'Please select a rating');
+        return;
       }
 
       if (reviewCommentController.text.isEmpty) {
         showSnackBar(title: 'Please write a review');
+        return;
       }
 
       isLoading(true);
@@ -62,26 +62,25 @@ class ReviewController extends GetxController {
       if (user == null) throw 'User not logged in';
 
       // Get user details
-      final userDoc = await _firestore.collection('users').doc(user.uid).get();
-      final userData = userDoc.data();
+      final userId = _auth.currentUser!.uid;
+      final userDetails = await serviceController.fetchUserDetails(userId);
+      final firstName = userDetails?['First Name'] ?? 'Unknown';
+      final lastName = userDetails?['Last Name'] ?? 'User';
+      final profileImage = userDetails?['profileImage'] ?? '';
 
       final review = ReviewModel(
         id: '',
         serviceId: serviceId,
-        reviewerId: user.uid,
-        reviewerName: userData?['fullName'] ?? 'Anonymous',
-        reviewerImage: userData?['profileImage'],
+        reviewerId: _auth.currentUser?.uid ?? '',
+        reviewerName: '$firstName $lastName',
+        reviewerImage: profileImage,
         rating: selectedRating.value,
         comment: reviewCommentController.text,
         timestamp: DateTime.now(),
       );
 
-      // Add review to service's reviews subcollection
-      await _firestore
-          .collection('services')
-          .doc(serviceId)
-          .collection('reviews')
-          .add(review.toMap());
+      // Add review to reviews collection
+      await _firestore.collection('reviews').add(review.toMap());
 
       // Update service's average rating
       await _updateServiceRating(serviceId);
@@ -91,13 +90,9 @@ class ReviewController extends GetxController {
       selectedRating(0.0);
 
       Get.back(); // Close review dialog
-      SuccessSnackBar(
-        'Success',
-        'Review added successfully',);
+      SuccessSnackBar('Success', 'Review added successfully');
     } catch (e) {
-      ErrorSnackBar(
-        'Error',
-        e.toString(),);
+      ErrorSnackBar('Error', e.toString());
     } finally {
       isLoading(false);
     }
@@ -105,24 +100,27 @@ class ReviewController extends GetxController {
 
   // Update service's average rating
   Future<void> _updateServiceRating(String serviceId) async {
-    final reviewsSnapshot = await _firestore
-        .collection('services')
-        .doc(serviceId)
-        .collection('reviews')
-        .get();
+    try {
+      final reviewsSnapshot = await _firestore
+          .collection('reviews')
+          .where('serviceId', isEqualTo: serviceId)
+          .get();
 
-    if (reviewsSnapshot.docs.isEmpty) return;
+      if (reviewsSnapshot.docs.isEmpty) return;
 
-    final totalRating = reviewsSnapshot.docs.fold(
-      0.0,
-          (sum, doc) => sum + (doc.data()['rating'] as num).toDouble(),
-    );
+      final totalRating = reviewsSnapshot.docs.fold(
+        0.0,
+            (sum, doc) => sum + (doc.data()['rating'] as num).toDouble(),
+      );
 
-    final averageRating = totalRating / reviewsSnapshot.docs.length;
+      final averageRating = totalRating / reviewsSnapshot.docs.length;
 
-    await _firestore.collection('services').doc(serviceId).update({
-      'rating': averageRating,
-      'ratingsCount': reviewsSnapshot.docs.length,
-    });
+      await _firestore.collection('services').doc(serviceId).update({
+        'rating': averageRating,
+        'ratingsCount': reviewsSnapshot.docs.length,
+      });
+    } catch (e) {
+      throw 'Failed to update service rating: $e';
+    }
   }
 }

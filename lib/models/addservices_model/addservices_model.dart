@@ -1,4 +1,5 @@
 class AddServicesModel {
+  final String id; // <-- Added serviceId
   final String userId;
   final String userName;
   final String? userImage;
@@ -16,6 +17,7 @@ class AddServicesModel {
   final double? longitude;
 
   AddServicesModel({
+    required this.id, // <-- include here
     required this.userId,
     required this.userName,
     this.userImage,
@@ -35,6 +37,7 @@ class AddServicesModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'userId': userId,
       'userName': userName,
       'userImage': userImage,
@@ -55,6 +58,7 @@ class AddServicesModel {
 
   factory AddServicesModel.fromMap(Map<String, dynamic> map, [String? id]) {
     return AddServicesModel(
+      id: id ?? '', // <-- get it from doc.id
       userId: map['userId'] ?? '',
       userName: map['userName'] ?? '',
       userImage: map['userImage'],

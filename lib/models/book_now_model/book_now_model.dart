@@ -7,6 +7,7 @@ class BookNowModel {
   final String userId;
   final String vendorId;
   final String vendorName;
+  final String serviceId; // <-- Added this
   final String serviceName;
   final String serviceImage;
   final DateTime bookingDate;
@@ -24,6 +25,7 @@ class BookNowModel {
     required this.userId,
     required this.vendorId,
     required this.vendorName,
+    required this.serviceId, // <-- Added this
     required this.serviceName,
     required this.serviceImage,
     required this.bookingDate,
@@ -35,7 +37,6 @@ class BookNowModel {
     required this.phoneNumber,
   });
 
-  // Convert Firestore DocumentSnapshot to Model
   factory BookNowModel.fromMap(Map<String, dynamic> data, String bookingId) {
     return BookNowModel(
       bookingId: bookingId,
@@ -44,6 +45,7 @@ class BookNowModel {
       userId: data['userId'] ?? '',
       vendorId: data['vendorId'] ?? '',
       vendorName: data['vendorName'] ?? '',
+      serviceId: data['serviceId'] ?? '', // <-- Added this
       serviceName: data['serviceName'] ?? '',
       serviceImage: data['serviceImage'] ?? '',
       bookingDate: (data['bookingDate'] as Timestamp).toDate(),
@@ -56,7 +58,6 @@ class BookNowModel {
     );
   }
 
-  // Convert Model to Firestore Map
   Map<String, dynamic> toMap() {
     return {
       'userName': userName,
@@ -64,6 +65,7 @@ class BookNowModel {
       'userId': userId,
       'vendorId': vendorId,
       'vendorName': vendorName,
+      'serviceId': serviceId, // <-- Added this
       'serviceName': serviceName,
       'serviceImage': serviceImage,
       'bookingDate': Timestamp.fromDate(bookingDate),

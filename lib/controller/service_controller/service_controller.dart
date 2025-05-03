@@ -56,6 +56,7 @@ class ServiceController extends GetxController{
         final profileImage = userDetails?['profileImage'] ?? '';
         final serviceId = _firestore.collection('services').doc();
         final serviceData = AddServicesModel(
+          id: serviceId.id,
           userId: _auth.currentUser?.uid ?? '',
           userName: '$firstName $lastName',
           userImage: profileImage,
@@ -134,6 +135,7 @@ class ServiceController extends GetxController{
         final userDetails = await fetchUserDetails(userId);
 
         final service = AddServicesModel(
+          id: doc.id,
           userId: userId,
           userName: '${userDetails?['First Name'] ?? 'Unknown'} ${userDetails?['Last Name'] ?? 'User'}',
           phoneNumber: '${userDetails?['Country Code'] ?? 'Unknown'} ${userDetails?['Phone Number'] ?? 'Unknown'}',

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart' show Get;
 import 'package:intl/intl.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/review_controller/review_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -21,8 +24,7 @@ class BookNowCheckout extends StatefulWidget {
 }
 
 class _BookNowCheckoutState extends State<BookNowCheckout> {
-
-  double _rating = 5;
+  final ReviewController reviewController = Get.put(ReviewController());
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -202,7 +204,7 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
                                 Icon(Icons.star,size: 16,color: Color(0xFFFFD800)),
                                 SizedBox(width: 3..w),
                                 MainText(
-                                  text: '4.5',
+                                  text: reviewController.averageRating.value.toStringAsFixed(1),
                                   fontSize: 15..sp,
                                   fontWeight: FontWeight.w500,
                                 )
@@ -244,24 +246,18 @@ class _BookNowCheckoutState extends State<BookNowCheckout> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                RatingBar.builder(
-                                    initialRating: 5,
-                                    minRating: 1,
+                                RatingBarIndicator(
+                                    rating: reviewController.averageRating.value,
                                     itemCount: 5,
                                     itemSize: 16,
                                     itemPadding: EdgeInsets.only(right: 2),
                                     direction: Axis.horizontal,
                                     unratedColor: Color(0x4DF9E005),
                                     itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                    onRatingUpdate: (rating1){
-                                      setState(() {
-                                        _rating = _rating;
-                                      });
-                                    }
                                 ),
                                 SizedBox(width: 5..w),
                                 Text(
-                                  '$_rating',
+                                  reviewController.averageRating.value.toStringAsFixed(1),
                                   style: TextStyle(
                                     color: AppColor.black,
                                     fontSize: 14..sp,

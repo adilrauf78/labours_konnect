@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AddServicesModel {
-  final String id; // <-- Added serviceId
+  final String id;
   final String userId;
   final String userName;
-  final String? userImage;
+  final String userImage;
   final String serviceTitle;
-  final String? serviceImage;
+  final String serviceImage;
   final String category;
   final String city;
   final String location;
@@ -17,12 +19,12 @@ class AddServicesModel {
   final double? longitude;
 
   AddServicesModel({
-    required this.id, // <-- include here
+    required this.id,
     required this.userId,
     required this.userName,
-    this.userImage,
+    required this.userImage,
     required this.serviceTitle,
-    this.serviceImage,
+    required this.serviceImage,
     required this.category,
     required this.city,
     required this.location,
@@ -31,13 +33,33 @@ class AddServicesModel {
     required this.description,
     required this.phoneNumber,
     required this.timestamp,
-    this.latitude,
-    this.longitude,
+    required this.latitude,
+    required this.longitude,
   });
+
+  factory AddServicesModel.fromMap(Map<String, dynamic> data, String id) {
+    return AddServicesModel(
+      id: id,
+      userId: data['userId'] ?? '',
+      userName: data['userName'] ?? '',
+      userImage: data['userImage'] ?? '',
+      serviceTitle: data['serviceTitle'] ?? '',
+      serviceImage: data['serviceImage'] ?? '',
+      category: data['category'] ?? '',
+      city: data['city'] ?? '',
+      location: data['location'] ?? '',
+      experience: data['experience'] ?? '',
+      price: data['price'] ?? '',
+      description: data['description'] ?? '',
+      phoneNumber: data['phoneNumber'] ?? '',
+      timestamp: (data['timestamp'] as Timestamp).toDate(),
+      latitude: (data['latitude'] as num).toDouble(),
+      longitude: (data['longitude'] as num).toDouble(),
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'userId': userId,
       'userName': userName,
       'userImage': userImage,
@@ -50,30 +72,9 @@ class AddServicesModel {
       'price': price,
       'description': description,
       'phoneNumber': phoneNumber,
-      'timestamp': timestamp,
+      'timestamp': Timestamp.fromDate(timestamp),
       'latitude': latitude,
       'longitude': longitude,
     };
-  }
-
-  factory AddServicesModel.fromMap(Map<String, dynamic> map, [String? id]) {
-    return AddServicesModel(
-      id: id ?? '', // <-- get it from doc.id
-      userId: map['userId'] ?? '',
-      userName: map['userName'] ?? '',
-      userImage: map['userImage'],
-      serviceTitle: map['serviceTitle'] ?? '',
-      serviceImage: map['serviceImage'],
-      category: map['category'] ?? '',
-      city: map['city'] ?? '',
-      location: map['location'] ?? '',
-      experience: map['experience'] ?? '',
-      price: map['price'] ?? '',
-      description: map['description'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? '',
-      timestamp: map['timestamp']?.toDate() ?? DateTime.now(),
-      latitude: map['latitude']?.toDouble(),
-      longitude: map['longitude']?.toDouble(),
-    );
   }
 }

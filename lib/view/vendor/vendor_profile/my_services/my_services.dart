@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
+import 'package:labours_konnect/controller/review_controller/review_controller.dart';
 import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -23,6 +24,7 @@ class MyServices extends StatefulWidget {
 class _MyServicesState extends State<MyServices> {
   final ServiceController serviceController = Get.find<ServiceController>();
   final AuthController authController = Get.find<AuthController>();
+  final ReviewController reviewController = Get.put(ReviewController());
   double _rating = 5;
   @override
   Widget build(BuildContext context) {
@@ -157,29 +159,48 @@ class _MyServicesState extends State<MyServices> {
                                                     fontSize: 14..sp,
                                                     fontWeight: FontWeight.w500,
                                                   ),
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      RatingBarIndicator(
-                                                          //rating: service.rating,
-                                                          itemCount: 5,
-                                                          itemSize: 12,
-                                                          itemPadding: EdgeInsets.only(right: 2),
-                                                          direction: Axis.horizontal,
-                                                          unratedColor: Color(0xFFF9E005).withOpacity(.5),
-                                                          itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                                      ),
-                                                      SizedBox(width: 5..w),
-                                                      Text('',
-                                                        //'${service.rating.toStringAsFixed(1)}',
-                                                        style: TextStyle(
-                                                          color: AppColor.black,
-                                                          fontSize: 10..sp,
-                                                          fontWeight: FontWeight.w400,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                  FutureBuilder<double>(
+                                                    future: reviewController.getAverageRating(service.id),
+                                                    builder: (context, snapshot) {
+                                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                                        return MainText(
+                                                          text: '...',
+                                                          fontSize: 15..sp,
+                                                          fontWeight: FontWeight.w500,
+                                                        );
+                                                      }
+                                                      if (snapshot.hasError) {
+                                                        return MainText(
+                                                          text: '0.0',
+                                                          fontSize: 15..sp,
+                                                          fontWeight: FontWeight.w500,
+                                                        );
+                                                      }
+                                                      return Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          RatingBarIndicator(
+                                                            rating: snapshot.data ?? 0.0,
+                                                            itemCount: 5,
+                                                            itemSize: 12,
+                                                            itemPadding: EdgeInsets.only(right: 2),
+                                                            direction: Axis.horizontal,
+                                                            unratedColor: Color(0xFFF9E005).withOpacity(.5),
+                                                            itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
+                                                          ),
+                                                          SizedBox(width: 5..w),
+                                                          Text(
+                                                            snapshot.data!.toStringAsFixed(1),
+                                                            style: TextStyle(
+                                                              color: AppColor.black,
+                                                              fontSize: 10..sp,
+                                                              fontWeight: FontWeight.w400,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  )
                                                 ],
                                               ),
                                             ],

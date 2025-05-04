@@ -9,6 +9,7 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/constants/utils.dart';
 import 'package:labours_konnect/controller/book_now_controller/book_now_controller.dart';
+import 'package:labours_konnect/controller/review_controller/review_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -28,6 +29,7 @@ class _BookNowState extends State<BookNow> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   final BookNowController bookNowController = Get.put(BookNowController());
+  final ReviewController reviewController = Get.put(ReviewController());
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -219,7 +221,7 @@ class _BookNowState extends State<BookNow> {
                                 Icon(Icons.star,size: 16,color: Color(0xFFFFD800)),
                                 SizedBox(width: 3..w),
                                 MainText(
-                                  text: '4.5',
+                                  text: reviewController.averageRating.value.toStringAsFixed(1),
                                   fontSize: 15..sp,
                                   fontWeight: FontWeight.w500,
                                 )
@@ -261,24 +263,18 @@ class _BookNowState extends State<BookNow> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                RatingBar.builder(
-                                    initialRating: 5,
-                                    minRating: 1,
+                                RatingBarIndicator(
+                                    rating: reviewController.averageRating.value,
                                     itemCount: 5,
                                     itemSize: 16,
                                     itemPadding: EdgeInsets.only(right: 2),
                                     direction: Axis.horizontal,
-                                    unratedColor: Color(0x4DF9E005),
+                                    unratedColor: Color(0xFFF9E005).withOpacity(.5),
                                     itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                    onRatingUpdate: (rating1){
-                                      setState(() {
-                                        _rating = _rating;
-                                      });
-                                    }
                                 ),
                                 SizedBox(width: 5..w),
                                 Text(
-                                  '$_rating',
+                                  reviewController.averageRating.value.toStringAsFixed(1),
                                   style: TextStyle(
                                     color: AppColor.black,
                                     fontSize: 14..sp,

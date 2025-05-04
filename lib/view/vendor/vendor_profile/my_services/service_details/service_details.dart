@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/review_controller/review_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
@@ -16,6 +19,7 @@ class ServiceDetails extends StatefulWidget {
 }
 
 class _ServiceDetailsState extends State<ServiceDetails> {
+  final ReviewController reviewController = Get.put(ReviewController());
   bool favorite1 = true;
   @override
   Widget build(BuildContext context) {
@@ -125,11 +129,18 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                               children: [
                                 Icon(Icons.star,size: 16,color: Color(0xFFFFD800)),
                                 SizedBox(width: 3..w),
-                                MainText(
-                                  text: '' ,//'${widget.service.rating.toStringAsFixed(1)}',
-                                  fontSize: 15..sp,
-                                  fontWeight: FontWeight.w500,
-                                )
+                                FutureBuilder<void>(
+                                  future: reviewController.fetchReviews(widget.service.id), // 👈 Use actual ID field
+                                  builder: (context, snapshot) {
+                                    return MainText(
+                                      text: reviewController
+                                          .averageRating.value
+                                          .toStringAsFixed(1),
+                                      fontSize: 15..sp,
+                                      fontWeight: FontWeight.w500,
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                             Container(

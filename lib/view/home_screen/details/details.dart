@@ -32,7 +32,11 @@ class _DetailsState extends State<Details> {
   final ReviewController reviewController = Get.put(ReviewController());
   bool favorite = true;
   bool favorite1 = true;
-  double _rating = 5;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   reviewController.fetchReviews(widget.service.id);
+  // }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -310,11 +314,20 @@ class _DetailsState extends State<Details> {
                                               children: [
                                                 Icon(Icons.star,color: AppColor.white,size: 20,),
                                                 SizedBox(height: 2..h),
-                                                SubText(
-                                                  text: '',//'${widget.service.rating.toStringAsFixed(1)}',
-                                                  fontSize: 18..sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColor.white,
+                                                FutureBuilder<void>(
+                                                  future: reviewController.fetchReviews(widget.service.id), // 👈 Use actual ID field
+                                                  builder: (context, snapshot) {
+                                                    return SubText(
+                                                      text: reviewController
+                                                          .averageRating.value
+                                                          .toStringAsFixed(1),
+                                                      fontSize: 18
+                                                        ..sp,
+                                                      fontWeight: FontWeight
+                                                          .w500,
+                                                      color: AppColor.white,
+                                                    );
+                                                  },
                                                 ),
                                               ],
                                             ),
@@ -460,29 +473,49 @@ class _DetailsState extends State<Details> {
                                                                     fontSize: 14.sp,
                                                                     fontWeight: FontWeight.w500,
                                                                   ),
-                                                                  Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    children: [
-                                                                      RatingBarIndicator(
-                                                                        //rating: service.rating,
-                                                                        itemCount: 5,
-                                                                        itemSize: 12,
-                                                                        itemPadding: EdgeInsets.only(right: 2),
-                                                                        direction: Axis.horizontal,
-                                                                        unratedColor: Color(0xFFF9E005).withOpacity(.5),
-                                                                        itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                                                      ),
-                                                                      SizedBox(width: 5..w),
-                                                                      Text(
-                                                                        '',//'${service.rating.toStringAsFixed(1)}',
-                                                                        style: TextStyle(
-                                                                          color: AppColor.black,
-                                                                          fontSize: 10..sp,
-                                                                          fontWeight: FontWeight.w400,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
+                                                                  FutureBuilder<double>(
+                                                                    future: reviewController.getAverageRating(service.id),
+                                                                    builder: (context, snapshot) {
+                                                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                                                        return MainText(
+                                                                          text: '...',
+                                                                          fontSize: 15..sp,
+                                                                          fontWeight: FontWeight.w500,
+                                                                        );
+                                                                      }
+                                                                      if (snapshot.hasError) {
+                                                                        return MainText(
+                                                                          text: '0.0',
+                                                                          fontSize: 15..sp,
+                                                                          fontWeight: FontWeight.w500,
+                                                                        );
+                                                                      }
+                                                                      return Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        children: [
+                                                                          RatingBarIndicator(
+                                                                            rating: snapshot.data ?? 0.0,
+                                                                            itemCount: 5,
+                                                                            itemSize: 12,
+                                                                            itemPadding: EdgeInsets.only(right: 2),
+                                                                            direction: Axis.horizontal,
+                                                                            unratedColor: Color(0xFFF9E005).withOpacity(.5),
+                                                                            itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
+                                                                          ),
+                                                                          SizedBox(width: 5..w),
+                                                                          Text(
+                                                                            snapshot.data!.toStringAsFixed(1),
+                                                                            style: TextStyle(
+                                                                              color: AppColor.black,
+                                                                              fontSize: 10..sp,
+                                                                              fontWeight: FontWeight.w400,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    },
+                                                                  )
+
                                                                 ],
                                                               ),
                                                             ],
@@ -520,127 +553,157 @@ class _DetailsState extends State<Details> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                          child: FutureBuilder<void>(
+                            future: reviewController.fetchReviews(widget.service.id), // 👈 Use actual ID field
+                            builder: (context, snapshot) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text18(
-                                    text: 'Reviews ',
-                                    fontWeight: FontWeight.w700,
+                                  Row(
+                                    children: [
+                                      Text18(
+                                        text: 'Reviews ',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      Obx(() => Text18(
+                                        text: '(${reviewController.reviews.length})',
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColor.black.withOpacity(.25),
+                                      )),
+                                    ],
                                   ),
-                                  Obx(() => Text18(
-                                    text: '(${reviewController.reviews.length})',
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColor.black.withOpacity(.25),
-                                  )),
-                                ],
-                              ),
-                              SizedBox(height: 10..h),
-                              Row(
-                                children: [
-                                  RatingBarIndicator(
-                                   // rating: widget.service.rating,
-                                    itemCount: 5,
-                                    itemSize: 22..sp,
-                                    itemPadding: EdgeInsets.only(right: 5..w),
-                                    unratedColor: Color(0x4DF9E005),
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: Color(0xFFFFD800),
-                                    ),
-                                  ),
-                                  SizedBox(width: 15..w),
-                                  MainText(
-                                    text: '',//widget.service.rating.toStringAsFixed(1),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10..h),
-                              Divider(
-                                color: AppColor.black.withOpacity(.1),
-                              ),
-                              SizedBox(height: 15..h),
-                              // Reviews List
-                              Obx(() {
-                                if (reviewController.isLoading.value && reviewController.reviews.isEmpty) {
-                                  return Center(child: CircularProgressIndicator());
-                                }
-                                if (reviewController.reviews.isEmpty) {
-                                  return Center(
-                                    child: Column(
-                                      children: [
-                                        SizedBox(height: 40..h),
-                                        Icon(Icons.reviews, size: 50..sp, color: Colors.grey),
-                                        SizedBox(height: 10..h),
-                                        Text(
-                                          'No reviews yet',
-                                          style: TextStyle(
-                                            fontSize: 14..sp,
-                                            color: AppColor.black.withOpacity(0.6),
-                                          ),
+                                  SizedBox(height: 10..h),
+                                  Row(
+                                    children: [
+                                      RatingBarIndicator(
+                                        rating: reviewController.averageRating.value,
+                                        itemCount: 5,
+                                        itemSize: 22..sp,
+                                        itemPadding: EdgeInsets.only(right: 5..w),
+                                        unratedColor: Color(0x4DF9E005),
+                                        itemBuilder: (context, _) => Icon(
+                                          Icons.star,
+                                          color: Color(0xFFFFD800),
                                         ),
-                                      ],
-                                    ),
-                                  );
-                                }
-
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: reviewController.reviews.length,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final review = reviewController.reviews[index];
-                                    return Padding(
-                                      padding: EdgeInsets.only(bottom: 20..h),
-                                      child: Container(
-                                        padding: EdgeInsets.all(12..w),
-                                        decoration: BoxDecoration(
-                                          color: AppColor.white,
-                                          borderRadius: BorderRadius.circular(10..r),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: AppColor.k0xFFEEEEEE,
-                                              blurRadius: 5,
+                                      ),
+                                      SizedBox(width: 15..w),
+                                      MainText(
+                                        text: reviewController.averageRating.value.toStringAsFixed(1),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10..h),
+                                  Divider(
+                                    color: AppColor.black.withOpacity(.1),
+                                  ),
+                                  SizedBox(height: 15..h),
+                                  // Reviews List
+                                  Obx(() {
+                                    if (reviewController.isLoading.value && reviewController.reviews.isEmpty) {
+                                      return Center(child: CircularProgressIndicator());
+                                    }
+                                    if (reviewController.reviews.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          children: [
+                                            SizedBox(height: 40..h),
+                                            Icon(Icons.reviews, size: 50..sp, color: Colors.grey),
+                                            SizedBox(height: 10..h),
+                                            Text(
+                                              'No reviews yet',
+                                              style: TextStyle(
+                                                fontSize: 14..sp,
+                                                color: AppColor.black.withOpacity(0.6),
+                                              ),
                                             ),
                                           ],
                                         ),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: reviewController.reviews.length,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        final review = reviewController.reviews[index];
+                                        return Padding(
+                                          padding: EdgeInsets.only(bottom: 20..h),
+                                          child: Container(
+                                            padding: EdgeInsets.all(12..w),
+                                            decoration: BoxDecoration(
+                                              color: AppColor.white,
+                                              borderRadius: BorderRadius.circular(10..r),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: AppColor.k0xFFEEEEEE,
+                                                  blurRadius: 5,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
-                                                    Container(
-                                                      width: 30..w,
-                                                      height: 30..h,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: AppColor.white,
-                                                        image: DecorationImage(
-                                                          image: review.reviewerImage?.isNotEmpty ?? false
-                                                              ? NetworkImage(review.reviewerImage!)
-                                                              : AssetImage('${imagePath}pipe.png'),
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 10..w),
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                    Row(
                                                       children: [
-                                                        MainText(
-                                                          text: review.reviewerName,
-                                                          fontSize: 12..sp,
-                                                          fontWeight: FontWeight.w500,
+                                                        Container(
+                                                          width: 30..w,
+                                                          height: 30..h,
+                                                          decoration: BoxDecoration(
+                                                            shape: BoxShape.circle,
+                                                            color: AppColor.white,
+                                                            image: DecorationImage(
+                                                              image: review.reviewerImage?.isNotEmpty ?? false
+                                                                  ? NetworkImage(review.reviewerImage!)
+                                                                  : AssetImage('${imagePath}pipe.png'),
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
                                                         ),
+                                                        SizedBox(width: 10..w),
+                                                        Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            MainText(
+                                                              text: review.reviewerName,
+                                                              fontSize: 12..sp,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            Text(
+                                                              '${review.timestamp.day}/${review.timestamp.month}/${review.timestamp.year}',
+                                                              style: TextStyle(
+                                                                color: AppColor.black,
+                                                                fontSize: 8..sp,
+                                                                fontWeight: FontWeight.w400,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        RatingBarIndicator(
+                                                          rating: review.rating,
+                                                          itemCount: 5,
+                                                          itemSize: 12..sp,
+                                                          itemPadding: EdgeInsets.only(right: 2..w),
+                                                          direction: Axis.horizontal,
+                                                          unratedColor: Color(0x4DF9E005),
+                                                          itemBuilder: (context, _) => Icon(
+                                                            Icons.star,
+                                                            color: Color(0xFFFFD800),
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 5..w),
                                                         Text(
-                                                          '${review.timestamp.day}/${review.timestamp.month}/${review.timestamp.year}',
+                                                          review.rating.toStringAsFixed(1),
                                                           style: TextStyle(
                                                             color: AppColor.black,
-                                                            fontSize: 8..sp,
+                                                            fontSize: 10..sp,
                                                             fontWeight: FontWeight.w400,
                                                           ),
                                                         ),
@@ -648,34 +711,22 @@ class _DetailsState extends State<Details> {
                                                     ),
                                                   ],
                                                 ),
-                                                RatingBarIndicator(
-                                                  rating: review.rating,
-                                                  itemCount: 5,
-                                                  itemSize: 12..sp,
-                                                  itemPadding: EdgeInsets.only(right: 2..w),
-                                                  direction: Axis.horizontal,
-                                                  unratedColor: Color(0x4DF9E005),
-                                                  itemBuilder: (context, _) => Icon(
-                                                    Icons.star,
-                                                    color: Color(0xFFFFD800),
-                                                  ),
+                                                SizedBox(height: 10..h),
+                                                SubText(
+                                                  text: review.comment,
+                                                  fontSize: 12..sp,
+                                                  fontWeight: FontWeight.w400,
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 10..h),
-                                            SubText(
-                                              text: review.comment,
-                                              fontSize: 12..sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                          ),
+                                        );
+                                      },
                                     );
-                                  },
-                                );
-                              }),
-                            ],
+                                  }),
+                                ],
+                              );
+                            },
                           ),
                         )
                       ],

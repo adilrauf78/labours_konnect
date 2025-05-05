@@ -159,28 +159,14 @@ class _MyServicesState extends State<MyServices> {
                                                     fontSize: 14..sp,
                                                     fontWeight: FontWeight.w500,
                                                   ),
-                                                  FutureBuilder<double>(
-                                                    future: reviewController.getAverageRating(service.id),
+                                                  FutureBuilder<void>(
+                                                    future: reviewController.fetchReviews(service.id), // 👈 Use actual ID field
                                                     builder: (context, snapshot) {
-                                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                                        return MainText(
-                                                          text: '...',
-                                                          fontSize: 15..sp,
-                                                          fontWeight: FontWeight.w500,
-                                                        );
-                                                      }
-                                                      if (snapshot.hasError) {
-                                                        return MainText(
-                                                          text: '0.0',
-                                                          fontSize: 15..sp,
-                                                          fontWeight: FontWeight.w500,
-                                                        );
-                                                      }
                                                       return Row(
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
                                                           RatingBarIndicator(
-                                                            rating: snapshot.data ?? 0.0,
+                                                            rating: reviewController.averageRating.value,
                                                             itemCount: 5,
                                                             itemSize: 12,
                                                             itemPadding: EdgeInsets.only(right: 2),
@@ -190,7 +176,7 @@ class _MyServicesState extends State<MyServices> {
                                                           ),
                                                           SizedBox(width: 5..w),
                                                           Text(
-                                                            snapshot.data!.toStringAsFixed(1),
+                                                            reviewController.averageRating.value.toStringAsFixed(1),
                                                             style: TextStyle(
                                                               color: AppColor.black,
                                                               fontSize: 10..sp,
@@ -200,7 +186,7 @@ class _MyServicesState extends State<MyServices> {
                                                         ],
                                                       );
                                                     },
-                                                  )
+                                                  ),
                                                 ],
                                               ),
                                             ],

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/utils.dart';
+import 'package:labours_konnect/controller/location_controller/location_controller.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/view/vendor/vendor_bottom_navigator/vendor_bottom_navigator.dart';
 
@@ -23,10 +25,8 @@ class ServiceController extends GetxController{
   void updateSelectedCategory(String category) {
     selectedCategory.value = category;
   }
-
+  final locationControllers = Get.find<LocationController>();
   //Add Services
-  double? latitude;
-  double? longitude;
   Future<void> addService() async {
     if (serviceTitle.text.isEmpty) {
       showSnackBar(title: 'Please select an image');
@@ -66,8 +66,8 @@ class ServiceController extends GetxController{
           category: selectedCategory.value,
           city: cityController.text.trim(),
           location: locationController.text.trim(),
-          latitude: latitude,
-          longitude: longitude,
+          latitude: locationControllers.selectedLatitude.value,
+          longitude: locationControllers.selectedLongitude.value,
           experience: experienceController.text.trim(),
           price: priceController.text.trim(),
           description: descriptionController.text.trim(),
@@ -185,4 +185,61 @@ class ServiceController extends GetxController{
     return null;
   }
 
+
+
+  // Add this method to ServiceController
+  Future<List<AddServicesModel>> fetchNearbyServices(double latitude, double longitude, double radiusInKm) async {
+    try {
+      // Convert km to meters (Firestore uses meters for geo queries)
+      final radiusInMeters = radiusInKm * 1000;
+
+      // We need to query all services first since Firestore doesn't natively support geo-queries
+      final allServices = await _firestore.collection('services').get();
+
+      final nearbyServices = <AddServicesModel>[];
+
+      for (var doc in allServices.docs) {
+        final serviceData = doc.data();
+        final serviceLat = serviceData['latitude'] as double?;
+        final serviceLong = serviceData['longitude'] as double?;
+
+        if (serviceLat != null && serviceLong != null) {
+          final distanceInMeters = Geolocator.distanceBetween(
+            latitude,
+            longitude,
+            serviceLat,
+            serviceLong,
+          );
+
+          if (distanceInMeters <= radiusInMeters) {
+            final userDetails = await fetchUserDetails(serviceData['userId']);
+
+            nearbyServices.add(AddServicesModel(
+              id: doc.id,
+              userId: serviceData['userId'],
+              userName: '${userDetails?['First Name'] ?? 'Unknown'} ${userDetails?['Last Name'] ?? 'User'}',
+              phoneNumber: '${userDetails?['Country Code'] ?? 'Unknown'} ${userDetails?['Phone Number'] ?? 'Unknown'}',
+              userImage: userDetails?['profileImage'] ?? '',
+              serviceTitle: serviceData['serviceTitle'],
+              serviceImage: serviceData['serviceImage'],
+              category: serviceData['category'],
+              city: serviceData['city'],
+              location: serviceData['location'],
+              latitude: serviceLat,
+              longitude: serviceLong,
+              experience: serviceData['experience'],
+              price: serviceData['price'],
+              description: serviceData['description'],
+              timestamp: serviceData['timestamp'].toDate(),
+            ));
+          }
+        }
+      }
+
+      return nearbyServices;
+    } catch (e) {
+      ErrorSnackBar('Error', 'Failed to fetch nearby services: $e');
+      rethrow;
+    }
+  }
 }

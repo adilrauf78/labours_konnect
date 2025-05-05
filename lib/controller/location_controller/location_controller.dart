@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:labours_konnect/constants/utils.dart';
+import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/view/auth_screens/confirm_location/confirm_location.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -16,6 +17,9 @@ class LocationController extends GetxController{
   late GoogleMapController mapController;
   LatLng initialPosition = LatLng(31.5204, 74.3587);
   late LatLng _currentPosition;
+  // Add these variables to store coordinates
+  RxDouble selectedLatitude = 0.0.obs;
+  RxDouble selectedLongitude = 0.0.obs;
 
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -42,6 +46,9 @@ class LocationController extends GetxController{
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
         _currentPosition = LatLng(position.latitude, position.longitude);
+      // Store the coordinates
+      selectedLatitude.value = position.latitude;
+      selectedLongitude.value = position.longitude;
 
       mapController.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -86,7 +93,11 @@ class LocationController extends GetxController{
       target: latLng,
       zoom: 10.0,
     )));
-      markers.clear();
+    // Update selected coordinates
+    selectedLatitude.value = latLng.latitude;
+    selectedLongitude.value = latLng.longitude;
+
+    markers.clear();
       markers.add(Marker(
         markerId: MarkerId('selected_location'),
         position: latLng,
@@ -119,5 +130,45 @@ class LocationController extends GetxController{
     }
   }
 
+  // Add this method to LocationController
+  Future<void> getNearbyServices() async {
+    try {
+      isLoading.value = true;
+
+      // First get current location
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      _currentPosition = LatLng(position.latitude, position.longitude);
+
+      // Update map to current location
+      mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: _currentPosition,
+            zoom: 15.0,
+          ),
+        ),
+      );
+
+      // Get nearby services (20 km radius)
+      final serviceController = Get.find<ServiceController>();
+      final nearbyServices = await serviceController.fetchNearbyServices(
+        position.latitude,
+        position.longitude,
+        20, // 20 km radius
+      );
+
+      // You can now use nearbyServices as needed
+      // For example, show them in a list or on the map
+      print('Found ${nearbyServices.length} nearby services');
+
+      isLoading.value = false;
+    } catch (e) {
+      isLoading.value = false;
+      ErrorSnackBar('Error', 'Failed to get nearby services: $e');
+    }
+  }
 
 }

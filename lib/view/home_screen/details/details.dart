@@ -117,9 +117,17 @@ class _DetailsState extends State<Details> {
                               children: [
                                 SvgPicture.asset('${iconPath}map-pin.svg'),
                                 SizedBox(width: 10..w),
-                                Text12(
-                                  text: widget.service.location,
+                                Text(
+                                  widget.service.location,
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    color: AppColor.black.withOpacity(.5),
+                                    fontSize: 12..sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
+
+
                               ],
                             ),
                           ]
@@ -591,6 +599,7 @@ class _DetailsState extends State<Details> {
                                         text: reviewController.averageRating.value.toStringAsFixed(1),
                                       ),
                                     ],
+
                                   ),
                                   SizedBox(height: 10..h),
                                   Divider(

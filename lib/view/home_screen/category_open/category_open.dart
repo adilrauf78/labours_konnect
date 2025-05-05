@@ -253,8 +253,8 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                               children: [
                                                 Icon(Icons.star, size: 16, color: Color(0xFFFFD800)),
                                                 SizedBox(width: 3..w),
-                                                FutureBuilder<void>(
-                                                  future: reviewController.fetchReviews(service.id),
+                                                FutureBuilder<double>(
+                                                  future: reviewController.getAverageRating(service.id),
                                                   builder: (context, snapshot) {
                                                     if (snapshot.connectionState == ConnectionState.waiting) {
                                                       return MainText(
@@ -263,6 +263,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                                         fontWeight: FontWeight.w500,
                                                       );
                                                     }
+
                                                     if (snapshot.hasError) {
                                                       return MainText(
                                                         text: '0.0',
@@ -271,7 +272,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                                       );
                                                     }
                                                     return MainText(
-                                                      text: reviewController.averageRating.value.toStringAsFixed(1),
+                                                      text: snapshot.data!.toStringAsFixed(1),
                                                       fontSize: 15..sp,
                                                       fontWeight: FontWeight.w500,
                                                     );

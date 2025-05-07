@@ -11,7 +11,6 @@ import 'package:labours_konnect/controller/service_controller/service_controller
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
-import 'package:labours_konnect/view/home_screen/details/details.dart';
 import 'package:labours_konnect/view/my_location/service/service.dart';
 
 class MyLocation extends StatefulWidget {
@@ -118,21 +117,21 @@ class _MyLocationState extends State<MyLocation> {
               Stack(
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * .5,
-                    child: GoogleMap(
-                      onMapCreated: locationController.onMapCreated,
-                      markers: Set<Marker>.of(locationController.markers),
-                      initialCameraPosition: CameraPosition(
-                        target: locationController.initialPosition,
-                        zoom: 9.0,
-                      ),
-                      compassEnabled: false,
-                      mapType: MapType.normal,
-                      zoomControlsEnabled: false,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                    )),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * .5,
+                      child: GoogleMap(
+                        onMapCreated: locationController.onMapCreated,
+                        markers: Set<Marker>.of(locationController.markers),
+                        initialCameraPosition: CameraPosition(
+                          target: locationController.initialPosition,
+                          zoom: 9.0,
+                        ),
+                        compassEnabled: false,
+                        mapType: MapType.normal,
+                        zoomControlsEnabled: false,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                      )),
                   Positioned(
                     top: 20,
                     right: 20,
@@ -208,10 +207,11 @@ class _MyLocationState extends State<MyLocation> {
                             setState(() {
                               selectedIndex = index;
                             });
-                            navigateToNextScreen(
-                              context,
-                              Details(service: service),
-                            );
+                            navigateToNextScreen(context, Service(service: service));
+                            // navigateToNextScreen(
+                            //   context,
+                            //   Details(service: service),
+                            // );
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width,
@@ -240,12 +240,12 @@ class _MyLocationState extends State<MyLocation> {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppColor.white,
-                                        // image: DecorationImage(
-                                        //   image: service.userImage.isNotEmpty
-                                        //       ? NetworkImage(service.userImage)
-                                        //       : AssetImage('${imagePath}pipe.png') as ImageProvider,
-                                        //   fit: BoxFit.cover,
-                                        // ),
+                                        image: DecorationImage(
+                                          image: service.userImage?.isNotEmpty ?? false
+                                              ? NetworkImage(service.userImage!)
+                                              : AssetImage('${imagePath}pipe.png'),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                     SizedBox(width: 10..w),

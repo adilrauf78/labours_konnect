@@ -2,21 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/view/home_screen/book_now/book_now.dart';
+import 'package:labours_konnect/view/home_screen/details/details.dart';
 
 class Service extends StatefulWidget {
-  const Service({super.key});
+  final AddServicesModel service;
+  const Service({super.key, required this.service});
 
   @override
   State<Service> createState() => _ServiceState();
 }
 
 class _ServiceState extends State<Service> {
+  final ServiceController serviceController = Get.put(ServiceController());
   bool favorite1 = true;
   double _rating = 5;
   @override
@@ -38,7 +44,9 @@ class _ServiceState extends State<Service> {
                         decoration: BoxDecoration(
                           color: AppColor.white,
                           image: DecorationImage(
-                            image: AssetImage('${imagePath}pipe-fitting.png'),
+                            image: serviceController.imagePath.isNotEmpty
+                                ? NetworkImage(serviceController.imagePath.value)
+                                : AssetImage('${imagePath}pipe-fitting.png'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -127,17 +135,18 @@ class _ServiceState extends State<Service> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SubText(
-                          text: 'Pipe Fitting',
+                          text: widget.service.serviceTitle,
                           fontWeight: FontWeight.w700,
                           fontSize: 16..sp,
                         ),
                         SizedBox(height: 5..h),
+
                         Row(
                           children: [
                             SvgPicture.asset('${iconPath}map-pin.svg'),
                             SizedBox(width: 10..w),
                             Text12(
-                              text: 'Woodstock, GA',
+                              text: widget.service.city,
                             ),
                           ],
                         ),
@@ -164,7 +173,7 @@ class _ServiceState extends State<Service> {
                               ),
                               child: Center(
                                 child: MainText(
-                                  text: '\$ 20.00',
+                                  text: '\$ ${widget.service.price}.00',
                                   fontSize: 14..sp,
                                   color: AppColor.white,
                                 ),
@@ -188,9 +197,7 @@ class _ServiceState extends State<Service> {
                     text: 'Description',
                   ),
                   SubText(
-                    text: 'Hey, I\'m Jack Marston and expert of plumb servicing. I having more than 2 years of working '
-                        'experience. I appreciate the best delivery from my side. Hey, I\'m Jack Marston and expert of plumb '
-                        'servicing. I having more than 2 years of working experience Read More...',
+                    text: widget.service.description,
                     fontSize: 12..sp,
                   ),
                   SizedBox(height: 20..h),
@@ -278,7 +285,7 @@ class _ServiceState extends State<Service> {
                   SizedBox(height: 50..h,),
                   GestureDetector(
                     onTap: (){
-                      //navigateToNextScreen(context, BookNow());
+                      navigateToNextScreen(context, BookNow(service: widget.service));
                     },
                     child: Button(
                       text: 'Book Now',

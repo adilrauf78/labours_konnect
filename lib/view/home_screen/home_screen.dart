@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/category_controller/category_controller.dart';
+import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
+import 'package:labours_konnect/models/addservices_model/addservices_model.dart';
 import 'package:labours_konnect/models/category_model/category_model.dart';
 import 'package:labours_konnect/view/home_screen/categories/categories.dart';
 import 'package:labours_konnect/view/home_screen/category_open/category_open.dart';
+import 'package:labours_konnect/view/home_screen/details/details.dart';
 import 'package:labours_konnect/view/home_screen/filter/filter.dart';
 
 import '../../controller/location_controller/location_controller.dart';
@@ -25,6 +29,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final CategoryController categoryController = Get.put(CategoryController());
+  final ServiceController serviceController = Get.put(ServiceController());
+  List<AddServicesModel> nearbyServices = [];
+  bool isLoadingNearbyServices = false;
   final LocationController locationController = Get.find();
   final Map<int, bool> _imageLoadingStates = {};
 
@@ -57,6 +64,33 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     });
+  }
+  Future<void> _fetchNearbyServices() async {
+    setState(() {
+      isLoadingNearbyServices = true;
+    });
+
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      final services = await serviceController.fetchNearbyServices(
+        position.latitude,
+        position.longitude,
+        20, // 20 km radius
+      );
+
+      setState(() {
+        nearbyServices = services;
+      });
+    } catch (e) {
+      print('Error fetching nearby services: $e');
+    } finally {
+      setState(() {
+        isLoadingNearbyServices = false;
+      });
+    }
   }
   bool favorite = true;
   bool favorite1 = true;
@@ -352,155 +386,107 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 20..h),
-            SizedBox(
-              height: 280,
+            isLoadingNearbyServices
+                ? Center(child: CircularProgressIndicator())
+                : nearbyServices.isEmpty
+                ? Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Text('No nearby services found'),
+            )
+                : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: ListView.builder(
-                itemCount: 2,
-                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 2),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context,index){
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: nearbyServices.length,
+                itemBuilder: (context, index) {
+                  final service = nearbyServices[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: 210..w,
-                          decoration: BoxDecoration(
-                            color: AppColor.white,
-                            image: DecorationImage(
-                              image: AssetImage('${imagePath}man.png'),
-                              fit: BoxFit.cover,
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: GestureDetector(
+                      onTap: () {
+                        navigateToNextScreen(
+                            context, Details(service: service));
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: AppColor.white,
+                          borderRadius: BorderRadius.circular(10..r),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColor.k0xFFEEEEEE,
+                              blurRadius: 5,
                             ),
-                            borderRadius: BorderRadius.circular(10..r),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColor.k0xFFEEEEEE,
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
+                          ],
                         ),
-                        Positioned(
-                          left: 8,
-                          right: 10,
-                          top: 8,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: 85..w,
-                                height: 20..h,
-                                decoration: BoxDecoration(
-                                  color: AppColor.primaryColor,
-                                  borderRadius: BorderRadius.circular(5..r),
-                                ),
-                                child: Center(
-                                  child: Text18(
-                                    text: 'Level two',
-                                    color: AppColor.white,
-                                    fontSize: 12..sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: (){
-                                  setState(() {
-                                    favorite = !favorite;
-                                  });
-                                },
-                                child: Container(
-                                  width: 25..w,
-                                  height: 25..h,
+                        child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 70..w,
+                                  height: 70..h,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: AppColor.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColor.k0xFFEEEEEE,
-                                        blurRadius: 5,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                      child: favorite ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 18,) :
-                                      Icon(Icons.favorite,color: AppColor.red,size: 18,)
-                                  ),
-                                ),
-                              )
-                            ]
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          child: Container(
-                            width: 210..w,
-                            padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5,),
-                            decoration: BoxDecoration(
-                              color: AppColor.white,
-                              borderRadius: BorderRadius.circular(10..r),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColor.k0xFFEEEEEE,
-                                  blurRadius: 3,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                MainText(
-                                  text: 'Jack marston',
-                                  fontSize: 14..sp,
-                                ),
-                                SubText(
-                                  text: 'Plumber',
-                                  fontSize: 10..sp,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    RatingBar.builder(
-                                        initialRating: 5,
-                                        minRating: 1,
-                                        itemCount: 5,
-                                        itemSize: 12,
-                                        itemPadding: EdgeInsets.only(right: 2),
-                                        direction: Axis.horizontal,
-                                        unratedColor: Color(0x4DF9E005),
-                                        itemBuilder: (context, index)=>Icon(Icons.star,color: Color(0xFFFFD800)),
-                                        onRatingUpdate: (rating1){
-                                          setState(() {
-                                            _rating = _rating;
-                                          });
-                                        }
+                                    image: DecorationImage(
+                                      image: service.userImage
+                                          ?.isNotEmpty ??
+                                          false
+                                          ? NetworkImage(
+                                          service.userImage!)
+                                          : AssetImage(
+                                          '${imagePath}pipe.png')
+                                      as ImageProvider,
+                                      fit: BoxFit.cover,
                                     ),
-                                    SizedBox(width: 5..w),
-                                    Text(
-                                      '$_rating',
-                                      style: TextStyle(
-                                        color: AppColor.black,
-                                        fontSize: 10..sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                SizedBox(width: 10..w),
+                                Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
                                   children: [
-                                    SvgPicture.asset('${iconPath}map-pin.svg'),
-                                    SizedBox(width: 10..w),
-                                    Text12(
-                                      text: 'Woodstock, GA',
+                                    MainText(
+                                      text: service.userName,
+                                      color: AppColor.black,
+                                      fontSize: 14..sp,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.star,
+                                            size: 14,
+                                            color: Color(0xFFFFD800)),
+                                        SizedBox(width: 3..w),
+                                        Text12(text: '4.5'),
+                                      ],
+                                    ),
+                                    Text12(text: service.serviceTitle),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            '${iconPath}map-pin.svg'),
+                                        SizedBox(width: 5..w),
+                                        Text12(text: service.city),
+                                      ],
                                     ),
                                   ],
                                 )
                               ],
                             ),
-                          ),
+                            Text16(
+                              text: '\$${service.price}',
+                              fontWeight: FontWeight.w700,
+                              color: AppColor.black,
+                            )
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   );
                 },

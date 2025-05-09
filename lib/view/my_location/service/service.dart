@@ -231,7 +231,7 @@ class _ServiceState extends State<Service> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SubText(
-                              text: 'Jack Marston',
+                              text: widget.service.userName ?? 'null',
                               color: AppColor.white,
                               fontWeight: FontWeight.w700,
                             ),

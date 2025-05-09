@@ -10,6 +10,7 @@ import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
 import 'package:labours_konnect/view/account_screen/change_password/change_password.dart';
 import 'package:labours_konnect/view/account_screen/edit_profile/edit_profile.dart';
+import 'package:labours_konnect/view/account_screen/favorite_screen/favorite_screen.dart';
 import 'package:labours_konnect/view/account_screen/payment_method/payment_method.dart';
 import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.dart';
 import 'package:labours_konnect/view/vendor/vendor_bottom_navigator/vendor_bottom_navigator.dart';
@@ -324,33 +325,38 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               SizedBox(height: 15
                 ..h),
-              Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
-                height: 45
-                  ..h,
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                decoration: BoxDecoration(
-                  color: AppColor.white,
-                  borderRadius: BorderRadius.circular(10
-                    ..r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.k0xFFEEEEEE,
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text16(
-                      text: 'My Favorite',
-                    ),
-                    SvgPicture.asset('${iconPath}arrow_left.svg'),
-                  ],
+              GestureDetector(
+                onTap: (){
+                  navigateToNextScreen(context, FavoriteScreen());
+                },
+                child: Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: 45
+                    ..h,
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10
+                      ..r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.k0xFFEEEEEE,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text16(
+                        text: 'My Favorite',
+                      ),
+                      SvgPicture.asset('${iconPath}arrow_left.svg'),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 15

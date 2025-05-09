@@ -38,7 +38,6 @@ class _CategoryOpenState extends State<CategoryOpen> {
       },
     );
   }
-  bool favorite = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -188,11 +187,18 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                         top: 5,
                                         right: 5,
                                         child: GestureDetector(
-                                          onTap: (){
+                                          onTap: () async {
+                                            await serviceController.toggleFavorite(
+                                                service.id,
+                                                service.favorite
+                                            );
                                             setState(() {
-                                              favorite = !favorite;
+                                              service.favorite = !service.favorite;
                                             });
+                                            print('Service ID: ${service.id}, Favorite: ${service.favorite}');
+
                                           },
+
                                           child: Container(
                                             width: 25..w,
                                             height: 25..h,
@@ -207,8 +213,8 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                               ],
                                             ),
                                             child: Center(
-                                                child: favorite ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 18,) :
-                                                Icon(Icons.favorite,color: AppColor.red,size: 18,)
+                                                child: service.favorite ? Icon(Icons.favorite,color: AppColor.red,size: 18,) :
+                                              Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 18,)
                                             ),
                                           ),
                                         ),

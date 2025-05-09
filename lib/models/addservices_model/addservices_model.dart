@@ -15,6 +15,7 @@ class AddServicesModel {
   final DateTime timestamp;
   final double? latitude;
   final double? longitude;
+  bool favorite; // <-- Added favorite field
 
   AddServicesModel({
     required this.id, // <-- include here
@@ -33,6 +34,7 @@ class AddServicesModel {
     required this.timestamp,
     this.latitude,
     this.longitude,
+    this.favorite = false, // <-- default value is false
   });
 
   Map<String, dynamic> toMap() {
@@ -53,6 +55,7 @@ class AddServicesModel {
       'timestamp': timestamp,
       'latitude': latitude,
       'longitude': longitude,
+      'favorite': favorite, // <-- added to map
     };
   }
 
@@ -74,6 +77,7 @@ class AddServicesModel {
       timestamp: map['timestamp']?.toDate() ?? DateTime.now(),
       latitude: map['latitude']?.toDouble(),
       longitude: map['longitude']?.toDouble(),
+      favorite: map['favorite'] ?? false, // <-- added from map
     );
   }
 }

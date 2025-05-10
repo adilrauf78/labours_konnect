@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/location_controller/location_controller.dart';
+import 'package:labours_konnect/controller/review_controller/review_controller.dart';
 import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_text/custom_text.dart';
@@ -23,6 +24,7 @@ class MyLocation extends StatefulWidget {
 class _MyLocationState extends State<MyLocation> {
   final LocationController locationController = Get.put(LocationController());
   final ServiceController serviceController = Get.put(ServiceController());
+  final ReviewController reviewController = Get.put(ReviewController());
   int selectedIndex = 0;
   List<AddServicesModel> nearbyServices = [];
 
@@ -265,10 +267,29 @@ class _MyLocationState extends State<MyLocation> {
                                                 size: 14,
                                                 color: Color(0xFFFFD800)),
                                             SizedBox(width: 3..w),
-                                            Text12(text: '4.5'),
+                                            FutureBuilder<double>(
+                                              future: reviewController.getAverageRating(service.id),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  return MainText(
+                                                    text: '...',
+                                                    fontSize: 15..sp,
+                                                    fontWeight: FontWeight.w500,
+                                                  );
+                                                }
+                                                if (snapshot.hasError) {
+                                                  return MainText(
+                                                    text: '0.0',
+                                                    fontSize: 15..sp,
+                                                    fontWeight: FontWeight.w500,
+                                                  );
+                                                }
+                                                return Text12(text: snapshot.data!.toStringAsFixed(1),);
+                                              },
+                                            )
                                           ],
                                         ),
-                                        Text12(text: service.serviceTitle),
+                                        Text12(text: service.category),
                                         Row(
                                           children: [
                                             SvgPicture.asset('${iconPath}map-pin.svg'),

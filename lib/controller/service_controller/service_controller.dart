@@ -245,45 +245,6 @@ class ServiceController extends GetxController{
       rethrow;
     }
   }
-  // Toggle favorite status for a service
-  Future<void> toggleFavorite(String serviceId, bool currentStatus) async {
-    try {
-      User? user = _auth.currentUser;
-      if (user == null) {
-        throw Exception('User not logged in');
-      }
 
-      await _firestore.collection('services').doc(serviceId).update({
-        'favorite': !currentStatus, // Toggle the favorite status
-        'userId': user.uid, // Ensure each service has userId
-      });
-    } catch (e) {
-      ErrorSnackBar('Error', 'Failed to update favorite status: $e');
-      rethrow;
-    }
-  }
-
-// Fetch favorite services for current user
-  Future<List<AddServicesModel>> fetchFavoriteServices() async {
-    try {
-      User? user = _auth.currentUser;
-      if (user == null) {
-        throw Exception('User not logged in');
-      }
-
-      final querySnapshot = await _firestore
-          .collection('services')
-          .where('favorite', isEqualTo: true)
-          .where('userId', isEqualTo: user.uid)
-          .get();
-
-      return querySnapshot.docs.map((doc) {
-        return AddServicesModel.fromMap(doc.data(), doc.id);
-      }).toList();
-    } catch (e) {
-      ErrorSnackBar('Error', 'Error fetching favorite services: $e');
-      rethrow;
-    }
-  }
 
 }

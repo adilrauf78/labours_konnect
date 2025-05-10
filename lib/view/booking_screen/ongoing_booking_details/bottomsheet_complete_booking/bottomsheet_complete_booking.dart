@@ -62,7 +62,7 @@ class _CompleteBookingState extends State<CompleteBooking> {
             SizedBox(height: 40..h),
             GestureDetector(
               onTap: () async {
-                //await bookNowController.markBookingAsCompleted(widget.booking.bookingId);
+                await bookNowController.markBookingAsCompleted(widget.booking.bookingId);
                   setState(() {
                     _showBottomSheet(context);
                   });

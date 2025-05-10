@@ -7,6 +7,7 @@ import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
 import 'package:labours_konnect/controller/chat_controller/chat_controller.dart';
+import 'package:labours_konnect/controller/favorite_controller/favorite_controller.dart';
 import 'package:labours_konnect/controller/review_controller/review_controller.dart';
 import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
@@ -30,6 +31,7 @@ class _DetailsState extends State<Details> {
   final ServiceController serviceController = Get.find<ServiceController>();
   final ChatController chatController = Get.put(ChatController());
   final ReviewController reviewController = Get.put(ReviewController());
+  final FavoriteController favoriteController = Get.put(FavoriteController());
   bool favorite = true;
   bool favorite1 = true;
   // @override
@@ -89,48 +91,53 @@ class _DetailsState extends State<Details> {
                           ),
                         ),
                         SizedBox(width: 15..w),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MainText(
-                              text: widget.service.userName ?? 'null',
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            SizedBox(height: 5..h),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10,vertical: 2),
-                              decoration: BoxDecoration(
-                                color: AppColor.primaryColor,
-                                borderRadius: BorderRadius.circular(5..r),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MainText(
+                                text: widget.service.userName ?? 'null',
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
                               ),
-                              child: Center(
-                                child: Text16(
-                                  text: widget.service.category,
-                                  fontSize: 14..sp,
-                                  color: AppColor.white,
+                              SizedBox(height: 5..h),
+                              Container(
+                                width: 100,
+                                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: AppColor.primaryColor,
+                                  borderRadius: BorderRadius.circular(5..r),
                                 ),
-                              ),
-                            ),
-                            SizedBox(height: 5..h),
-                            Row(
-                              children: [
-                                SvgPicture.asset('${iconPath}map-pin.svg'),
-                                SizedBox(width: 10..w),
-                                Text(
-                                  widget.service.location,
-                                  style: TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    color: AppColor.black.withOpacity(.5),
-                                    fontSize: 12..sp,
-                                    fontWeight: FontWeight.w500,
+                                child: Center(
+                                  child: Text16(
+                                    text: widget.service.category,
+                                    fontSize: 14..sp,
+                                    color: AppColor.white,
                                   ),
                                 ),
-
-
-                              ],
-                            ),
-                          ]
+                              ),
+                              SizedBox(height: 5..h),
+                              Row(
+                                children: [
+                                  SvgPicture.asset('${iconPath}map-pin.svg'),
+                                  SizedBox(width: 10..w),
+                                  Expanded(
+                                    child: Text(
+                                      widget.service.location,
+                                      style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        color: AppColor.black.withOpacity(.5),
+                                        fontSize: 12..sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                          
+                          
+                                ],
+                              ),
+                            ]
+                          ),
                         )
                       ],
                     ),
@@ -218,10 +225,8 @@ class _DetailsState extends State<Details> {
                                     top: 10,
                                     right: 10,
                                     child: GestureDetector(
-                                      onTap: (){
-                                        setState(() {
-                                          favorite = !favorite;
-                                        });
+                                      onTap: () {
+                                        favoriteController.toggleFavoriteService(widget.service.id);
                                       },
                                       child: Container(
                                         width: 40..w,
@@ -237,8 +242,9 @@ class _DetailsState extends State<Details> {
                                           ],
                                         ),
                                         child: Center(
-                                            child: favorite ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 24,) :
-                                            Icon(Icons.favorite,color: AppColor.red,size: 24,)
+                                          child: widget.service.favorite
+                                              ? Icon(Icons.favorite, color: AppColor.red, size: 18)
+                                              : Icon(Icons.favorite_border_outlined, color: AppColor.k0xFF818080, size: 18),
                                         ),
                                       ),
                                     ),
@@ -417,10 +423,8 @@ class _DetailsState extends State<Details> {
                                                       top: 10,
                                                       right: 10,
                                                       child: GestureDetector(
-                                                        onTap: (){
-                                                          setState(() {
-                                                            favorite1 = !favorite1;
-                                                          });
+                                                        onTap: () {
+                                                          favoriteController.toggleFavoriteService(widget.service.id);
                                                         },
                                                         child: Container(
                                                           width: 40..w,
@@ -436,8 +440,9 @@ class _DetailsState extends State<Details> {
                                                             ],
                                                           ),
                                                           child: Center(
-                                                              child: favorite1 ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 24,) :
-                                                              Icon(Icons.favorite,color: AppColor.red,size: 24,)
+                                                            child: widget.service.favorite
+                                                                ? Icon(Icons.favorite, color: AppColor.red, size: 18)
+                                                                : Icon(Icons.favorite_border_outlined, color: AppColor.k0xFF818080, size: 18),
                                                           ),
                                                         ),
                                                       ),

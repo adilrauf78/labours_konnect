@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
 import 'package:labours_konnect/controller/auh_controller/auth_controller.dart';
+import 'package:labours_konnect/controller/favorite_controller/favorite_controller.dart';
 import 'package:labours_konnect/controller/review_controller/review_controller.dart';
 import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
@@ -25,6 +26,7 @@ class CategoryOpen extends StatefulWidget {
 class _CategoryOpenState extends State<CategoryOpen> {
   final ServiceController serviceController = Get.put(ServiceController());
   final ReviewController  reviewController = Get.put(ReviewController());
+  final FavoriteController favoriteController = Get.put(FavoriteController());
 
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -38,6 +40,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,21 +190,12 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                         top: 5,
                                         right: 5,
                                         child: GestureDetector(
-                                          onTap: () async {
-                                            await serviceController.toggleFavorite(
-                                                service.id,
-                                                service.favorite
-                                            );
-                                            setState(() {
-                                              service.favorite = !service.favorite;
-                                            });
-                                            print('Service ID: ${service.id}, Favorite: ${service.favorite}');
-
+                                          onTap: () {
+                                            favoriteController.toggleFavoriteService(service.id);
                                           },
-
                                           child: Container(
-                                            width: 25..w,
-                                            height: 25..h,
+                                            width: 25.w,
+                                            height: 25.h,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               color: AppColor.white,
@@ -213,11 +207,13 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                               ],
                                             ),
                                             child: Center(
-                                                child: service.favorite ? Icon(Icons.favorite,color: AppColor.red,size: 18,) :
-                                              Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 18,)
+                                              child: service.favorite
+                                                  ? Icon(Icons.favorite, color: AppColor.red, size: 18)
+                                                  : Icon(Icons.favorite_border_outlined, color: AppColor.k0xFF818080, size: 18),
                                             ),
                                           ),
-                                        ),
+                                        )
+
                                       ),
                                       Positioned(
                                         bottom: 5,

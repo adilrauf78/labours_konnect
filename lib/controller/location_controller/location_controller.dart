@@ -25,6 +25,46 @@ class LocationController extends GetxController{
     mapController = controller;
   }
 
+  String currentLocation = 'Detecting location...';
+  Future<void> handleLocationPermission() async {
+    var status = await Permission.location.request();
+
+    if (status.isGranted) {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+          currentLocation = 'Location services are disabled.';
+        return;
+      }
+
+      Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 10,
+        ),
+      ).listen((Position position) {
+        _getAddressFromPosition(position);
+      });
+    } else {
+        currentLocation = 'Location permission not granted.';
+    }
+  }
+
+  Future<void> _getAddressFromPosition(Position position) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      Placemark placemark = placemarks.first;
+
+        currentLocation =
+        '${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
+      //${placemark.street},
+    } catch (e) {
+        currentLocation = 'Failed to get address.';
+    }
+  }
+
   //Floating Action Button Click Location in Text Show
   RxString address = 'H#28 saleem Street # 17 Fiji garhi stop Band Rd, Shera Kot, Lahore, Punjab 54000 Pakistan'.obs;
   Future<void> getCurrentLocation() async {

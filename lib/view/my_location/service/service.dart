@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:labours_konnect/constants/assets_path.dart';
 import 'package:labours_konnect/constants/colors.dart';
+import 'package:labours_konnect/controller/favorite_controller/favorite_controller.dart';
+import 'package:labours_konnect/controller/review_controller/review_controller.dart';
 import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/custom_widgets/custom_animation/custom_animation.dart';
 import 'package:labours_konnect/custom_widgets/custom_button/custom_button.dart';
@@ -23,6 +25,8 @@ class Service extends StatefulWidget {
 
 class _ServiceState extends State<Service> {
   final ServiceController serviceController = Get.put(ServiceController());
+  final ReviewController reviewController = Get.put(ReviewController());
+  final FavoriteController favoriteController = Get.put(FavoriteController());
   bool favorite1 = true;
   double _rating = 5;
   @override
@@ -87,10 +91,8 @@ class _ServiceState extends State<Service> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
-                          setState(() {
-                            favorite1 = !favorite1;
-                          });
+                        onTap: () {
+                          favoriteController.toggleFavoriteService(widget.service.id);
                         },
                         child: Container(
                           width: 40..w,
@@ -106,8 +108,9 @@ class _ServiceState extends State<Service> {
                             ],
                           ),
                           child: Center(
-                              child: favorite1 ? Icon(Icons.favorite_border_outlined,color: AppColor.k0xFF818080,size: 24,) :
-                              Icon(Icons.favorite,color: AppColor.red,size: 24,)
+                            child: widget.service.favorite
+                                ? Icon(Icons.favorite, color: AppColor.red, size: 18)
+                                : Icon(Icons.favorite_border_outlined, color: AppColor.k0xFF818080, size: 18),
                           ),
                         ),
                       ),
@@ -158,10 +161,25 @@ class _ServiceState extends State<Service> {
                               children: [
                                 Icon(Icons.star,size: 16,color: Color(0xFFFFD800)),
                                 SizedBox(width: 3..w),
-                                MainText(
-                                  text: '4.5',
-                                  fontSize: 15..sp,
-                                  fontWeight: FontWeight.w500,
+                                FutureBuilder<double>(
+                                  future: reviewController.getAverageRating(widget.service.id),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return MainText(
+                                        text: '...',
+                                        fontSize: 15..sp,
+                                        fontWeight: FontWeight.w500,
+                                      );
+                                    }
+                                    if (snapshot.hasError) {
+                                      return MainText(
+                                        text: '0.0',
+                                        fontSize: 15..sp,
+                                        fontWeight: FontWeight.w500,
+                                      );
+                                    }
+                                    return Text12(text: snapshot.data!.toStringAsFixed(1),);
+                                  },
                                 )
                               ],
                             ),

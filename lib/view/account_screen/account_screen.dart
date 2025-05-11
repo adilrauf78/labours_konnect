@@ -16,6 +16,8 @@ import 'package:labours_konnect/view/auth_screens/signin_screen/signin_screen.da
 import 'package:labours_konnect/view/vendor/vendor_bottom_navigator/vendor_bottom_navigator.dart';
 import 'package:labours_konnect/view/vendor/vendor_home/vendor_home.dart';
 
+import 'ai_image_analyzer/ai_image_analyzer.dart';
+
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
 
@@ -440,7 +442,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ..h),
               GestureDetector(
                 onTap: () {
-                  Get.to(SignInScreen());
+                  //navigateToNextScreen(context, ImageAnalysisScreen());
                 },
                 child: Container(
                   width: MediaQuery

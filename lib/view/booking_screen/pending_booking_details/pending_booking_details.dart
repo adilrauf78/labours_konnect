@@ -258,7 +258,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                           text: 'Subtotal',
                         ),
                         Text16(
-                          text: '\$20.00',
+                          text: '\$0.0',
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
                         ),
@@ -274,7 +274,7 @@ class _PendingBookingDetailsState extends State<PendingBookingDetails> {
                           text: 'Tax',
                         ),
                         Text16(
-                          text: '\$20.00',
+                          text: '\$0.0',
                           fontWeight: FontWeight.w700,
                           color: AppColor.black,
                         ),

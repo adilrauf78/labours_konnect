@@ -115,10 +115,10 @@ class _RateServicesState extends State<RateServices> {
                 child: reviewController.isLoading.value
                     ? CircularProgressIndicator()
                     : Button(text: 'Submit'),
-              )),
+              ),),
             ],
           ),
-        )
+        ),
     );
   }
 }

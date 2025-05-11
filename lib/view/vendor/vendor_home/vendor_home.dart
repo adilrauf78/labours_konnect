@@ -132,7 +132,7 @@ class _VendorHomeState extends State<VendorHome> {
                             ],
                           ),
                           Text16(
-                            text: '\$100.00',
+                            text: '\$0.0',
                             fontWeight: FontWeight.w500,
                             color: AppColor.black,
                           ),
@@ -169,7 +169,7 @@ class _VendorHomeState extends State<VendorHome> {
                               SvgPicture.asset('${iconPath}jobs.svg'),
                               SizedBox(width: 10..w),
                               Text16(
-                                text: '192',
+                                text: '0',
                                 fontSize: 18..sp,
                                 color: AppColor.white,
                               ),
@@ -199,7 +199,7 @@ class _VendorHomeState extends State<VendorHome> {
                               SvgPicture.asset('${iconPath}services.svg'),
                               SizedBox(width: 10..w),
                               Text16(
-                                text: '5',
+                                text: '0',
                                 fontSize: 18..sp,
                                 color: AppColor.white,
                               ),

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:labours_konnect/constants/utils.dart';
 import 'package:labours_konnect/controller/service_controller/service_controller.dart';
 import 'package:labours_konnect/models/review_model/review_model.dart';
+import 'package:labours_konnect/view/bottom_navigator/bottom_navigator.dart';
 
 class ReviewController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -17,11 +18,6 @@ class ReviewController extends GetxController {
   final TextEditingController reviewCommentController = TextEditingController();
   final RxDouble selectedRating = 0.0.obs;
 
-  @override
-  void onClose() {
-    reviewCommentController.dispose();
-    super.onClose();
-  }
   final RxMap<String, double> _serviceAverageRatings = <String, double>{}.obs;
 
   Future<double> getAverageRating(String serviceId) async {
@@ -136,7 +132,8 @@ class ReviewController extends GetxController {
       reviewCommentController.clear();
       selectedRating(0.0);
 
-      Get.back(); // Close review dialog
+      Get.to(BottomNavigator());
+      // Close review dialog
       SuccessSnackBar('Success', 'Review added successfully');
     } catch (e) {
       ErrorSnackBar('Error', e.toString());

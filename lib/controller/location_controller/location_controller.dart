@@ -65,7 +65,7 @@ class LocationController extends GetxController{
     }
   }
 
-  //Floating Action Button Click Location in Text Show
+  //Floating Action Button Click Location in Text
   RxString address = 'H#28 saleem Street # 17 Fiji garhi stop Band Rd, Shera Kot, Lahore, Punjab 54000 Pakistan'.obs;
   Future<void> getCurrentLocation() async {
     isLoading.value = true;

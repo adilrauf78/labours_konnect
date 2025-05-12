@@ -255,7 +255,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                               children: [
                                                 Icon(Icons.star, size: 16, color: Color(0xFFFFD800)),
                                                 SizedBox(width: 3..w),
-                                                FutureBuilder<double>(
+                                                Obx(() =>FutureBuilder<double>(
                                                   future: reviewController.getAverageRating(service.id),
                                                   builder: (context, snapshot) {
                                                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -279,7 +279,7 @@ class _CategoryOpenState extends State<CategoryOpen> {
                                                       fontWeight: FontWeight.w500,
                                                     );
                                                   },
-                                                )
+                                                )),
                                               ],
                                             ),
 

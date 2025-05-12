@@ -77,7 +77,7 @@ dependencies:
   uuid: ^4.5.1
 
   #ai
-
+#  google_mlkit_image_labeling: ^0.14.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

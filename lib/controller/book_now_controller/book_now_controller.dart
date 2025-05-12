@@ -93,7 +93,7 @@ class BookNowController extends GetxController {
       } catch (e) {
         isLoading = false;
         update();
-        ErrorSnackBar('Error', 'Failed to book service: $e');
+        //ErrorSnackBar('Error', 'Failed to book service: $e');
       }
     }
   }

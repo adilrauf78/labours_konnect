@@ -150,7 +150,12 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                       ),
                     ),
                   ),
-                  GestureDetector(
+                  bookNowController.isLoading
+                      ? SpinKitRing(
+                    color: AppColor.blue,
+                    size:40,
+                    lineWidth: 4,
+                  ) :GestureDetector(
                       onTap: () async {
                         if (!isChecked) {
                           showSnackBar(title: 'Please agree to the terms of service and privacy policy');

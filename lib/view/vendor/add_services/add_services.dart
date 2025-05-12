@@ -37,11 +37,6 @@ class _AddServicesState extends State<AddServices> {
     serviceController.locationController = TextEditingController(text: widget.address);
   }
 
-  @override
-  void dispose() {
-    serviceController.locationController.dispose();
-    super.dispose();
-  }
 
   List<File?> images = [];
   File? image2;

@@ -58,8 +58,8 @@ class LocationController extends GetxController{
       Placemark placemark = placemarks.first;
 
         currentLocation =
-        '${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
-      //${placemark.street},
+        '${placemark.street},${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
+
     } catch (e) {
         currentLocation = 'Failed to get address.';
     }

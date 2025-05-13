@@ -69,6 +69,7 @@ class LocationController extends GetxController{
   RxString address = 'H#28 saleem Street # 17 Fiji garhi stop Band Rd, Shera Kot, Lahore, Punjab 54000 Pakistan'.obs;
   Future<void> getCurrentLocation() async {
     isLoading.value = true;
+    
     // Check if location permission is granted
     var status = await Permission.location.status;
     if (!status.isGranted) {

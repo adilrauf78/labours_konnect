@@ -151,7 +151,7 @@ class LocationController extends GetxController{
   Future<void> requestLocationPermission() async {
     isLoading.value = true;
     update();
-    var status = await Permission.ocation.request();
+    var status = await Permission.location.request();
     isLoading.value = false;
     update();
 
@@ -193,7 +193,7 @@ class LocationController extends GetxController{
       final nearbyServices = await serviceController.fetchNearbyServices(
         position.latitude,
         position.longitude,
-        , // 20 km radius
+        20, // 20 km radius
       );
 
       // You can now use nearbyServices as needed

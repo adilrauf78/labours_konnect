@@ -301,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 10..h),
                 FutureBuilder<List<CategoryModel>>(
-                  future: categoryController.fetchCategories(), // Fetch categories
+                  future: categoryController.fetchCategories(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -352,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       child:  _imageLoadingStates[index] ?? true
                                           ? Center(
-                                        child: CircularProgressIndicator(), // Show loading indicator for 2 seconds
+                                        child: CircularProgressIndicator(),
                                       )
                                           :Center(
                                         child: category.imagePath.isNotEmpty

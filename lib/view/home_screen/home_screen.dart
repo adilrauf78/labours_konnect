@@ -101,8 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
-  // bool favorite = true;
-  // bool favorite1 = true;
   // double _rating = 5;
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(

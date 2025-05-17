@@ -122,7 +122,7 @@ class ReviewController extends GetxController {
 
       // Add review to reviews collection
       await _firestore.collection('reviews').add(review.toMap());
-      //calculate
+
       reviews.insert(0, review);
       calculateAverageRating();
       // Update service's average rating
